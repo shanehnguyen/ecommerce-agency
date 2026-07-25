@@ -1,0 +1,65 @@
+---
+/* Regular sticky nav — wordmark + byline, three links (Home, Portfolio,
+   Book), Book styled as the one action. Collapses to a hamburger dropdown
+   on mobile. No overlay/transparent mode — same bar on every page. */
+import { site } from '../data/site.config';
+---
+<header class="nav" data-nav>
+  <div class="nav__inner">
+    <a class="nav__logo" href="/" aria-label={`${site.brand} — home`}>
+      <span class="nav__logo-name">{site.wordmark.lead} <span>{site.wordmark.accent}</span></span>
+      <span class="nav__logo-by">{site.byline}</span>
+    </a>
+
+    <button
+      class="nav__toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="nav-links"
+      aria-label="Open menu"
+      data-nav-toggle
+    >
+      <span class="nav__toggle-box" aria-hidden="true"></span>
+    </button>
+
+    <div class="nav__menu">
+      <ul class="nav__links" id="nav-links" data-nav-menu>
+        <li><a href="/">Home</a></li>
+        <li><a href="/#portfolio">Portfolio</a></li>
+        <li><a class="btn btn--primary nav__book" href={`${site.cta.href}?from=${encodeURIComponent('Nav:GetBuild')}`} data-event="Nav:GetBuild"><span class="btn__label">Get My Build</span></a></li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-nav]');
+  const toggle = header?.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+  const menu = header?.querySelector<HTMLElement>('[data-nav-menu]');
+  if (header && toggle && menu) {
+    const setOpen = (open: boolean) => {
+      header.classList.toggle('is-open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      if (open) menu.querySelector<HTMLElement>('a')?.focus();
+      else toggle.focus();
+    };
+    toggle.addEventListener('click', () => setOpen(!header.classList.contains('is-open')));
+    menu.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) setOpen(false); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && header.classList.contains('is-open')) setOpen(false); });
+  }
+</script>
+
+<style>
+  /* the Book link doubles as the nav's one action — small, lightly rounded, not a full-size btn */
+  .nav__book { padding: 8px 20px; font-size: var(--fs-caption); min-height: 36px; border-radius: var(--radius-md); }
+  @media (max-width: 55.99em) {
+    .nav__book { align-self: flex-start; margin-top: var(--space-2); }
+  }
+
+  /* first paint: logo fades in ahead of everything else on the page (part
+     of the hero load sequence, but self-contained so it still runs on
+     pages without a hero) */
+  .js .nav__logo { opacity: 0; animation: nav-logo-in 150ms var(--ease-out) forwards; }
+  @keyframes nav-logo-in { to { opacity: 1; } }
+</style>

@@ -1,0 +1,26 @@
+---
+/* Cta — THE single site-wide CTA. Same words on every button (structure
+   spec §1), one destination (the apply page), both read from site.config.
+   Click tracking is delegated once in BaseLayout, so this component carries
+   no script of its own (no duplicate listeners). The `event` name is also
+   tagged onto the href as ?from=, so /pulse's "by CTA / source" breakdown
+   can tell which button actually drives bookings, not just GA4 clicks. */
+import { site } from '../data/site.config';
+interface Props {
+  event: string;
+  size?: 'lg' | 'md';
+  derisk?: string;
+  center?: boolean;
+  pill?: boolean;
+  class?: string;
+}
+const { event, size = 'lg', derisk, center = true, pill = false, class: cls = '' } = Astro.props;
+const href = `${site.cta.href}?from=${encodeURIComponent(event)}`;
+---
+<div class:list={['cta-block', { 'cta-block--center': center }, cls]}>
+  <a class:list={['btn', 'btn--primary', { 'btn--lg': size === 'lg', 'btn--pill': pill }]} href={href} data-event={event}>
+    <span class="btn__label">{site.cta.label}</span>
+    <span aria-hidden="true">→</span>
+  </a>
+  {derisk && <span class="cta-block__derisk">{derisk}</span>}
+</div>

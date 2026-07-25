@@ -1,0 +1,8 @@
+# Shane Nguyen — robots policy
+User-agent: *
+Allow: /
+# Single-goal, noindex pages — keep them out of the index.
+Disallow: /apply
+Disallow: /thank-you
+
+Sitemap: https://shanenguyen.co/sitemap.xml

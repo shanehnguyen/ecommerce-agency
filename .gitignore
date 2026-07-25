@@ -1,0 +1,33 @@
+node_modules/
+.env
+.env.local
+.env*.local
+.vercel/
+dist/
+.astro/
+
+# AI coding tool config/cache directories (not part of the site)
+.agent/
+.claude/
+.codebuddy/
+.codex/
+.continue/
+.cursor/
+.gemini/
+.github/
+.kiro/
+.opencode/
+.qoder/
+.roo/
+.trae/
+.windsurf/
+
+# Design reference screenshots (not site code)
+/inspo/
+
+# Internal strategy/planning docs (kept local-only)
+/00-MASTER-OFFER.md
+/01-ICP-DOSSIER.md
+/02-COMPETITOR-TEARDOWN.md
+/03-HOW-ECOMMERCE-BRANDS-MAKE-MONEY.md
+/04-HIGH-CONVERTING-ECOMMERCE-PLAYBOOK (1).md

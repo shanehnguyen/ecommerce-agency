@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site.config';
+---
+<BaseLayout title="Terms" description={`The terms for using the ${site.brand} website.`} noindex={true}>
+  <section class="section legal">
+    <div class="container container--prose">
+      <h1>Terms</h1>
+      <p class="legal__date mono">Last updated July 2026</p>
+      <!-- LEGAL REVIEW REQUIRED before launch. Plain-language draft only. -->
+      <p>
+        These terms cover use of the {site.brand} website and its application and booking forms. Using the
+        site means you’re okay with them.
+      </p>
+      <h2>The calculator is an estimate</h2>
+      <p>
+        The revenue calculator uses the numbers you enter and a defensible uplift assumption to show a
+        directional figure, not a promise. Actual results depend on your store, your traffic, and your market.
+      </p>
+      <h2>Service terms live with each engagement</h2>
+      <p>
+        The delivery guarantee, the 60-day iteration warranty, the six-month code warranty, and the specific
+        conditions on each are stated in full in your build agreement. Those govern the actual work.
+      </p>
+      <h2>Contact</h2>
+      <p>Questions: <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal h1 { font-family: var(--font-display); }
+  .legal__date { color: var(--ink-50); font-size: var(--fs-caption); margin-block: var(--space-2) var(--space-6); }
+  .legal h2 { font-family: var(--font-display); text-transform: none; font-size: var(--fs-h3); margin-top: var(--space-8); }
+  .legal p, .legal li { color: var(--ink-70); margin-top: var(--space-3); line-height: 1.6; }
+</style>

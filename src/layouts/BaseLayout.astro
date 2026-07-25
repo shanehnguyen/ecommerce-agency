@@ -1,0 +1,178 @@
+---
+/* BaseLayout — content pages (nav + footer + meta/OG + analytics).
+   Use BareLayout for /book (single-goal, no nav). */
+import { site } from '../data/site.config';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import Analytics from '../components/Analytics.astro';
+import '@fontsource-variable/archivo';
+import '@fontsource-variable/source-serif-4';
+import '@fontsource-variable/jetbrains-mono';
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/components.css';
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  noindex?: boolean;
+}
+const { title, description, ogImage = '/assets/images/og-cover.svg', noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, site.url).toString();
+const fullTitle = title.includes(site.brand) ? title : `${title} | ${site.brand}`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#F4F1EA" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex
+      ? <meta name="robots" content="noindex, nofollow" />
+      : <meta name="robots" content="index, follow, max-image-preview:large" />}
+
+    <meta property="og:site_name" content={site.brand} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={new URL(ogImage, site.url).toString()} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(ogImage, site.url).toString()} />
+
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <Analytics />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Nav />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <div class="cursor" data-cursor aria-hidden="true"></div>
+    <script is:inline>
+      // Subtle fade-up on scroll + nav shrink/blur on scroll. Respects reduced-motion.
+      (function () {
+        var nav = document.querySelector('.nav');
+        if (nav) {
+          var onScroll = function () { nav.setAttribute('data-scrolled', (window.scrollY > 80) ? 'true' : 'false'); };
+          window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+        }
+        // Delegated CTA tracking: every [data-event] anchor fires window.kwTrack
+        // exactly once per click (no per-button scripts, so no double-firing).
+        document.addEventListener('click', function (e) {
+          var a = e.target.closest && e.target.closest('a[data-event]');
+          if (a && window.kwTrack) window.kwTrack(a.getAttribute('data-event'));
+        });
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        // Reveal roots: each [data-reveal] and, inside it, any [data-reveal-child]
+        // gets its own staggered transition-delay (60-80ms apart) so sections
+        // never animate in as one flat block.
+        document.querySelectorAll('[data-reveal]').forEach(function (root) {
+          var children = root.querySelectorAll('[data-reveal-child]');
+          children.forEach(function (child, i) {
+            child.style.transitionDelay = (i * 70) + 'ms';
+          });
+        });
+        var els = document.querySelectorAll('[data-reveal]');
+        var revealAll = function () { els.forEach(function (e) { e.classList.add('is-in'); }); };
+        if (reduce || !('IntersectionObserver' in window)) { revealAll(); return; }
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
+        }, { threshold: 0, rootMargin: '0px 0px -20% 0px' });
+        els.forEach(function (e) { io.observe(e); });
+        // Failsafe: content must NEVER stay hidden if the observer misses it
+        // (fast scroll, jump-to-anchor, tab restore). Reveal any stragglers
+        // shortly after load.
+        window.addEventListener('load', function () { setTimeout(revealAll, 1200); });
+
+        // Count-up numbers: [data-count-to="N"] eases 0 -> N once, the first
+        // time it scrolls into view. Optional data-count-prefix/-suffix and
+        // data-count-decimals. Instant (no animation) under reduced-motion.
+        var countEls = document.querySelectorAll('[data-count-to]');
+        if (countEls.length) {
+          var easeOutCubic = function (t) { return 1 - Math.pow(1 - t, 3); };
+          var runCount = function (el) {
+            var to = parseFloat(el.getAttribute('data-count-to'));
+            if (isNaN(to)) return;
+            var prefix = el.getAttribute('data-count-prefix') || '';
+            var suffix = el.getAttribute('data-count-suffix') || '';
+            var decimals = parseInt(el.getAttribute('data-count-decimals') || '0', 10);
+            var format = function (v) { return prefix + v.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals }) + suffix; };
+            if (reduce) { el.textContent = format(to); return; }
+            var duration = 1200, start = null;
+            var step = function (ts) {
+              if (start === null) start = ts;
+              var t = Math.min(1, (ts - start) / duration);
+              el.textContent = format(to * easeOutCubic(t));
+              if (t < 1) requestAnimationFrame(step);
+            };
+            requestAnimationFrame(step);
+          };
+          if (!('IntersectionObserver' in window)) { countEls.forEach(runCount); }
+          else {
+            var countIo = new IntersectionObserver(function (entries) {
+              entries.forEach(function (e) { if (e.isIntersecting) { runCount(e.target); countIo.unobserve(e.target); } });
+            }, { threshold: 0.6 });
+            countEls.forEach(function (e) { countIo.observe(e); });
+          }
+        }
+
+        // Lightweight custom cursor: desktop-with-a-real-pointer only, never
+        // on touch. Scales 1.5x over anything interactive.
+        var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        if (canHover) {
+          document.documentElement.classList.add('has-cursor');
+          var dot = document.querySelector('[data-cursor]');
+          if (dot) {
+            var cx = 0, cy = 0, x = 0, y = 0;
+            window.addEventListener('mousemove', function (e) { cx = e.clientX; cy = e.clientY; dot.classList.add('is-active'); });
+            var tick = function () {
+              var ease = reduce ? 1 : 0.35;
+              x += (cx - x) * ease; y += (cy - y) * ease;
+              dot.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+              requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+            document.addEventListener('mouseover', function (e) {
+              var t = e.target.closest && e.target.closest('a, button, [role="button"], summary, input, [data-cursor-hover]');
+              dot.classList.toggle('is-hover', !!t);
+            });
+            document.addEventListener('mouseleave', function () { dot.classList.remove('is-active'); });
+          }
+        }
+      })();
+    </script>
+    <script>
+      import Lenis from 'lenis';
+      import 'lenis/dist/lenis.css';
+
+      // Sitewide inertia smooth scroll (desktop wheel only; touch keeps native
+      // momentum scroll, which already feels right on mobile). Kept very
+      // short/snappy on purpose — this should just take the edge off the
+      // native scroll-wheel notch, not add a noticeable lag before the page
+      // catches up. Off entirely under reduced-motion.
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!reduce) {
+        var lenis = new Lenis({
+          duration: 0.4,
+          easing: function (t) { return 1 - Math.pow(1 - t, 2); },
+          autoRaf: true,
+        });
+        window.lenis = lenis;
+      }
+    </script>
+  </body>
+</html>

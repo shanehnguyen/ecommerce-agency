@@ -1,0 +1,99 @@
+---
+/* Analytics — Meta Pixel + Microsoft Clarity + optional GA4. All public client
+   ids, so they live in site.config (committed), not env vars.
+
+   PERF: the third-party scripts are DEFERRED — they load after the page has
+   painted and is interactive (requestIdleCallback, first interaction, or a short
+   timeout, whichever comes first). That keeps the header/first render from
+   competing with analytics on slow mobile. Preconnects below warm the DNS/TLS so
+   the deferred scripts still handshake fast. Meta conversion events fire through
+   src/utils/track.js; window.kwTrack carries funnel telemetry to GA4. */
+import { site } from '../data/site.config';
+const { metaPixelId, ga4Id, clarityId } = site.analytics;
+---
+{metaPixelId && <link rel="preconnect" href="https://connect.facebook.net" crossorigin />}
+{clarityId && <link rel="preconnect" href="https://www.clarity.ms" crossorigin />}
+
+<script is:inline define:vars={{ metaPixelId, ga4Id, clarityId }}>
+  (function () {
+    var booted = false;
+    function boot() {
+      if (booted) return; booted = true;
+
+      if (metaPixelId) {
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+        n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+        document,'script','https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', metaPixelId); fbq('track', 'PageView');
+      }
+
+      if (ga4Id) {
+        var g = document.createElement('script'); g.async = true;
+        g.src = 'https://www.googletagmanager.com/gtag/js?id=' + ga4Id;
+        document.head.appendChild(g);
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () { dataLayer.push(arguments); };
+        gtag('js', new Date()); gtag('config', ga4Id);
+      }
+
+      if (clarityId) {
+        (function(c,l,a,r,i,t,y){
+          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", clarityId);
+      }
+    }
+    // Load once the main thread is free — or the moment the user interacts,
+    // so recordings/events never miss an early action.
+    if ('requestIdleCallback' in window) requestIdleCallback(boot, { timeout: 3500 });
+    else setTimeout(boot, 1500);
+    ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach(function (ev) {
+      addEventListener(ev, boot, { once: true, passive: true });
+    });
+  })();
+</script>
+
+<script is:inline>
+  // Internal funnel telemetry → GA4. Meta events go through src/utils/track.js
+  // so the Pixel receives just the named conversion events. (Loads immediately —
+  // it's tiny and must exist before any CTA click.)
+  window.kwTrack = function (name, params) {
+    try { if (window.gtag) window.gtag('event', name, params || {}); } catch (e) {}
+  };
+  // FIRST-TOUCH ATTRIBUTION. Stash the UTMs / click-ids from the very first page
+  // the visitor lands on, so the booking beacon can report them even when they
+  // entered on the homepage (or any page) and only reached /book after several
+  // clicks — by which point the URL no longer carries the tags. First hit wins;
+  // sessionStorage = one visit. This is what /pulse reads for utm_source etc.
+  (function () {
+    try {
+      var KEY = 'kw_attr_v1';
+      if (sessionStorage.getItem(KEY)) return; // already captured this visit
+      var p = new URLSearchParams(window.location.search);
+      var keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid'];
+      var cur = {}, has = false;
+      keys.forEach(function (k) { var v = (p.get(k) || '').slice(0, 200); if (v) { cur[k] = v; has = true; } });
+      if (!has) return; // nothing to remember yet — a later utm-tagged page can still be the first touch
+      cur._landing = window.location.pathname;
+      cur._ref = document.referrer || '';
+      sessionStorage.setItem(KEY, JSON.stringify(cur));
+    } catch (e) {}
+  })();
+  // Belt-and-suspenders: also carry UTMs straight through same-origin links to
+  // /apply, so the destination URL itself shows them (handy for GA + pulse).
+  (function () {
+    var qs = window.location.search;
+    if (!qs || qs.indexOf('utm_') === -1) return;
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="/"]');
+      if (!a) return;
+      var href = a.getAttribute('href');
+      if (/\/apply/.test(href) && href.indexOf('utm_') === -1) {
+        a.setAttribute('href', href + (href.indexOf('?') > -1 ? '&' : '?') + qs.slice(1));
+      }
+    });
+  })();
+</script>

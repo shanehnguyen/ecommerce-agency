@@ -1,0 +1,360 @@
+/* =====================================================================
+   components.css — shared primitives.
+   Hierarchy fix: primary CTA is heavy + unmissable (solid ink). Brass is
+   rare. Signature GuaranteeSpec ("fine print, printed big") in mono.
+   ===================================================================== */
+
+/* ---------- CTAButton (one heavy primary style site-wide) ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-body-semi);
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  padding: var(--space-4) var(--space-8);
+  border: var(--rule-thick) solid transparent;
+  border-radius: var(--radius-sm);
+  transition: transform var(--duration-fast) var(--ease-out),
+              background var(--duration-fast) var(--ease-out),
+              color var(--duration-fast) var(--ease-out),
+              border-color var(--duration-fast) var(--ease-out),
+              box-shadow var(--duration-fast) var(--ease-out);
+  cursor: pointer;
+  line-height: 1.1;
+  min-height: 44px; /* tap target */
+}
+.btn .btn__arrow, .btn span[aria-hidden] { transition: transform var(--duration-fast) var(--ease-out); }
+.btn:hover span[aria-hidden] { transform: translateX(3px); }
+
+.btn--primary {
+  position: relative; overflow: hidden; isolation: isolate;
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+/* hover fills the button with a sweep from the left rather than an instant
+   color swap; sits at z-index -1 so it slides in behind the label */
+.btn--primary::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: var(--dark);
+  transform: translateX(-100%);
+  transition: transform 150ms var(--ease-out);
+}
+.btn--primary:hover::before { transform: translateX(0); }
+.btn--primary:hover { border-color: var(--dark); color: var(--bg); text-decoration: none; }
+.btn__label { display: inline-block; transition: transform 150ms var(--ease-out); }
+.btn--primary:hover .btn__label { transform: translateY(-2px); }
+.btn--primary:hover span[aria-hidden] { transform: translate(3px, -2px); }
+.btn--ghost {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--line);
+}
+.btn--ghost:hover { border-color: var(--ink); text-decoration: none; }
+
+/* On dark sections: brass primary with ink text */
+.section--dark .btn--primary, .smcta .btn--primary { background: var(--accent-strong); border-color: var(--accent-strong); color: var(--ink); }
+.section--dark .btn--primary::before, .smcta .btn--primary::before { background: var(--bg); }
+.section--dark .btn--primary:hover, .smcta .btn--primary:hover { border-color: var(--bg); color: var(--ink); }
+.section--dark .btn--ghost { color: var(--dark-ink); border-color: var(--dark-line); }
+
+.btn--lg { font-size: var(--fs-lede); padding: var(--space-5) var(--space-10); }
+
+/* Pill CTA — fully rounded (new architecture: "one pill button") */
+.btn--pill { border-radius: 999px; }
+
+/* ---------- Sticky mobile CTA bar (global so it always loads) ---------- */
+/* Disabled: the bottom "Book a Call" bar is hidden on every screen. The nav CTA
+   ("Schedule Strategy Session") is the single CTA at all widths. */
+.smcta {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--z-sticky);
+  display: none; align-items: center;
+  padding: var(--space-3) var(--gutter);
+  padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
+  background: color-mix(in srgb, var(--cabinet) 96%, transparent);
+  border-top: var(--rule-thick) solid var(--brass);
+  /* hidden until scrolled past the hero (JS toggles data-show) */
+  transform: translateY(100%);
+  transition: transform var(--duration-base) var(--ease-out);
+}
+.smcta[data-show="true"] { transform: translateY(0); }
+.smcta .btn { flex: 1; justify-content: center; }
+/* desktop has the inline nav CTA, so the bar is mobile-only */
+@media (min-width: 56em) { .smcta { display: none; } }
+
+.cta-block { display: flex; flex-direction: column; gap: var(--space-3); align-items: flex-start; }
+.cta-block--center { align-items: center; text-align: center; }
+.cta-block__derisk { font-family: var(--font-body); font-size: var(--fs-caption); color: var(--ink-50); }
+.section--dark .cta-block__derisk { color: var(--paper-50); }
+
+/* ---------- Pricing card (shared — homepage pricing AND /apply's "which
+   option" question use this exact same card, so they never drift apart) ---------- */
+.pcard { position: relative; min-width: 0; background: var(--bg-raised); border: var(--rule-width) solid var(--line); border-radius: var(--radius-md); padding: clamp(var(--space-8), 4vw, var(--space-10)); display: flex; flex-direction: column; text-align: left; width: 100%; }
+.pcard--featured {
+  border-color: var(--accent); border-width: 2px;
+  animation: pcard-glow 3s var(--ease-io) infinite;
+}
+@keyframes pcard-glow {
+  0%, 100% { box-shadow: 0 30px 60px -30px rgba(26, 24, 20, 0.4), 0 0 16px -6px color-mix(in srgb, var(--accent) 25%, transparent); }
+  50%      { box-shadow: 0 30px 60px -30px rgba(26, 24, 20, 0.4), 0 0 26px 0px color-mix(in srgb, var(--accent) 45%, transparent); }
+}
+.pcard__tag { position: absolute; top: -0.8em; left: var(--space-8); background: var(--accent); color: var(--bg-raised); padding: 0.3em 0.9em; border-radius: 999px; font-size: var(--fs-caption); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps); }
+.pcard__name { font-size: var(--fs-body); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50); }
+.pcard__desc { margin-top: var(--space-2); font-family: var(--font-serif); font-size: var(--fs-body); line-height: 1.4; color: var(--ink-soft); }
+.pcard__price { margin-top: var(--space-4); font-family: var(--font-display); font-weight: var(--fw-display); font-size: clamp(3rem, 6vw, 4rem); line-height: 1; letter-spacing: -0.02em; display: flex; align-items: baseline; gap: var(--space-3); flex-wrap: wrap; }
+.pcard__qual { font-family: var(--font-body); font-size: var(--fs-body); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50); }
+.pcard__cta { margin-top: var(--space-8); justify-content: center; width: 100%; font-size: var(--fs-lede); padding: var(--space-5) var(--space-8); }
+.pcard__divider { margin: var(--space-6) 0; border: 0; border-top: var(--rule-width) solid var(--line); }
+.pcard__features { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-4); }
+.pcard__features li { position: relative; padding-left: var(--space-6); font-family: var(--font-serif); font-size: var(--fs-bodyL); line-height: 1.4; color: var(--ink); }
+.pcard__features li::before { content: ""; position: absolute; left: 0; top: 0.65em; width: 12px; height: 2px; background: var(--accent); }
+/* selectable variant: the whole card is a <button>, picked state matches
+   the site's other selectable cards (.bk-card.is-on) */
+button.pcard { cursor: pointer; font: inherit; color: inherit; appearance: none; -webkit-appearance: none; }
+button.pcard.is-on { border-color: var(--ink); }
+button.pcard.is-on.pcard--featured { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--bg-raised)); }
+.pcard__select { display: inline-flex; align-items: center; justify-content: center; margin-top: var(--space-8); width: 100%; padding: var(--space-5) var(--space-8); border-radius: var(--radius-sm); font-size: var(--fs-lede); font-weight: var(--fw-body-semi); background: var(--ink); color: var(--bg); }
+button.pcard.is-on .pcard__select { background: var(--accent-strong); color: var(--ink); }
+
+/* ---------- Nav ---------- */
+/* solid dark bar (via .section--dark) so it reads as one consistent color
+   at every scroll position, instead of a translucent/blurred bar picking up
+   whatever section happens to be scrolling underneath it */
+.nav {
+  position: sticky; top: 0; z-index: var(--z-nav);
+  background: var(--bg);
+  border-bottom: 1px solid transparent;
+  transition: border-color 200ms var(--ease-out), background 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
+}
+.nav[data-scrolled="true"] {
+  border-bottom-color: var(--line);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px -18px rgba(26, 24, 20, 0.25);
+}
+.nav__inner {
+  max-width: var(--container-wide);
+  margin-inline: auto;
+  padding: var(--space-4) var(--gutter);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-6);
+  transition: padding 200ms var(--ease-out);
+}
+.nav[data-scrolled="true"] .nav__inner { padding-block: var(--space-2); }
+.nav__logo {
+  display: inline-flex; flex-direction: column; justify-content: center; gap: 1px;
+  min-height: 44px; /* tap target */
+  color: var(--ink); text-decoration: none; line-height: 1;
+}
+.nav__logo-name {
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+.nav__logo-name span { color: var(--accent-deep); }
+.nav__logo-by {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  font-weight: var(--fw-body-semi);
+  color: var(--ink-soft);
+}
+.nav__links { list-style: none; margin: 0; padding: 0; }
+.nav__links a { color: var(--ink-soft); text-decoration: none; font-size: var(--fs-body); font-weight: var(--fw-body-medium); }
+.nav__links a:hover, .nav__links a[aria-current="page"] { color: var(--ink); }
+/* the Book link is a solid btn--primary, not a plain nav link — it must
+   keep its own light-on-dark text regardless of the rule above */
+.nav__links a.nav__book, .nav__links a.nav__book:hover { color: var(--bg); }
+
+/* logo + CTA are tap-target sized and always present */
+.nav__actions { display: flex; align-items: center; gap: var(--space-3); }
+.nav__cta { display: inline-flex; white-space: nowrap; }
+/* responsive CTA label: full phrase on desktop/tablet, compact on small phones
+   so the long single-CTA phrase never wraps or crowds the logo */
+.nav__cta-mini { display: none; }
+.nav__cta-full { display: inline; }
+@media (max-width: 34em) {
+  .nav__cta-full { display: none; }
+  .nav__cta-mini { display: inline; }
+  .nav__cta { padding: 10px 16px; font-size: 13px; min-height: 44px; }
+  .nav__logo-name { font-size: 1.05rem; }
+  .nav__actions { gap: var(--space-2); }
+}
+
+/* Done For You (mobile): keep the header CTA hidden over the hero/video, then
+   reveal it once the visitor scrolls to the "why this works" section (JS adds
+   .nav--cta-on). Desktop is unaffected — the CTA shows normally there. */
+@media (max-width: 55.99em) {
+  .nav--cta-scroll .nav__cta {
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transform: translateY(-6px);
+    transition: opacity var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out), visibility var(--duration-fast);
+  }
+  .nav--cta-scroll.nav--cta-on .nav__cta {
+    opacity: 1; visibility: visible; pointer-events: auto; transform: none;
+  }
+}
+
+/* hamburger — mobile only, reveals the secondary links (never the CTA) */
+.nav__toggle {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; padding: 0;
+  background: transparent; border: 0; color: var(--ink); cursor: pointer;
+}
+.nav__toggle-box { position: relative; }
+.nav__toggle-box, .nav__toggle-box::before, .nav__toggle-box::after {
+  display: block; width: 22px; height: 2px; background: currentColor; border-radius: 2px;
+  transition: transform var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out);
+}
+.nav__toggle-box::before, .nav__toggle-box::after { content: ""; position: absolute; left: 0; }
+.nav__toggle-box::before { top: -7px; }
+.nav__toggle-box::after { top: 7px; }
+.nav.is-open .nav__toggle-box { background: transparent; }
+.nav.is-open .nav__toggle-box::before { transform: translateY(7px) rotate(45deg); }
+.nav.is-open .nav__toggle-box::after { transform: translateY(-7px) rotate(-45deg); }
+
+/* mobile: links collapse into a solid dropdown panel under the bar */
+@media (max-width: 55.99em) {
+  /* drop the "by FlipFix Digital" tagline on the small navbar — keep just the wordmark */
+  .nav__logo-by { display: none; }
+  /* tighten the bar so logo + CTA + hamburger always fit (the empty centered
+     menu would otherwise reserve two wide gaps and push the hamburger off-screen).
+     space-between still spaces the logo and actions apart when there's room. */
+  .nav__inner { gap: 0; }
+  /* .nav__menu drops out of the flex box entirely (its child .nav__links is
+     already position:absolute for the dropdown) — otherwise it still counts
+     as a 3rd flex item, and space-between reserves a symmetric gap AFTER the
+     toggle for it, leaving the toggle stranded mid-bar instead of flush right. */
+  .nav__menu { display: contents; }
+  .nav__links {
+    position: absolute; top: 100%; left: 0; right: 0;
+    display: none; flex-direction: column;
+    background: var(--bg);
+    border-bottom: var(--rule-thick) solid var(--line);
+    box-shadow: 0 14px 26px -18px rgba(26, 24, 20, 0.5);
+    padding: var(--space-2) var(--gutter) var(--space-3);
+  }
+  .nav.is-open .nav__links { display: flex; }
+  .nav__links a { display: flex; align-items: center; min-height: 44px; border-top: 1px solid var(--line); }
+  .nav__links li:first-child a { border-top: 0; }
+}
+
+/* desktop: links inline, no hamburger */
+@media (min-width: 56em) {
+  /* the whole cluster (logo + links) centers together as one group in the
+     bar, rather than the logo pinning left and the links centering only in
+     the leftover space */
+  .nav__inner { justify-content: center; gap: var(--space-10); }
+  .nav__menu { display: flex; justify-content: center; }
+  .nav__links { display: flex; flex-direction: row; align-items: center; gap: var(--space-6); }
+  .nav__toggle { display: none; }
+}
+
+/* ---------- Footer ---------- */
+.footer { background: var(--dark); color: var(--dark-soft); padding-block: var(--space-12); }
+.footer__inner { max-width: var(--container-standard); margin-inline: auto; padding-inline: var(--gutter); display: grid; gap: var(--space-8); }
+.footer__top { display: flex; flex-wrap: wrap; gap: var(--space-8) var(--space-16); justify-content: space-between; }
+.footer__brand { font-family: var(--font-display); font-weight: var(--fw-display); text-transform: uppercase; color: var(--dark-ink); font-size: 1.3rem; }
+.footer__brand span { color: var(--accent-strong); }
+.footer__cols { display: flex; flex-wrap: wrap; gap: var(--space-12); }
+.footer__col h4 { color: var(--paper-50); font-size: var(--fs-eyebrow); letter-spacing: var(--tracking-caps); text-transform: uppercase; margin-bottom: var(--space-3); }
+.footer__col a { display: block; color: var(--dark-soft); text-decoration: none; font-size: var(--fs-body); padding-block: var(--space-1); }
+.footer__col a:hover { color: var(--dark-ink); }
+.footer__legal { border-top: 1px solid var(--dark-line); padding-top: var(--space-5); display: flex; flex-wrap: wrap; gap: var(--space-4); justify-content: space-between; font-size: var(--fs-caption); color: var(--paper-50); }
+.footer__legal a { color: var(--dark-soft); }
+
+/* NKBA / membership badge slot */
+.badge-slot {
+  display: inline-flex; align-items: center; gap: var(--space-3);
+  border: 1px dashed var(--dark-line); border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4); color: var(--paper-50);
+  font-family: var(--font-mono); font-size: var(--fs-small);
+}
+
+/* ---------- Forms ---------- */
+.field { display: flex; flex-direction: column; gap: var(--space-2); }
+.field label { font-size: var(--fs-body); font-weight: var(--fw-body-semi); }
+.field input, .field select, .field textarea {
+  padding: var(--space-4);
+  border: var(--rule-width) solid var(--line);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  font-size: var(--fs-body);
+}
+.field input:focus-visible, .field select:focus-visible, .field textarea:focus-visible { border-color: var(--ink); outline-offset: 0; }
+.honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* ---------- GuaranteeSpec — THE SIGNATURE ("fine print, printed big") ---------- */
+.gspec {
+  background: var(--bg-raised);
+  border: var(--rule-thick) solid var(--ink);
+  border-radius: var(--radius-sm);
+  box-shadow: 6px 6px 0 var(--rule-soft);
+  overflow: hidden;
+}
+.gspec__header {
+  background: var(--dark);
+  color: var(--dark-ink);
+  padding: var(--space-5) var(--space-6);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+  flex-wrap: wrap;
+}
+.gspec__stamp {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+  font-size: var(--fs-eyebrow);
+  color: var(--accent-strong);
+  border: 1px solid var(--accent-strong);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+}
+.gspec__title {
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  text-transform: uppercase;
+  font-size: var(--fs-h3);
+  line-height: 1; letter-spacing: -0.01em;
+  color: var(--dark-ink); /* the header strip is --dark; keep the title light, not the global h3 ink */
+}
+.gspec__body { padding: var(--space-6); }
+.gspec__conditions { list-style: none; padding: 0; margin: 0; counter-reset: cond; }
+.gspec__conditions > li {
+  counter-increment: cond;
+  display: grid; grid-template-columns: auto 1fr; gap: var(--space-4); align-items: start;
+  padding: var(--space-5) 0;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: var(--fs-lede);
+  line-height: var(--lh-snug);
+}
+.gspec__conditions > li:first-child { border-top: 0; }
+.gspec__conditions > li::before {
+  content: counter(cond, decimal-leading-zero);
+  font-family: var(--font-display); font-weight: var(--fw-display);
+  font-size: var(--fs-h3); color: var(--accent); line-height: 0.9;
+}
+.gspec__foot {
+  padding: var(--space-5) var(--space-6);
+  border-top: var(--rule-thick) dashed var(--line);
+  font-family: var(--font-mono); font-size: var(--fs-mono); font-style: italic; color: var(--ink-soft);
+  overflow-x: auto;
+}
+
+/* ---------- placeholder flag (clearly marked; never fabricated content) ---------- */
+.placeholder {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  color: var(--warn);
+  background: color-mix(in srgb, var(--warn) 8%, transparent);
+  border: 1px dashed var(--warn);
+  padding: 0.1em 0.5em; border-radius: var(--radius-sm);
+}

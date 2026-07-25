@@ -1,0 +1,43 @@
+---
+/* /thank-you — confirmation + pre-call homework (structure spec: "The Thank
+   You Page"). Reached after a time is booked on /apply. Setting homework here
+   raises show rates and opens the call with data instead of small talk. */
+import BareLayout from '../layouts/BareLayout.astro';
+import { site } from '../data/site.config';
+---
+<BareLayout
+  title="Booked — see you on the call"
+  description="You're on the calendar. One thing to do before we speak."
+  noindex={true}
+>
+  <section class="section ty">
+    <div class="container container--narrow ty__inner">
+      <p class="eyebrow">You’re on the calendar</p>
+      <h1 class="ty__h1">Booked.</h1>
+      <p class="ty__lead">Check your email for the time and the call link.</p>
+
+      <div class="ty__homework">
+        <h2 class="ty__hw-h">Before we speak, do one thing.</h2>
+        <p>Open Shopify Analytics, set it to the last 30 days, and screenshot it. Sessions, conversion rate, and AOV. Bring that to the call.</p>
+        <p class="ty__hw-note">The whole call is {site.callLengthMinutes} minutes and it’s built around your numbers, not my portfolio.</p>
+      </div>
+
+      <p class="ty__sig">See you then.<br />— {site.founder}</p>
+    </div>
+  </section>
+</BareLayout>
+
+<style>
+  .ty { padding-block: clamp(var(--space-12), 16vh, 18vh) var(--space-16); }
+  .ty__h1 { margin-top: var(--space-3); font-size: var(--fs-hero); }
+  .ty__lead { margin-top: var(--space-5); font-family: var(--font-serif); font-size: var(--fs-bodyL); color: var(--ink); }
+  .ty__homework {
+    margin-top: var(--space-10); padding: var(--space-8);
+    background: var(--bg-raised); border: var(--rule-thick) solid var(--ink);
+    border-radius: var(--radius-sm); box-shadow: 6px 6px 0 var(--rule-soft);
+  }
+  .ty__hw-h { font-size: var(--fs-h3); }
+  .ty__homework p { margin-top: var(--space-4); font-family: var(--font-serif); font-size: var(--fs-bodyL); line-height: 1.7; color: var(--ink); }
+  .ty__hw-note { font-style: italic; color: var(--ink-soft) !important; }
+  .ty__sig { margin-top: var(--space-8); font-family: var(--font-display); font-weight: var(--fw-display); font-size: var(--fs-h4); color: var(--ink); }
+</style>

@@ -1,0 +1,606 @@
+---
+/* /apply — a PROGRESSIVE, single-step-at-a-time form (ported from an
+   earlier project's /book.astro: same mechanics and CSS, `bk-` classes
+   kept as-is). Only the current question is ever visible — answering it
+   swaps the next one into the same spot, like a page turn. It's a SINGLE
+   <form>; values live in the DOM and persist to sessionStorage so nothing
+   is lost. On submit the lead fires to Web3Forms and the Calendly
+   calendar takes over the same spot; a booked time shows the confirmation.
+   Exactly 3 questions: monthly revenue (no gate — every band goes through),
+   which offer (shared pricing cards, same as the homepage), then contact
+   details → calendar. */
+import BareLayout from '../layouts/BareLayout.astro';
+import { site } from '../data/site.config';
+import { priceCards } from '../data/pricing';
+
+const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k', '$100k–$200k', '$200k+'];
+---
+<BareLayout
+  title="Apply — Get your build in 14 days"
+  description="A two-minute application. If you're a fit, I'll send you a teardown of your current site before we even speak."
+  noindex={true}
+>
+  <div data-book-flow>
+    <section class="section bk-funnel">
+      <div class="container container--narrow">
+
+        <header class="bk-intro">
+          <h1 class="bk-intro__h1">Let’s see if we’re a good fit.</h1>
+        </header>
+
+        <form class="bk-form" data-book-form novalidate>
+
+          <!-- Q1 — REVENUE (no gate — every band moves the form forward) -->
+          <fieldset class="bk-step" data-step>
+            <p class="bk-count">1/3</p>
+            <h2 class="bk-q">How much monthly revenue does your ecommerce business do?</h2>
+            <div class="bk-field" data-field="revenue">
+              <div class="bk-cards bk-cards--row" data-name="revenue" data-radio>
+                {revenueBands.map((b) => <button type="button" class="bk-card" data-value={b}>{b}</button>)}
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Q2 — WHICH OFFER -->
+          <fieldset class="bk-step" data-step hidden>
+            <button type="button" class="bk-back" data-back><span aria-hidden="true">←</span> Back</button>
+            <p class="bk-count">2/3</p>
+            <h2 class="bk-q">Which option are you interested in?</h2>
+            <div class="bk-field" data-field="interest">
+              <div class="bk-choice" data-name="interest" data-radio>
+                {priceCards.map((c) => (
+                  <button type="button" class:list={['bk-card', 'bk-offer', { 'bk-offer--featured': c.featured }]} data-value={c.name}>
+                    <span class="bk-offer__top">
+                      <span class="bk-offer__name mono">{c.name}</span>
+                      {c.featured && <span class="bk-offer__badge mono">Most booked</span>}
+                    </span>
+                    <span class="bk-offer__price">{c.price}<span class="bk-offer__qual">{c.qualifier}</span></span>
+                    <span class="bk-offer__desc">{c.description}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Q3 — NAME + EMAIL + PHONE → submit -->
+          <fieldset class="bk-step" data-step hidden>
+            <button type="button" class="bk-back" data-back><span aria-hidden="true">←</span> Back</button>
+            <p class="bk-count">3/3</p>
+            <h2 class="bk-q">Last thing. How can I reach you?</h2>
+            <div class="bk-fields">
+              <div class="bk-field" data-field="fullName">
+                <label class="bk-label" for="bk-fullName">Full name</label>
+                <input class="bk-input" id="bk-fullName" name="fullName" type="text" autocomplete="name" placeholder="Your full name" required />
+              </div>
+              <div class="bk-field" data-field="email">
+                <label class="bk-label" for="bk-email">Email</label>
+                <input class="bk-input" id="bk-email" name="email" type="email" autocomplete="email" placeholder="you@brand.com" required />
+              </div>
+              <div class="bk-field" data-field="phone">
+                <label class="bk-label" for="bk-phone">Phone</label>
+                <input class="bk-input" id="bk-phone" name="phone" type="tel" autocomplete="tel" placeholder="(555) 555-5555" required />
+              </div>
+            </div>
+            <div class="bk-nav"><button type="button" class="btn btn--primary btn--lg" data-submit>{site.cta.label} <span aria-hidden="true">→</span></button></div>
+            <p class="bk-form__status mono" data-book-status hidden></p>
+          </fieldset>
+
+          <!-- honeypot. A CHECKBOX, not a text input — autofill/password managers
+               fill text fields, never checkboxes, so only a bot ticking every
+               input gets caught here. -->
+          <div class="honeypot" aria-hidden="true">
+            <input id="hp-confirm" name="hp_confirm" type="checkbox" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          </div>
+        </form>
+
+        <!-- CALENDAR — revealed beneath the answers once the form is submitted -->
+        <div class="bk-step bk-step--cal" data-step="cal" hidden>
+          <h2 class="bk-cal__h">Got your details. Pick a time that works.</h2>
+          <p class="bk-cal__note">The call is {site.callLengthMinutes} minutes, built around your numbers.</p>
+          <div class="bk-cal__widget" data-calendly></div>
+          <a class="bk-cal__direct" href={site.bookingUrl} target="_blank" rel="noopener">Calendar not loading? Open it in a new tab →</a>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+  <!-- CONFIRMATION (after Calendly schedules) -->
+  <section class="section bk-done" data-book-done hidden>
+    <div class="container container--narrow">
+      <p class="eyebrow">You’re on the books</p>
+      <h2 class="bk-done__h">You’re on the books.</h2>
+      <p class="bk-done__p">Check your email for the time and the call link. Before we talk, I’ll dig into your store so we don’t waste a minute playing catch-up.</p>
+      <p class="bk-done__sig">See you then.<br />— {site.founder}</p>
+    </div>
+  </section>
+</BareLayout>
+
+<script>
+  import { site } from '../data/site.config';
+  import { pulseId, pulseSource, pulseSend } from '../utils/pulse.js';
+  const bookingUrl = site.bookingUrl;
+  const web3Key = site.web3formsKey;
+
+  const form = document.querySelector<HTMLFormElement>('[data-book-form]');
+  const flow = document.querySelector<HTMLElement>('[data-book-flow]');
+  const done = document.querySelector<HTMLElement>('[data-book-done]');
+  const calStep = document.querySelector<HTMLElement>('[data-step="cal"]');
+
+  // text answers live in the DOM; single-choice cards are tracked here too
+  const answers: Record<string, string> = {};
+
+  if (form) {
+    const steps = Array.from(form.querySelectorAll<HTMLElement>('[data-step]'));
+    let current = 0;
+
+    const emailOk = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+
+    // ---- visible validation (shows messages + shakes) ----
+    const fieldWrap = (name: string) => form.querySelector<HTMLElement>(`[data-field="${name}"]`);
+    function showErr(name: string, msg: string) {
+      const wrap = fieldWrap(name);
+      if (!wrap) return;
+      wrap.classList.add('bk-field--err');
+      let m = wrap.querySelector<HTMLElement>('.bk-err');
+      if (!m) { m = document.createElement('p'); m.className = 'bk-err'; m.setAttribute('role', 'alert'); wrap.appendChild(m); }
+      m.textContent = msg;
+    }
+    function clearErr(name: string) {
+      const wrap = fieldWrap(name);
+      if (!wrap) return;
+      wrap.classList.remove('bk-field--err');
+      wrap.querySelector('.bk-err')?.remove();
+    }
+    const shake = (step: HTMLElement) => { step.classList.remove('bk-step--err'); void step.offsetWidth; step.classList.add('bk-step--err'); };
+
+    const validStep = (step: HTMLElement) => {
+      let ok = true;
+      step.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input[name], textarea[name]').forEach((f) => {
+        if (f.name === 'hp_confirm' || !f.required) return;
+        const name = (f.closest('[data-field]') as HTMLElement)?.dataset.field || f.name;
+        if (!f.value.trim()) { showErr(name, 'Please fill this in to continue.'); ok = false; }
+        else if ((f as HTMLInputElement).type === 'email' && !emailOk(f.value)) { showErr(name, 'That email doesn’t look right.'); ok = false; }
+        else clearErr(name);
+      });
+      step.querySelectorAll<HTMLElement>('[data-radio]').forEach((g) => {
+        const name = g.dataset.name!;
+        if (!g.querySelector('.is-on')) { showErr(name, 'Pick an option to continue.'); ok = false; }
+        else clearErr(name);
+      });
+      if (!ok) shake(step);
+      return ok;
+    };
+
+    const stepValid = (step: HTMLElement) => {
+      let ok = true;
+      step.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input[name], textarea[name]').forEach((f) => {
+        if (f.name === 'hp_confirm' || !f.required) return;
+        if (!f.value.trim()) ok = false;
+        else if ((f as HTMLInputElement).type === 'email' && !emailOk(f.value)) ok = false;
+      });
+      step.querySelectorAll<HTMLElement>('[data-radio]').forEach((g) => { if (!g.querySelector('.is-on')) ok = false; });
+      return ok;
+    };
+
+    // ---- persistence: never lose answers between reveals or on reload ----
+    const STORE = 'ff_apply_v1';
+    const collectAll = () => {
+      form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input[name], textarea[name]').forEach((f) => {
+        if (f.name === 'hp_confirm') return;
+        if ((f as HTMLInputElement).type === 'radio' || (f as HTMLInputElement).type === 'checkbox') return;
+        answers[f.name] = f.value.trim();
+      });
+    };
+    const persist = () => { try { collectAll(); sessionStorage.setItem(STORE, JSON.stringify(answers)); } catch { /* ignore */ } };
+    const restore = () => {
+      let saved: Record<string, string> = {};
+      try { saved = JSON.parse(sessionStorage.getItem(STORE) || '{}'); } catch { return; }
+      Object.assign(answers, saved);
+      Object.entries(saved).forEach(([k, v]) => {
+        const el = form.querySelector<HTMLInputElement | HTMLTextAreaElement>(`[name="${k}"]`);
+        if (el && typeof v === 'string') el.value = v;
+      });
+      form.querySelectorAll<HTMLElement>('[data-radio]').forEach((g) => {
+        const val = saved[g.dataset.name!];
+        if (val) g.querySelectorAll<HTMLElement>('.bk-card').forEach((c) => c.classList.toggle('is-on', c.dataset.value === val));
+      });
+    };
+    // Re-commit each field's value to itself so an AUTOFILLED value is a real,
+    // materialised DOM value before we read it for validation/submit.
+    const commitFields = () => {
+      collectAll();
+      Object.entries(answers).forEach(([k, v]) => {
+        const el = form.querySelector<HTMLInputElement | HTMLTextAreaElement>(`[name="${k}"]`);
+        if (el) el.value = v;
+      });
+    };
+
+    // ---- wizard reveal: only the CURRENT step is ever visible — answering
+    //      one swaps the next into the same spot, like a page turn ----
+    const reveal = (n: number, scroll = false) => {
+      current = Math.max(0, Math.min(steps.length - 1, n));
+      steps.forEach((s, idx) => {
+        s.hidden = idx !== current;
+        s.classList.toggle('is-current', idx === current);
+      });
+      const step = steps[current];
+      if (scroll) {
+        step.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const focusable = step.querySelector<HTMLElement>('input:not([type=hidden]), textarea');
+        requestAnimationFrame(() => focusable?.focus());
+      }
+    };
+    const advance = () => {
+      if (current < steps.length - 1) reveal(current + 1, true);
+      setStage(stageForCurrent());
+    };
+
+    const showCalendar = () => {
+      steps.forEach((s) => { s.classList.remove('is-current'); s.hidden = true; });
+      if (calStep) {
+        calStep.hidden = false;
+        initCalendly();
+        calStep.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    };
+
+    // ---- booking pulse: report how far each visitor gets, so drop-offs email
+    //      Shane and the /pulse dashboard shows the funnel. Stage only moves
+    //      forward; the beacon carries whatever they've filled in so far. ----
+    const nowMs = () => Date.now();
+    const PULSE = { id: pulseId(), stage: 'landed', landedAt: nowMs(), stageTimes: {} as Record<string, number>, ...pulseSource() };
+    const PSTAGES = ['landed', 'revenue', 'offer', 'details', 'calendar', 'booked'];
+    const prank = (s: string) => PSTAGES.indexOf(s);
+    PULSE.stageTimes.landed = PULSE.landedAt; // stamp the landing as the first stage time
+    const pulsePayload = (final: boolean) => {
+      collectAll();
+      return {
+        id: PULSE.id, stage: PULSE.stage,
+        revenue: answers.revenue || '',
+        interest: answers.interest || '',
+        fullName: answers.fullName || '',
+        email: answers.email || '',
+        phone: answers.phone || '',
+        source: PULSE.source, referrer: PULSE.referrer, query: PULSE.query,
+        utmSource: PULSE.utmSource, utmMedium: PULSE.utmMedium, utmCampaign: PULSE.utmCampaign,
+        utmContent: PULSE.utmContent, utmTerm: PULSE.utmTerm, gclid: PULSE.gclid, fbclid: PULSE.fbclid,
+        stageTimes: PULSE.stageTimes,
+        landedAt: PULSE.landedAt, final: !!final,
+      };
+    };
+    // Advance the stage (never backward) and beacon. Repeats at the same stage
+    // are dropped unless it's the "leaving" (final) ping. The first time a stage
+    // is reached we stamp its timestamp, so /pulse can show the time to each step.
+    const setStage = (s: string, final = false) => {
+      const up = prank(s) > prank(PULSE.stage);
+      if (up) {
+        PULSE.stage = s;
+        if (!PULSE.stageTimes[s]) PULSE.stageTimes[s] = nowMs();
+      }
+      if (up || final) pulseSend(pulsePayload(final), final);
+    };
+    // Furthest step → stage. Q1 revenue · Q2 interest (offer) · Q3 details → calendar → booked.
+    const stageForCurrent = () =>
+      current >= 2 ? 'details' : current >= 1 ? 'offer'
+      : (answers.revenue ? 'revenue' : 'landed');
+
+    // Fire the "started applying" signal once, the moment revenue is picked —
+    // marks top-of-funnel intent even if they never finish.
+    const STARTED_KEY = 'ff_apply_started_v1';
+    let startedFired = false;
+    try { if (sessionStorage.getItem(STARTED_KEY)) startedFired = true; } catch { /* ignore */ }
+    const fireStarted = () => {
+      if (startedFired) return;
+      startedFired = true;
+      try { sessionStorage.setItem(STARTED_KEY, '1'); } catch { /* ignore */ }
+      (window as any).kwTrack?.('ApplyStarted');
+    };
+
+    // single-choice cards
+    form.querySelectorAll<HTMLElement>('[data-radio]').forEach((group) => {
+      group.querySelectorAll<HTMLButtonElement>('.bk-card').forEach((card) => {
+        card.addEventListener('click', () => {
+          group.querySelectorAll('.bk-card').forEach((c) => c.classList.remove('is-on'));
+          card.classList.add('is-on');
+          answers[group.dataset.name!] = card.dataset.value!;
+          clearErr(group.dataset.name!);
+          persist();
+          setStage(stageForCurrent()); // picking revenue flips landed → revenue
+          if (group.dataset.name === 'revenue') fireStarted();
+          maybeAutoAdvance(card);
+        });
+      });
+    });
+
+    // Auto-advance: once a pick completes a choice-only step, move on without
+    // a Continue click. Skips steps with a typed field, and
+    // the final (submit) step.
+    const maybeAutoAdvance = (card: HTMLElement) => {
+      const step = card.closest('[data-step]') as HTMLElement | null;
+      if (!step || step !== steps[current]) return;
+      if (step.querySelector('input[required], textarea[required]')) return;
+      if (step.querySelector('[data-submit]')) return;
+      const groups = Array.from(step.querySelectorAll<HTMLElement>('[data-radio]'));
+      if (!groups.every((g) => g.querySelector('.is-on'))) return;
+      setTimeout(() => { if (steps[current] === step && validStep(step)) advance(); }, 280);
+    };
+
+    // clear error + persist as the user types OR autofills
+    form.querySelectorAll<HTMLInputElement>('input[name], textarea[name]').forEach((f) => {
+      const onEdit = () => {
+        clearErr((f.closest('[data-field]') as HTMLElement)?.dataset.field || f.name);
+        persist();
+      };
+      f.addEventListener('input', onEdit);
+      f.addEventListener('change', onEdit);
+    });
+
+    // Send the qualified lead to Web3Forms — fires on completion.
+    let leadSent = false;
+    const sendLead = () => {
+      if (leadSent) return;
+      leadSent = true;
+      collectAll();
+      const fd = new FormData();
+      fd.append('access_key', web3Key);
+      fd.append('from_name', site.brand);
+      if (answers.email) fd.append('replyto', answers.email);
+      fd.append('subject', `🛒 Build application — ${answers.fullName || 'new lead'} · ${answers.revenue} · ${answers.interest}`);
+      fd.append('Name', answers.fullName || '');
+      fd.append('Email', answers.email || '');
+      fd.append('Phone', answers.phone || '');
+      fd.append('Monthly revenue', answers.revenue || '');
+      fd.append('Interested in', answers.interest || '');
+      if (window.location.search) fd.append('Query params', window.location.search);
+      if (document.referrer) fd.append('Referrer', document.referrer);
+      fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd }).catch(() => { /* best-effort */ });
+    };
+
+    let leadFired = false;
+    const doSubmit = () => {
+      const last = steps[steps.length - 1];
+      if (!validStep(last)) return;
+      if (form.querySelector<HTMLInputElement>('[name="hp_confirm"]')?.checked) return; // honeypot
+      collectAll();
+      if (!leadFired) {
+        leadFired = true;
+        sendLead();
+        (window as any).kwTrack?.('LeadQualified', { via: 'apply' });
+        (window as any).fbq?.('track', 'Lead');
+      }
+      setStage('calendar');
+      showCalendar();
+    };
+
+    // safety net: if the flow is ever interrupted, reset cleanly from the top
+    const bail = (msg: string) => {
+      try { sessionStorage.removeItem(STORE); } catch { /* ignore */ }
+      Object.keys(answers).forEach((k) => delete answers[k]);
+      try { form.reset(); } catch { /* ignore */ }
+      form.querySelectorAll('.bk-field--err').forEach((el) => el.classList.remove('bk-field--err'));
+      form.querySelectorAll('.bk-err').forEach((el) => el.remove());
+      form.querySelectorAll('.bk-card.is-on').forEach((el) => el.classList.remove('is-on'));
+      if (calStep) calStep.hidden = true;
+      reveal(0);
+      window.alert(msg);
+    };
+    const INTERRUPT_MSG = 'Something interrupted the form, so we’ve reset it. Mind starting over? It only takes a minute.';
+
+    form.addEventListener('click', (e) => {
+      try {
+        const t = e.target as HTMLElement;
+        if (t.closest('[data-back]')) { if (current > 0) reveal(current - 1, true); }
+        else if (t.closest('[data-next]')) { commitFields(); if (validStep(steps[current])) advance(); }
+        else if (t.closest('[data-submit]')) { commitFields(); doSubmit(); }
+      } catch (err) { console.error('[apply] form interrupted:', err); bail(INTERRUPT_MSG); }
+    });
+
+    form.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter') return;
+      if ((e.target as HTMLElement).tagName === 'TEXTAREA') return;
+      e.preventDefault();
+      try {
+        const step = steps[current];
+        commitFields();
+        if (step.querySelector('[data-submit]')) doSubmit();
+        else if (validStep(step)) advance();
+      } catch (err) { console.error('[apply] form interrupted:', err); bail(INTERRUPT_MSG); }
+    });
+
+    // hard safety net: the form can never natively submit (which would reload it)
+    form.addEventListener('submit', (e) => { e.preventDefault(); });
+
+    // Prefill for Calendly, read live from what they just entered.
+    const calendlyPrefill = () => {
+      collectAll();
+      const customAnswers: Record<string, string> = {};
+      if (answers.revenue) customAnswers.a1 = answers.revenue;
+      if (answers.interest) customAnswers.a2 = answers.interest;
+      return {
+        name: answers.fullName || '',
+        email: answers.email || '',
+        ...(answers.phone ? { customAnswers: { ...customAnswers, a3: answers.phone } } : { customAnswers }),
+      };
+    };
+    const syncDirectLink = () => {
+      const link = document.querySelector<HTMLAnchorElement>('.bk-cal__direct');
+      if (!link) return;
+      const p = calendlyPrefill();
+      const qs = new URLSearchParams();
+      if (p.name) qs.set('name', p.name);
+      if (p.email) qs.set('email', p.email);
+      Object.entries(p.customAnswers).forEach(([k, v]) => qs.set(k, v as string));
+      const base = bookingUrl.split('?')[0];
+      link.href = qs.toString() ? `${base}?${qs.toString()}` : bookingUrl;
+    };
+
+    // ---- Calendly inline embed (loaded lazily when the calendar reveals) ----
+    // Calendly's widget script is the slowest part of this whole flow, so
+    // start fetching it the moment the page loads — while they're still
+    // answering questions — instead of waiting until they reach the
+    // calendar step. initInlineWidget() itself still only runs once the
+    // step is visible (Calendly sizes off the container's real width).
+    let calendlyAssets: Promise<void> | null = null;
+    function loadCalendlyAssets(): Promise<void> {
+      if (calendlyAssets) return calendlyAssets;
+      calendlyAssets = new Promise((resolve) => {
+        const w = window as any;
+        if (w.Calendly) { resolve(); return; }
+        if (!document.querySelector('link[data-calendly-css]')) {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = 'https://assets.calendly.com/assets/external/widget.css';
+          link.setAttribute('data-calendly-css', '');
+          document.head.appendChild(link);
+        }
+        const s = document.createElement('script');
+        s.src = 'https://assets.calendly.com/assets/external/widget.js';
+        s.async = true;
+        s.onload = () => resolve();
+        document.body.appendChild(s);
+      });
+      return calendlyAssets;
+    }
+
+    function initCalendly() {
+      const host = document.querySelector<HTMLElement>('[data-calendly]');
+      if (!host || host.dataset.ready) return;
+      syncDirectLink();
+      loadCalendlyAssets().then(() => {
+        const w = window as any;
+        if (!w.Calendly || host.dataset.ready) return;
+        host.dataset.ready = '1';
+        w.Calendly.initInlineWidget({ url: bookingUrl, parentElement: host, prefill: calendlyPrefill() });
+      });
+    }
+
+    // fire the preload immediately, off the critical path
+    loadCalendlyAssets();
+
+    window.addEventListener('message', (e) => {
+      const data = (e.data as any);
+      if (data?.event === 'calendly.page_height' && data.payload?.height) {
+        const host = document.querySelector<HTMLElement>('[data-calendly]');
+        if (host) host.style.height = data.payload.height;
+        return;
+      }
+      if (data?.event === 'calendly.event_scheduled') {
+        (window as any).kwTrack?.('CallBooked', { via: 'apply' });
+        (window as any).fbq?.('track', 'CallBooked');
+        setStage('booked', true);
+        try { sessionStorage.removeItem(STORE); } catch { /* ignore */ }
+        if (flow) flow.hidden = true;
+        if (done) done.hidden = false;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+
+    // ---- boot ----
+    restore();
+    reveal(0);
+    while (current < steps.length - 1 && stepValid(steps[current])) reveal(current + 1);
+
+    // booking pulse: first ping (landed, or resumed further), then report as
+    // they leave. visibilitychange keeps the dashboard fresh; pagehide is the
+    // real exit and is what may trigger the drop-off email.
+    PULSE.stage = stageForCurrent();
+    pulseSend(pulsePayload(false));
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') pulseSend(pulsePayload(false));
+    });
+    window.addEventListener('pagehide', () => pulseSend(pulsePayload(true), true));
+  }
+</script>
+
+<style>
+  /* start the first screen lower so the headline + first question sit nearer
+     the middle on load; the form still grows and scrolls normally below it */
+  .bk-funnel { padding-block: clamp(var(--space-8), 15vh, 18vh) var(--space-16); }
+
+  .bk-intro { text-align: center; max-width: 52rem; margin-inline: auto; }
+  .bk-intro__h1 { font-size: var(--fs-h2); text-wrap: balance; }
+
+  .bk-form { margin-top: var(--space-8); text-align: center; }
+  .bk-step { border: 0; padding: 0; margin: 0; animation: bk-in 320ms cubic-bezier(.2,.7,.2,1); }
+  .bk-step--cal { margin-top: var(--space-10); padding-top: var(--space-10); border-top: 1px solid var(--line); }
+  @keyframes bk-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .bk-step--err { animation: bk-shake 320ms; }
+  @keyframes bk-shake { 10%,90%{transform:translateX(-1px)} 30%,70%{transform:translateX(3px)} 50%{transform:translateX(-4px)} }
+
+  .bk-count { font-family: var(--font-mono); font-size: var(--fs-caption); font-weight: var(--fw-body-semi); letter-spacing: 0.05em; color: var(--ink-50); margin-bottom: var(--space-2); }
+  .bk-back { display: inline-flex; align-items: center; gap: 5px; margin-bottom: var(--space-3); background: none; border: 0; padding: var(--space-1) var(--space-2); font-family: var(--font-body); font-size: var(--fs-body-sm, var(--fs-caption)); font-weight: var(--fw-body-semi); color: var(--ink-50); cursor: pointer; transition: color 120ms; }
+  .bk-back:hover { color: var(--ink); }
+  .bk-step:not(.is-current) .bk-back { display: none; }
+  .bk-q { font-size: var(--fs-h4); line-height: 1.3; max-width: 40ch; margin-inline: auto; }
+
+  .bk-input { margin: var(--space-5) auto 0; width: 100%; max-width: 32rem; font-family: var(--font-body); font-size: var(--fs-bodyL); padding: var(--space-4); border: var(--rule-thick) solid var(--line); border-radius: var(--radius-sm); background: #fff; color: var(--ink); }
+  .bk-input:focus-visible { outline: none; border-color: var(--ink); }
+
+  .bk-fields { margin: var(--space-5) auto 0; display: grid; gap: var(--space-4); max-width: 32rem; text-align: left; }
+  .bk-field { display: block; }
+  .bk-label { display: block; font-family: var(--font-body); font-size: var(--fs-body-sm, var(--fs-caption)); font-weight: var(--fw-body-semi); color: var(--ink-70); margin-bottom: var(--space-2); }
+  .bk-fields .bk-input { margin-top: 0; max-width: none; }
+
+  /* tap-to-select cards */
+  .bk-cards { margin: var(--space-5) auto 0; display: grid; gap: var(--space-3); max-width: 32rem; }
+  .bk-cards--row { grid-template-columns: repeat(2, 1fr); max-width: 40rem; }
+  @media (min-width: 34em) { .bk-cards--row { grid-template-columns: repeat(3, 1fr); } }
+  .bk-card { text-align: center; font-family: var(--font-body); font-size: var(--fs-bodyL); padding: var(--space-4); border: var(--rule-thick) solid var(--line); border-radius: var(--radius-sm); background: #fff; color: var(--ink); cursor: pointer; min-height: 52px; display: flex; align-items: center; justify-content: center; transition: border-color 120ms, background 120ms, transform 120ms; }
+  .bk-card:hover { border-color: var(--ink-50); }
+  .bk-card.is-on { border-color: var(--ink); background: color-mix(in srgb, var(--accent) 16%, #fff); }
+
+  /* Q2 "which offer" — a compact selectable card (name + price + one-line
+     description only, no features list) so both options fit in one view
+     without scrolling, on mobile and desktop alike. Pricing data itself
+     still comes from the shared src/data/pricing.ts, just rendered light
+     here instead of reusing the full homepage .pcard markup. */
+  .bk-choice { margin: var(--space-5) auto 0; display: grid; grid-template-columns: 1fr; gap: var(--space-4); max-width: 44rem; text-align: left; }
+  @media (min-width: 34em) { .bk-choice { grid-template-columns: 1fr 1fr; } }
+  .bk-offer { flex-direction: column; align-items: flex-start; justify-content: flex-start; text-align: left; min-height: 0; padding: var(--space-5); gap: var(--space-2); }
+  .bk-offer:hover { border-color: var(--accent); }
+  .bk-offer.is-on { border-color: var(--ink); background: var(--bg-raised); }
+  .bk-offer--featured.is-on { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--bg-raised)); }
+  .bk-offer__top { display: flex; align-items: center; gap: var(--space-3); }
+  .bk-offer__name { font-size: var(--fs-caption); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50); }
+  .bk-offer__badge { font-size: var(--fs-small); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--accent-deep); }
+  .bk-offer__price { font-family: var(--font-display); font-weight: var(--fw-display); font-size: var(--fs-h3); line-height: 1; color: var(--ink); }
+  .bk-offer__qual { margin-left: var(--space-2); font-family: var(--font-body); font-size: var(--fs-small); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50); }
+  .bk-offer__desc { font-family: var(--font-serif); font-size: var(--fs-body-sm, var(--fs-caption)); line-height: 1.4; color: var(--ink-70); }
+
+  /* validation */
+  .bk-field--err .bk-input, .bk-field--err .bk-card { border-color: var(--warn); }
+  .bk-err { margin-top: var(--space-2); font-size: var(--fs-body-sm, var(--fs-caption)); font-weight: var(--fw-body-semi); color: var(--warn); }
+
+  .bk-nav { margin-top: var(--space-6); display: flex; align-items: center; justify-content: center; gap: var(--space-4); }
+  .bk-step:not(.is-current) .bk-nav { display: none; }
+  .bk-form__status { margin-top: var(--space-4); font-size: var(--fs-caption); color: var(--ink-50); }
+
+  /* calendar */
+  .bk-step--cal { text-align: center; }
+  .bk-cal__h { font-size: var(--fs-h3); margin-bottom: var(--space-3); }
+  .bk-cal__note { margin: 0 auto var(--space-6); max-width: 46ch; font-family: var(--font-serif); font-size: var(--fs-body); font-style: italic; color: var(--ink-70); }
+  .bk-cal__widget { position: relative; left: 50%; transform: translateX(-50%); width: 96vw; max-width: 70rem; height: 820px; }
+  .bk-cal__widget :global(iframe) { width: 100%; height: 100%; border: 0; }
+  @media (max-width: 48em) { .bk-cal__widget { width: 100vw; height: 1180px; } }
+  .bk-cal__direct { display: inline-block; margin-top: var(--space-5); font-size: var(--fs-body-sm, var(--fs-caption)); font-weight: var(--fw-body-semi); color: var(--accent-deep); }
+
+  /* confirmation */
+  .bk-done { padding-top: var(--space-12); }
+  .bk-done__h { margin-top: var(--space-4); font-size: var(--fs-h2); }
+  .bk-done__p { margin-top: var(--space-5); font-family: var(--font-serif); font-size: var(--fs-bodyL); line-height: 1.7; color: var(--ink); max-width: 54ch; }
+  .bk-done__sig { margin-top: var(--space-8); font-family: var(--font-display); font-size: var(--fs-h4); color: var(--ink); }
+
+  /* MOBILE: compact everything so the first question is visible without scrolling */
+  @media (max-width: 40em) {
+    .bk-funnel { padding-block: var(--space-6) var(--space-12); }
+    .bk-intro__h1 { font-size: var(--fs-h3); }
+    .bk-form { margin-top: var(--space-6); }
+    .bk-cards { max-width: 100%; }
+    .bk-input { padding: var(--space-3); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bk-step { animation: none; }
+  }
+</style>

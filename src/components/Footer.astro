@@ -1,0 +1,44 @@
+---
+/* Footer — brand + tagline, three link columns, one legal line. Ported from
+   an earlier project's fuller footer (the site previously ran a stripped
+   "logo, email, one line" version — this restores the columns using CSS that
+   was already sitting in components.css unused). */
+import { site } from '../data/site.config';
+const year = 2026; // build-stamped; Date is intentionally not called at module scope
+---
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__top">
+      <div>
+        <div class="footer__brand">{site.wordmark.lead} <span>{site.wordmark.accent}</span></div>
+        <p style="max-width: 32ch; margin-top: var(--space-3); color: var(--paper-70);">{site.tagline}</p>
+      </div>
+      <div class="footer__cols">
+        <div class="footer__col">
+          <h4>Offers</h4>
+          <a href="/#pricing">Landing Page</a>
+          <a href="/#pricing">Full Store Build</a>
+        </div>
+        <div class="footer__col">
+          <h4>Company</h4>
+          <a href="/">Home</a>
+          <a href="/#portfolio">Portfolio</a>
+          <a href={site.cta.href}>Book</a>
+        </div>
+        <div class="footer__col">
+          <h4>Contact</h4>
+          <a href={`mailto:${site.email}`}>{site.email}</a>
+          {site.phone && <a href={`tel:${site.phone.replace(/[^\d+]/g, '')}`}>{site.phone}</a>}
+        </div>
+      </div>
+    </div>
+    <div class="footer__legal">
+      <span>© {year} {site.brand}. {site.tagline}</span>
+      <span>
+        <a href="/privacy" style="color: var(--paper-70);">Privacy</a>
+        &nbsp;·&nbsp;
+        <a href="/terms" style="color: var(--paper-70);">Terms</a>
+      </span>
+    </div>
+  </div>
+</footer>

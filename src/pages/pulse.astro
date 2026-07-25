@@ -1,0 +1,611 @@
+---
+/* /pulse — PRIVATE booking-funnel dashboard. Token-gated (PULSE_TOKEN, checked
+   server-side in /api/pulse). Shows the funnel with drop-off at each step, a
+   per-source rollup, and a wide, scrollable, sortable, filterable TABLE of every
+   visitor — a column per question (with the time to reach each step) plus every
+   UTM / click-id from the URL. This is the source of truth for booking data.
+   noindex; not linked anywhere. */
+import BareLayout from '../layouts/BareLayout.astro';
+---
+<BareLayout
+  title="Booking pulse"
+  description="Private booking-funnel dashboard."
+  noindex={true}
+  legalFooter={false}
+>
+  <section class="pl">
+    <div class="pl-wrap">
+      <header class="pl-head">
+        <h1 class="pl-title">Booking&nbsp;pulse</h1>
+        <div class="pl-meta">
+          <span data-pl-redis class="pl-redis" hidden></span>
+          <span data-pl-updated class="pl-updated"></span>
+          <button type="button" class="pl-btn" data-pl-refresh>Refresh</button>
+          <button type="button" class="pl-btn pl-btn--ghost" data-pl-signout hidden>Sign out</button>
+        </div>
+      </header>
+
+      <!-- token gate -->
+      <form class="pl-gate" data-pl-gate hidden>
+        <label class="pl-gate__label" for="pl-token">Dashboard password</label>
+        <div class="pl-gate__row">
+          <input class="pl-gate__input" id="pl-token" type="password" autocomplete="off" placeholder="PULSE_TOKEN" />
+          <button type="submit" class="pl-btn">Open</button>
+        </div>
+        <p class="pl-gate__err" data-pl-gate-err hidden></p>
+      </form>
+
+      <div data-pl-body hidden>
+        <!-- summary tiles (reflect the CURRENT filter, so you can segment) -->
+        <div class="pl-tiles" data-pl-tiles></div>
+
+        <!-- funnel -->
+        <div class="pl-card">
+          <h2 class="pl-h2">Funnel <span class="pl-dim" data-pl-window></span></h2>
+          <div class="pl-funnel" data-pl-funnel></div>
+        </div>
+
+        <!-- which CTA / source converts -->
+        <div class="pl-card">
+          <h2 class="pl-h2">By CTA / source <span class="pl-dim">· visitors → booked</span></h2>
+          <div class="pl-sources" data-pl-sources></div>
+        </div>
+
+        <!-- visitors table -->
+        <div class="pl-card">
+          <div class="pl-tbar">
+            <h2 class="pl-h2">Visitors <span class="pl-dim" data-pl-count></span></h2>
+            <div class="pl-tbar__controls">
+              <input class="pl-search" type="search" placeholder="Search anything…" data-pl-search />
+              <select class="pl-filter" data-pl-filter="stage"><option value="">All stages</option></select>
+              <select class="pl-filter" data-pl-filter="entryKind"><option value="">All entries</option></select>
+              <select class="pl-filter" data-pl-filter="utmSource"><option value="">All utm_source</option></select>
+              <select class="pl-filter" data-pl-filter="utmMedium"><option value="">All utm_medium</option></select>
+              <select class="pl-filter" data-pl-filter="utmCampaign"><option value="">All utm_campaign</option></select>
+              <button type="button" class="pl-btn pl-btn--ghost" data-pl-clear>Clear</button>
+              <button type="button" class="pl-btn" data-pl-export>Export CSV</button>
+            </div>
+          </div>
+          <p class="pl-hint">Click a column header to sort · click a row for the raw URL, referrer, timestamps &amp; device.</p>
+          <div class="pl-tscroll" data-pl-tscroll>
+            <table class="pl-table" data-pl-table></table>
+          </div>
+        </div>
+      </div>
+
+      <p class="pl-note" data-pl-note hidden></p>
+    </div>
+  </section>
+</BareLayout>
+
+<script>
+  const TOKEN_KEY = 'kw_pulse_token';
+  const $ = (s: string) => document.querySelector(s) as HTMLElement;
+  const gate = $('[data-pl-gate]');
+  const gateErr = $('[data-pl-gate-err]');
+  const body = $('[data-pl-body]');
+  const note = $('[data-pl-note]');
+  const tilesEl = $('[data-pl-tiles]');
+  const funnelEl = $('[data-pl-funnel]');
+  const sourcesEl = $('[data-pl-sources]');
+  const tableEl = $('[data-pl-table]');
+  const tscrollEl = $('[data-pl-tscroll]');
+  const searchEl = $('[data-pl-search]') as HTMLInputElement;
+  const updatedEl = $('[data-pl-updated]');
+  const redisEl = $('[data-pl-redis]');
+  const countEl = $('[data-pl-count]');
+  const windowEl = $('[data-pl-window]');
+  const signout = $('[data-pl-signout]') as HTMLButtonElement;
+
+  const REDIS_STATE: Record<string, { label: string; cls: string }> = {
+    connected: { label: '● database connected', cls: 'is-ok' },
+    unreachable: { label: '● database not reachable', cls: 'is-bad' },
+    'not-configured': { label: '● database not configured', cls: 'is-bad' },
+  };
+
+  const STAGE_ORDER = ['landed', 'revenue', 'offer', 'details', 'calendar', 'booked'];
+  const STAGE_LABELS: Record<string, string> = {
+    landed: 'Landed', revenue: 'Revenue answered', offer: 'Picked offer',
+    details: 'On details', calendar: 'At calendar', booked: 'Booked',
+  };
+  const STAGE_TONE: Record<string, string> = {
+    landed: 'cool', revenue: 'cool', offer: 'mid', details: 'warm', calendar: 'good', booked: 'good',
+  };
+  const ENTRY_LABEL: Record<string, string> = { cta: 'On-site CTA', ad: 'Ad / tagged', ref: 'Referral', direct: 'Direct' };
+  const stageLabel = (s: string) => STAGE_LABELS[s] || s;
+  const stageRankOf = (s: string) => { const i = STAGE_ORDER.indexOf(s); return i < 0 ? 0 : i; };
+
+  const esc = (s: any) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] as string));
+
+  function ago(ts: number): string {
+    if (!ts) return '';
+    const s = Math.max(0, Math.round((Date.now() - ts) / 1000));
+    if (s < 60) return `${s}s ago`;
+    const m = Math.round(s / 60);
+    if (m < 60) return `${m}m ago`;
+    const h = Math.round(m / 60);
+    if (h < 24) return `${h}h ago`;
+    return `${Math.round(h / 24)}d ago`;
+  }
+  // ms → compact "12s" / "1m 30s" / "2h 5m"; null/undefined → em dash
+  function fmtElapsed(ms: any): string {
+    if (ms == null || !Number.isFinite(ms)) return '—';
+    let s = Math.max(0, Math.round(ms / 1000));
+    if (s < 60) return `${s}s`;
+    const m = Math.floor(s / 60); s = s % 60;
+    if (m < 60) return s ? `${m}m ${s}s` : `${m}m`;
+    const h = Math.floor(m / 60); const mm = m % 60;
+    return mm ? `${h}h ${mm}m` : `${h}h`;
+  }
+  const secs = (ms: any) => (ms == null || !Number.isFinite(ms)) ? '' : Math.round(ms / 1000);
+  function refHost(u: string): string {
+    if (!u) return '';
+    try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u; }
+  }
+
+  // ---- arrival classification ----
+  // "from" tags follow "page:action" (e.g. "hero:GetBuild") or a bare label —
+  // matches the data-event convention used on every CTA across the site.
+  function prettyCta(s: string): string {
+    let page = '', locRaw = s;
+    const m = s.match(/^([A-Za-z]+):(.+)$/);
+    if (m) { page = m[1]; locRaw = m[2]; }
+    const loc = locRaw.replace(/([a-z])([A-Z])/g, '$1 $2');
+    if (!loc) return page || 'button';
+    return page ? page + ' · ' + loc : loc;
+  }
+  function entryOf(j: any): { kind: string; label: string } {
+    const s = j.source || '';
+    const isCta = /^[A-Za-z]+:[A-Za-z]+$/.test(s) || /^[A-Za-z]+$/.test(s);
+    if (s && isCta) return { kind: 'cta', label: 'clicked · ' + prettyCta(s) };
+    if (s) return { kind: 'ad', label: 'ad · ' + s };
+    if (j.referrer) return { kind: 'ref', label: 'referral · ' + refHost(j.referrer) };
+    return { kind: 'direct', label: 'direct' };
+  }
+  function deviceLabel(ua: string): string {
+    if (!ua) return '';
+    const mobile = /Mobi|Android|iPhone|iPad|iPod/i.test(ua);
+    let b = '';
+    if (/Edg\//i.test(ua)) b = 'Edge';
+    else if (/OPR\//i.test(ua) || /Opera/i.test(ua)) b = 'Opera';
+    else if (/Chrome\//i.test(ua)) b = 'Chrome';
+    else if (/Firefox\//i.test(ua)) b = 'Firefox';
+    else if (/Safari\//i.test(ua)) b = 'Safari';
+    return (mobile ? 'Mobile' : 'Desktop') + (b ? ' · ' + b : '');
+  }
+
+  // ---- normalise a stored journey into a flat row with derived timings ----
+  function toRow(j: any): any {
+    const st = (j.stageTimes && typeof j.stageTimes === 'object') ? j.stageTimes : {};
+    const landed = Number(j.landedAt) || Number(st.landed) || 0;
+    const elapsed = (s: string) => (st[s] && landed) ? (Number(st[s]) - landed) : null;
+    const entry = entryOf(j);
+    return {
+      j,
+      when: landed,
+      name: j.fullName || '',
+      stage: j.stage || 'landed',
+      stageRank: stageRankOf(j.stage || 'landed'),
+      revenue: j.revenue || '',
+      interest: j.interest || '',
+      email: j.email || '',
+      phone: j.phone || '',
+      tRevenue: elapsed('revenue'), tOffer: elapsed('offer'), tDetails: elapsed('details'),
+      tCal: elapsed('calendar'), tBooked: elapsed('booked'),
+      dwell: (Number(j.updatedAt) || landed) - landed,
+      entryKind: entry.kind, entryLabel: entry.label,
+      utmSource: j.utmSource || '', utmMedium: j.utmMedium || '', utmCampaign: j.utmCampaign || '',
+      utmContent: j.utmContent || '', utmTerm: j.utmTerm || '',
+      from: j.source || '',
+      paid: j.gclid ? 'Google' : (j.fbclid ? 'Meta' : ''),
+      referrer: refHost(j.referrer || ''),
+      device: deviceLabel(j.ua || ''),
+      ip: j.ip || '',
+    };
+  }
+
+  // ---- cell renderers ----
+  const txt = (v: any) => v ? esc(v) : '<span class="pl-dash">—</span>';
+  const elapsedCell = (ms: any) => (ms == null) ? '<span class="pl-dash">—</span>' : esc(fmtElapsed(ms));
+  const nameCell = (r: any) => r.name ? esc(r.name) : '<span class="pl-anon">Anonymous</span>';
+  const badgeCell = (r: any) => `<span class="pl-badge pl-tone--${STAGE_TONE[r.stage] || 'cool'}">${esc(stageLabel(r.stage))}</span>`;
+  const whenCell = (r: any) => r.when ? `<span title="${esc(new Date(r.when).toLocaleString())}">${esc(ago(r.when))}</span>` : '<span class="pl-dash">—</span>';
+  const entryCell = (r: any) => r.entryLabel ? `<span class="pl-entry--${r.entryKind}">${esc(r.entryLabel)}</span>` : '<span class="pl-dash">—</span>';
+
+  // ---- column model. order = left→right; first is sticky. ----
+  const COLUMNS: any[] = [
+    { key: 'name',        label: 'Name',          type: 'text',    cls: 'col-biz', get: (r: any) => r.name.toLowerCase(),     cell: nameCell },
+    { key: 'reached',     label: 'Reached',       type: 'num',                     get: (r: any) => r.stageRank,               cell: badgeCell },
+    { key: 'when',        label: 'Landed',        type: 'num',                     get: (r: any) => r.when,                    cell: whenCell },
+    { key: 'revenue',     label: 'Revenue · Q1',  type: 'text',                    get: (r: any) => r.revenue.toLowerCase(),   cell: (r: any) => txt(r.revenue) },
+    { key: 'interest',    label: 'Interested in · Q2', type: 'text',                get: (r: any) => r.interest.toLowerCase(),  cell: (r: any) => txt(r.interest) },
+    { key: 'email',       label: 'Email · Q3',    type: 'text',                    get: (r: any) => r.email.toLowerCase(),     cell: (r: any) => txt(r.email) },
+    { key: 'phone',       label: 'Phone · Q3',    type: 'text',                    get: (r: any) => r.phone.toLowerCase(),     cell: (r: any) => txt(r.phone) },
+    { key: 'tRevenue',    label: '→ Revenue',     type: 'numNull',                 get: (r: any) => r.tRevenue,                cell: (r: any) => elapsedCell(r.tRevenue) },
+    { key: 'tOffer',      label: '→ Offer',       type: 'numNull',                 get: (r: any) => r.tOffer,                  cell: (r: any) => elapsedCell(r.tOffer) },
+    { key: 'tDetails',    label: '→ Details',     type: 'numNull',                 get: (r: any) => r.tDetails,                cell: (r: any) => elapsedCell(r.tDetails) },
+    { key: 'tCal',        label: '→ Calendar',    type: 'numNull',                 get: (r: any) => r.tCal,                    cell: (r: any) => elapsedCell(r.tCal) },
+    { key: 'tBooked',     label: '→ Booked',      type: 'numNull',                 get: (r: any) => r.tBooked,                 cell: (r: any) => elapsedCell(r.tBooked) },
+    { key: 'dwell',       label: 'On page',       type: 'num',                     get: (r: any) => r.dwell,                   cell: (r: any) => txt(fmtElapsed(r.dwell)) },
+    { key: 'entry',       label: 'Entry',         type: 'text',                    get: (r: any) => r.entryLabel.toLowerCase(),cell: entryCell },
+    { key: 'utmSource',   label: 'utm_source',    type: 'text',                    get: (r: any) => r.utmSource.toLowerCase(), cell: (r: any) => txt(r.utmSource) },
+    { key: 'utmMedium',   label: 'utm_medium',    type: 'text',                    get: (r: any) => r.utmMedium.toLowerCase(), cell: (r: any) => txt(r.utmMedium) },
+    { key: 'utmCampaign', label: 'utm_campaign',  type: 'text',                    get: (r: any) => r.utmCampaign.toLowerCase(),cell: (r: any) => txt(r.utmCampaign) },
+    { key: 'utmContent',  label: 'utm_content',   type: 'text',                    get: (r: any) => r.utmContent.toLowerCase(),cell: (r: any) => txt(r.utmContent) },
+    { key: 'utmTerm',     label: 'utm_term',      type: 'text',                    get: (r: any) => r.utmTerm.toLowerCase(),   cell: (r: any) => txt(r.utmTerm) },
+    { key: 'from',        label: 'from',          type: 'text',                    get: (r: any) => r.from.toLowerCase(),      cell: (r: any) => txt(r.from) },
+    { key: 'paid',        label: 'Paid click',    type: 'text',                    get: (r: any) => r.paid.toLowerCase(),      cell: (r: any) => txt(r.paid) },
+    { key: 'referrer',    label: 'Referrer',      type: 'text',                    get: (r: any) => r.referrer.toLowerCase(),  cell: (r: any) => txt(r.referrer) },
+    { key: 'device',      label: 'Device',        type: 'text',                    get: (r: any) => r.device.toLowerCase(),    cell: (r: any) => txt(r.device) },
+    { key: 'ip',          label: 'IP',            type: 'text',                    get: (r: any) => r.ip,                      cell: (r: any) => txt(r.ip) },
+  ];
+  const COL_BY_KEY: Record<string, any> = {};
+  COLUMNS.forEach((c) => { COL_BY_KEY[c.key] = c; });
+
+  let ALL_ROWS: any[] = [];
+  const state = { sortKey: 'when', sortDir: 'desc' as 'asc' | 'desc' };
+
+  function cmp(a: any, b: any, col: any, dir: string): number {
+    const va = col.get(a), vb = col.get(b);
+    let r = 0;
+    if (col.type === 'numNull') {
+      const an = va == null, bn = vb == null;
+      if (an && bn) return 0;
+      if (an) return 1;   // empties always sink to the bottom, regardless of dir
+      if (bn) return -1;
+      r = va - vb;
+    } else if (col.type === 'num') {
+      r = (va || 0) - (vb || 0);
+    } else {
+      r = String(va).localeCompare(String(vb));
+    }
+    return dir === 'asc' ? r : -r;
+  }
+
+  function token(): string { try { return localStorage.getItem(TOKEN_KEY) || ''; } catch { return ''; } }
+  function setToken(t: string) { try { if (t) localStorage.setItem(TOKEN_KEY, t); else localStorage.removeItem(TOKEN_KEY); } catch {} }
+  function showGate(msg?: string) {
+    gate.hidden = false; body.hidden = true; signout.hidden = true;
+    if (msg) { gateErr.textContent = msg; gateErr.hidden = false; }
+  }
+
+  // ---------- filtering ----------
+  function currentFilters(): Record<string, string> {
+    const fs: Record<string, string> = {};
+    document.querySelectorAll<HTMLSelectElement>('[data-pl-filter]').forEach((s) => {
+      const k = s.getAttribute('data-pl-filter')!;
+      if (s.value) fs[k] = s.value;
+    });
+    return fs;
+  }
+  function filterRows(rows: any[]): any[] {
+    const q = (searchEl.value || '').trim().toLowerCase();
+    const fs = currentFilters();
+    return rows.filter((r) => {
+      for (const k in fs) { if (String(r[k] || '') !== fs[k]) return false; }
+      if (q) {
+        const hay = [r.name, r.revenue, r.interest, r.email, r.phone, r.utmSource, r.utmMedium,
+          r.utmCampaign, r.utmContent, r.utmTerm, r.from, r.paid, r.referrer, r.device, r.ip,
+          r.entryLabel, r.j.query, r.j.id].join(' ').toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+  }
+
+  const distinct = (arr: any[]) => [...new Set(arr.filter(Boolean))].sort();
+  function fillSelect(key: string, pairs: any[][]) {
+    const sel = document.querySelector<HTMLSelectElement>(`[data-pl-filter="${key}"]`);
+    if (!sel) return;
+    const cur = sel.value;
+    const allLabel = sel.querySelector('option')?.textContent || 'All';
+    sel.innerHTML = `<option value="">${esc(allLabel)}</option>` +
+      pairs.map(([v, l]) => `<option value="${esc(v)}">${esc(l)}</option>`).join('');
+    if (cur && pairs.some(([v]) => v === cur)) sel.value = cur;
+  }
+  function populateFilters(rows: any[]) {
+    fillSelect('stage', STAGE_ORDER.map((s) => [s, stageLabel(s)]));
+    fillSelect('entryKind', distinct(rows.map((r) => r.entryKind)).map((v) => [v, ENTRY_LABEL[v] || v]));
+    ['utmSource', 'utmMedium', 'utmCampaign'].forEach((k) =>
+      fillSelect(k, distinct(rows.map((r) => r[k])).map((v) => [v, v])));
+  }
+
+  // ---------- render ----------
+  function renderTiles(rows: any[]) {
+    const total = rows.length;
+    const started = rows.filter((r) => r.stageRank >= 1).length;
+    const cal = rows.filter((r) => r.stageRank >= 4).length;
+    const booked = rows.filter((r) => r.stage === 'booked').length;
+    const bookTimes = rows.map((r) => r.tBooked).filter((v) => v != null);
+    const avgBook = bookTimes.length ? bookTimes.reduce((a, b) => a + b, 0) / bookTimes.length : null;
+    const pct = (n: number) => total ? `${Math.round((n / total) * 100)}%` : '0%';
+    const tiles = [
+      ['Visitors', String(total), ''],
+      ['Started Q1', String(started), pct(started)],
+      ['Reached calendar', String(cal), pct(cal)],
+      ['Booked', String(booked), pct(booked)],
+      ['Avg time to book', fmtElapsed(avgBook), ''],
+    ];
+    tilesEl.innerHTML = tiles.map((t, i) =>
+      `<div class="pl-tile ${i === 3 ? 'is-booked' : ''}"><span class="pl-tile__n">${esc(t[1])}</span><span class="pl-tile__l">${esc(t[0])}${t[2] ? ` · ${t[2]}` : ''}</span></div>`
+    ).join('');
+  }
+
+  function detailRow(r: any): string {
+    const st = (r.j.stageTimes && typeof r.j.stageTimes === 'object') ? r.j.stageTimes : {};
+    const times = STAGE_ORDER.filter((s) => st[s]).map((s) => `${stageLabel(s)} ${new Date(Number(st[s])).toLocaleString()}`).join('  ·  ');
+    const bits: string[] = [];
+    bits.push(`id ${esc(r.j.id || '')}`);
+    if (r.j.query) bits.push(`url ${esc(r.j.query)}`);
+    if (r.j.referrer) bits.push(`referrer ${esc(r.j.referrer)}`);
+    if (r.j.ua) bits.push(`ua ${esc(r.j.ua)}`);
+    return `<tr class="pl-detail" hidden><td colspan="${COLUMNS.length}"><div class="pl-detail__in">`
+      + (times ? `<div class="pl-detail__times">${times}</div>` : '')
+      + `<div class="pl-detail__raw">${bits.join('  —  ')}</div></div></td></tr>`;
+  }
+
+  function renderTable(rows: any[]) {
+    const col = COL_BY_KEY[state.sortKey] || COL_BY_KEY.when;
+    const sorted = rows.slice().sort((a, b) => cmp(a, b, col, state.sortDir));
+    const head = '<thead><tr>' + COLUMNS.map((c) => {
+      const active = c.key === state.sortKey;
+      const arrow = active ? (state.sortDir === 'asc' ? ' ▲' : ' ▼') : '';
+      return `<th data-key="${c.key}" class="${c.cls || ''} ${active ? 'is-sorted' : ''}">${esc(c.label)}${arrow}</th>`;
+    }).join('') + '</tr></thead>';
+    const bodyHtml = '<tbody>' + (sorted.length ? sorted.map((r) => {
+      const cells = COLUMNS.map((c) => `<td class="${c.cls || ''}">${c.cell(r)}</td>`).join('');
+      return `<tr class="pl-tr ${r.stage === 'booked' ? 'is-booked' : ''}">${cells}</tr>` + detailRow(r);
+    }).join('') : `<tr><td colspan="${COLUMNS.length}" class="pl-empty">No visitors match.</td></tr>`) + '</tbody>';
+    const sl = tscrollEl.scrollLeft, stp = tscrollEl.scrollTop;
+    tableEl.innerHTML = head + bodyHtml;
+    tscrollEl.scrollLeft = sl; tscrollEl.scrollTop = stp;
+  }
+
+  function applyAndRender() {
+    populateFilters(ALL_ROWS);
+    const filtered = filterRows(ALL_ROWS);
+    renderTiles(filtered);
+    renderTable(filtered);
+    countEl.textContent = `· ${filtered.length} of ${ALL_ROWS.length}`;
+  }
+
+  function renderSources(sources: any[]) {
+    if (!sources.length) { sourcesEl.innerHTML = '<p class="pl-empty">No tagged traffic yet.</p>'; return; }
+    sourcesEl.innerHTML =
+      '<table class="pl-src"><thead><tr><th>Source</th><th>Visitors</th><th>Booked</th><th>Rate</th></tr></thead><tbody>' +
+      sources.map((s) =>
+        `<tr><td>${esc(s.source)}</td><td>${s.total}</td><td>${s.booked}</td><td class="${s.booked ? 'is-good' : ''}">${s.rate}%</td></tr>`
+      ).join('') + '</tbody></table>';
+  }
+
+  function renderFunnel(funnel: any[]) {
+    const top = funnel.length ? funnel[0].count : 0;
+    funnelEl.innerHTML = funnel.map((row, i) => {
+      const prev = i > 0 ? funnel[i - 1].count : row.count;
+      const pctOfTop = top ? Math.round((row.count / top) * 100) : 0;
+      const dropped = prev - row.count;
+      const dropPct = prev ? Math.round((dropped / prev) * 100) : 0;
+      const tone = STAGE_TONE[row.stage] || 'cool';
+      return `
+        <div class="pl-frow">
+          <div class="pl-fmeta">
+            <span class="pl-flabel">${esc(row.label)}</span>
+            <span class="pl-fnum">${row.count}</span>
+          </div>
+          <div class="pl-fbar"><span class="pl-ffill pl-tone--${tone}" style="width:${Math.max(pctOfTop, row.count ? 3 : 0)}%"></span></div>
+          <div class="pl-fdrop">${i > 0 && dropped > 0 ? `↓ ${dropped} left here (${dropPct}%)` : (i === 0 ? '' : '—')}</div>
+        </div>`;
+    }).join('');
+  }
+
+  // ---------- CSV export (current filtered view) ----------
+  function exportCsv() {
+    const rows = filterRows(ALL_ROWS);
+    const cols: [string, (r: any) => any][] = [
+      ['Name', (r) => r.name], ['Reached', (r) => stageLabel(r.stage)],
+      ['Landed', (r) => r.when ? new Date(r.when).toISOString() : ''],
+      ['Revenue', (r) => r.revenue], ['Interested in', (r) => r.interest], ['Email', (r) => r.email], ['Phone', (r) => r.phone],
+      ['t_to_revenue_s', (r) => secs(r.tRevenue)], ['t_to_offer_s', (r) => secs(r.tOffer)], ['t_to_details_s', (r) => secs(r.tDetails)],
+      ['t_to_calendar_s', (r) => secs(r.tCal)], ['t_to_booked_s', (r) => secs(r.tBooked)], ['on_page_s', (r) => secs(r.dwell)],
+      ['Entry', (r) => r.entryLabel],
+      ['utm_source', (r) => r.utmSource], ['utm_medium', (r) => r.utmMedium], ['utm_campaign', (r) => r.utmCampaign],
+      ['utm_content', (r) => r.utmContent], ['utm_term', (r) => r.utmTerm],
+      ['from', (r) => r.from], ['Paid', (r) => r.paid], ['Referrer', (r) => r.j.referrer || ''],
+      ['Device', (r) => r.device], ['IP', (r) => r.ip], ['Query', (r) => r.j.query || ''], ['Journey id', (r) => r.j.id || ''],
+    ];
+    const q = (v: any) => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+    const lines = [cols.map((c) => q(c[0])).join(',')];
+    rows.forEach((r) => lines.push(cols.map((c) => q(c[1](r))).join(',')));
+    const blob = new Blob([lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+    const d = new Date(); const p = (n: number) => String(n).padStart(2, '0');
+    const a = document.createElement('a');
+    a.download = `pulse-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}.csv`;
+    a.href = URL.createObjectURL(blob);
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  }
+
+  // ---------- load ----------
+  async function load() {
+    const t = token();
+    if (!t) { showGate(); return; }
+    let r: Response;
+    try {
+      r = await fetch(`/api/pulse?token=${encodeURIComponent(t)}`, { cache: 'no-store' });
+    } catch {
+      note.textContent = 'Could not reach the server. Retrying on next refresh.';
+      note.hidden = false; return;
+    }
+    if (r.status === 401) { setToken(''); showGate('That password didn’t work. Try again.'); return; }
+    if (r.status === 503) {
+      gate.hidden = true; body.hidden = true; signout.hidden = true;
+      note.innerHTML = 'The dashboard is off. Set a <code>PULSE_TOKEN</code> environment variable in Vercel, redeploy, then reload this page.';
+      note.hidden = false; return;
+    }
+    if (!r.ok) { note.textContent = `Server error (${r.status}).`; note.hidden = false; return; }
+
+    const data = await r.json();
+    note.hidden = true; gate.hidden = true; body.hidden = false; signout.hidden = false;
+    const journeys = Array.isArray(data.journeys) ? data.journeys : [];
+    ALL_ROWS = journeys.map(toRow);
+    renderFunnel(Array.isArray(data.funnel) ? data.funnel : []);
+    renderSources(Array.isArray(data.sources) ? data.sources : []);
+    applyAndRender();
+    windowEl.textContent = '· last 7 days';
+    updatedEl.textContent = `Updated ${new Date().toLocaleTimeString()}`;
+
+    const rs = REDIS_STATE[data.redisStatus as string];
+    if (rs) {
+      redisEl.textContent = rs.label;
+      redisEl.className = `pl-redis ${rs.cls}`;
+      redisEl.hidden = false;
+      if (data.redisStatus !== 'connected') {
+        note.innerHTML = 'The booking database isn’t connected, so nothing can be recorded. Add an Upstash Redis in Vercel (Storage), set <code>UPSTASH_REDIS_REST_URL</code> + <code>UPSTASH_REDIS_REST_TOKEN</code>, and redeploy.';
+        note.hidden = false;
+      }
+    } else { redisEl.hidden = true; }
+  }
+
+  // ---------- events ----------
+  // sort (header click) + row expand — delegated on the persistent table element
+  tableEl.addEventListener('click', (e) => {
+    const th = (e.target as HTMLElement).closest('th[data-key]');
+    if (th) {
+      const k = th.getAttribute('data-key')!;
+      const col = COL_BY_KEY[k];
+      if (state.sortKey === k) state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+      else { state.sortKey = k; state.sortDir = (col.type === 'num') ? 'desc' : 'asc'; }
+      applyAndRender();
+      return;
+    }
+    const tr = (e.target as HTMLElement).closest('tr.pl-tr') as HTMLElement | null;
+    if (tr && !(e.target as HTMLElement).closest('a')) {
+      const d = tr.nextElementSibling as HTMLElement | null;
+      if (d && d.classList.contains('pl-detail')) d.hidden = !d.hidden;
+    }
+  });
+
+  searchEl.addEventListener('input', () => applyAndRender());
+  document.querySelectorAll('[data-pl-filter]').forEach((s) => s.addEventListener('change', () => applyAndRender()));
+  $('[data-pl-clear]').addEventListener('click', () => {
+    searchEl.value = '';
+    document.querySelectorAll<HTMLSelectElement>('[data-pl-filter]').forEach((s) => { s.value = ''; });
+    applyAndRender();
+  });
+  $('[data-pl-export]').addEventListener('click', () => exportCsv());
+
+  gate.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const inp = document.getElementById('pl-token') as HTMLInputElement;
+    const val = (inp.value || '').trim();
+    if (!val) return;
+    setToken(val); gateErr.hidden = true; load();
+  });
+  $('[data-pl-refresh]').addEventListener('click', () => load());
+  signout.addEventListener('click', () => { setToken(''); showGate(); });
+
+  const urlToken = new URLSearchParams(location.search).get('token');
+  if (urlToken) { setToken(urlToken); history.replaceState(null, '', location.pathname); }
+
+  load();
+  setInterval(() => { if (!body.hidden) load(); }, 20000); // live-ish refresh (keeps your sort/filter)
+</script>
+
+<style is:global>
+  .pl { padding: var(--space-8) 0 var(--space-16); min-height: 70vh; }
+  .pl-wrap { max-width: 88rem; margin-inline: auto; padding-inline: var(--gutter); }
+  .pl-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: var(--space-3); }
+  .pl-title { font-size: var(--fs-h3); }
+  .pl-meta { display: flex; align-items: center; gap: var(--space-3); }
+  .pl-updated { font-size: var(--fs-caption); color: var(--ink-50); font-family: var(--font-mono); }
+  .pl-redis { font-size: var(--fs-caption); font-family: var(--font-mono); font-weight: var(--fw-body-semi); }
+  .pl-redis.is-ok { color: #3F7F4F; }
+  .pl-redis.is-bad { color: #C0392B; }
+  .pl-btn { font-family: var(--font-body); font-size: var(--fs-body-sm, var(--fs-caption)); font-weight: var(--fw-body-semi); padding: var(--space-2) var(--space-4); border: var(--rule-thick) solid var(--line); border-radius: var(--radius-sm); background: #fff; color: var(--ink); cursor: pointer; }
+  .pl-btn:hover { border-color: var(--ink); }
+  .pl-btn--ghost { border-color: transparent; color: var(--ink-50); }
+
+  .pl-gate { margin-top: var(--space-8); max-width: 24rem; }
+  .pl-gate__label { display: block; font-size: var(--fs-body-sm, var(--fs-caption)); font-weight: var(--fw-body-semi); color: var(--ink-70); margin-bottom: var(--space-2); }
+  .pl-gate__row { display: flex; gap: var(--space-2); }
+  .pl-gate__input { flex: 1; font-family: var(--font-mono); font-size: var(--fs-body); padding: var(--space-3); border: var(--rule-thick) solid var(--line); border-radius: var(--radius-sm); background: #fff; color: var(--ink); }
+  .pl-gate__err { margin-top: var(--space-3); font-size: var(--fs-body-sm, var(--fs-caption)); color: var(--warn); }
+
+  /* summary tiles */
+  .pl-tiles { margin-top: var(--space-6); display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: var(--space-3); }
+  .pl-tile { padding: var(--space-4); border: 1px solid var(--line); border-radius: var(--radius-md); background: #fff; display: grid; gap: 4px; }
+  .pl-tile.is-booked { border-color: #3F7F4F; }
+  .pl-tile__n { font-family: var(--font-mono); font-size: var(--fs-h4); font-weight: var(--fw-body-semi); }
+  .pl-tile__l { font-size: var(--fs-caption); color: var(--ink-50); text-transform: uppercase; letter-spacing: 0.03em; }
+
+  .pl-card { margin-top: var(--space-6); padding: var(--space-6); border: 1px solid var(--line); border-radius: var(--radius-md); background: #fff; }
+  .pl-h2 { font-size: var(--fs-h5, var(--fs-body)); font-weight: var(--fw-body-semi); }
+  .pl-dim { color: var(--ink-50); font-weight: var(--fw-body-regular); font-size: var(--fs-caption); font-family: var(--font-mono); }
+
+  /* funnel */
+  .pl-funnel { margin-top: var(--space-5); display: grid; gap: var(--space-4); }
+  .pl-frow { display: grid; grid-template-columns: 1fr; gap: var(--space-2); }
+  .pl-fmeta { display: flex; justify-content: space-between; align-items: baseline; }
+  .pl-flabel { font-size: var(--fs-body-sm, var(--fs-caption)); color: var(--ink-70); }
+  .pl-fnum { font-family: var(--font-mono); font-size: var(--fs-body); font-weight: var(--fw-body-semi); }
+  .pl-fbar { height: 12px; background: var(--line); border-radius: 999px; overflow: hidden; }
+  .pl-ffill { display: block; height: 100%; border-radius: 999px; transition: width 400ms cubic-bezier(.2,.7,.2,1); }
+  .pl-fdrop { font-size: var(--fs-caption); color: var(--ink-50); font-family: var(--font-mono); min-height: 1em; }
+
+  .pl-tone--cool { background: #6b8cae; }
+  .pl-tone--mid  { background: #A78B4F; }
+  .pl-tone--warm { background: #C9803E; }
+  .pl-tone--good { background: #3F7F4F; }
+
+  /* by-CTA table */
+  .pl-src { width: 100%; margin-top: var(--space-4); border-collapse: collapse; font-family: var(--font-mono); font-size: var(--fs-body-sm, var(--fs-caption)); }
+  .pl-src th, .pl-src td { text-align: right; padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--line); }
+  .pl-src th:first-child, .pl-src td:first-child { text-align: left; }
+  .pl-src thead th { font-size: var(--fs-caption); text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-50); font-weight: var(--fw-body-semi); }
+  .pl-src td.is-good { color: #3F7F4F; font-weight: var(--fw-body-semi); }
+
+  /* visitors toolbar */
+  .pl-tbar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; }
+  .pl-tbar__controls { display: flex; gap: var(--space-2); flex-wrap: wrap; align-items: center; }
+  .pl-search, .pl-filter { font-family: var(--font-body); font-size: var(--fs-body-sm, var(--fs-caption)); padding: 6px 10px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: #fff; color: var(--ink); }
+  .pl-search { min-width: 12rem; }
+  .pl-hint { margin-top: var(--space-2); font-size: var(--fs-caption); color: var(--ink-50); }
+
+  /* scrollable data table */
+  .pl-tscroll { margin-top: var(--space-4); overflow: auto; max-height: 74vh; border: 1px solid var(--line); border-radius: var(--radius-sm); }
+  .pl-table { border-collapse: separate; border-spacing: 0; font-family: var(--font-mono); font-size: var(--fs-caption); white-space: nowrap; min-width: 100%; }
+  .pl-table th, .pl-table td { padding: 6px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+  .pl-table thead th { position: sticky; top: 0; z-index: 2; background: #fff; cursor: pointer; user-select: none; text-transform: uppercase; letter-spacing: 0.03em; color: var(--ink-50); font-weight: var(--fw-body-semi); box-shadow: 0 1px 0 var(--line); }
+  .pl-table thead th:hover { color: var(--ink); }
+  .pl-table th.is-sorted { color: var(--ink); }
+  .col-biz { position: sticky; left: 0; z-index: 1; background: #fff; min-width: 11rem; box-shadow: 1px 0 0 var(--line); }
+  .pl-table thead th.col-biz { z-index: 3; }
+  .pl-tr { cursor: pointer; }
+  .pl-tr:hover td { background: color-mix(in srgb, var(--accent) 6%, #fff); }
+  .pl-tr:hover .col-biz { background: color-mix(in srgb, var(--accent) 6%, #fff); }
+  .pl-tr.is-booked td, .pl-tr.is-booked .col-biz { background: color-mix(in srgb, #3F7F4F 9%, #fff); }
+  .pl-badge { font-size: var(--fs-caption); font-weight: var(--fw-body-semi); color: #fff; padding: 1px 7px; border-radius: 999px; white-space: nowrap; }
+  .pl-dash { color: color-mix(in srgb, var(--ink) 25%, #fff); }
+  .pl-anon { color: var(--ink-50); font-style: italic; }
+  .pl-entry--cta { color: #3F7F4F; font-weight: var(--fw-body-semi); }
+  .pl-entry--ad { color: #A9722B; font-weight: var(--fw-body-semi); }
+  .pl-entry--ref { color: var(--ink-70); }
+  .pl-entry--direct { color: var(--ink-50); }
+
+  /* row-expand detail */
+  .pl-detail td { white-space: normal; background: color-mix(in srgb, var(--ink) 4%, #fff); }
+  .pl-detail__in { display: grid; gap: 4px; font-size: var(--fs-caption); }
+  .pl-detail__times { color: var(--ink-70); }
+  .pl-detail__raw { color: var(--ink-50); word-break: break-all; }
+
+  .pl-empty { color: var(--ink-50); font-size: var(--fs-body-sm, var(--fs-caption)); text-align: center; padding: var(--space-6); }
+
+  .pl-note { margin-top: var(--space-6); font-size: var(--fs-body-sm, var(--fs-caption)); color: var(--ink-70); }
+  .pl-note code { font-family: var(--font-mono); background: var(--line); padding: 1px 5px; border-radius: 4px; }
+</style>
+
+<!-- Global (not scoped): the tiles, table, funnel bars and badges are built with
+     innerHTML in the script, so they never carry Astro's scope attribute — scoped
+     rules would silently skip them. Every selector here is pl-* prefixed and this
+     page stands alone, so global is safe. -->

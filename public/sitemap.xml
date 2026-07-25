@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- /apply and /thank-you are intentionally omitted: single-goal, noindex,
+       reachable via the site's CTA and direct links only. -->
+  <url><loc>https://shanenguyen.co/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://shanenguyen.co/privacy</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>
+  <url><loc>https://shanenguyen.co/terms</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>
+</urlset>

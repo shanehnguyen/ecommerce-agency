@@ -1,0 +1,105 @@
+---
+/* FAQ — CSS-only details/summary accordions + FAQPage schema.org markup.
+   Voice-forward; doubles as on-page SEO (spec §5 / §6). */
+import type { Faq } from '../data/faqs';
+interface Props { items: Faq[]; }
+const { items } = Astro.props;
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: items.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: Array.isArray(f.a) ? f.a.join(' ') : f.a },
+  })),
+};
+---
+<div class="faq">
+  {items.map((f, i) => (
+    <details class="faq__item" data-reveal style={`transition-delay:${i * 70}ms`}>
+      <summary class="faq__q">
+        <span>{f.q}</span>
+        <span class="faq__icon" aria-hidden="true"></span>
+      </summary>
+      <div class="faq__a-wrap">
+        <div class="faq__a">
+          {Array.isArray(f.a) ? f.a.map((line) => <p>{line}</p>) : <p>{f.a}</p>}
+        </div>
+      </div>
+    </details>
+  ))}
+</div>
+<script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
+<script>
+  // Animate open/close by transitioning a measured pixel height (scrollHeight),
+  // not the CSS-only grid-template-rows trick — that trick relies on browsers
+  // interpolating `fr` track sizes, which turned out not to animate reliably
+  // here (the property stuck at its starting value instead of transitioning
+  // or even snapping to the end value). Height transitions are bulletproof.
+  // JS drives both directions; a plain [open] CSS fallback below covers the
+  // zero-JS case (instant, unanimated, but correct).
+  document.querySelectorAll('.faq__item').forEach((item) => {
+    const summary = item.querySelector(':scope > summary');
+    const wrap = item.querySelector(':scope > .faq__a-wrap');
+    if (!summary || !wrap) return;
+    summary.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (item.classList.contains('is-animating')) return;
+      item.classList.add('is-animating');
+      const onEnd = (ev) => {
+        if (ev.target !== wrap || ev.propertyName !== 'height') return;
+        wrap.removeEventListener('transitionend', onEnd);
+        item.classList.remove('is-animating');
+        if (item.open) wrap.style.height = ''; // let it size naturally once fully open
+      };
+      wrap.addEventListener('transitionend', onEnd);
+      if (item.open) {
+        // closing: measure the current rendered height as the transition's
+        // start point, then collapse to 0
+        wrap.style.height = wrap.scrollHeight + 'px';
+        void wrap.offsetHeight;
+        requestAnimationFrame(() => { wrap.style.height = '0px'; });
+        // wait for the collapse to finish before actually closing <details>,
+        // otherwise the browser hides the content instantly mid-animation
+        const onCollapseEnd = (ev) => {
+          if (ev.target !== wrap || ev.propertyName !== 'height') return;
+          wrap.removeEventListener('transitionend', onCollapseEnd);
+          item.open = false;
+        };
+        wrap.addEventListener('transitionend', onCollapseEnd);
+      } else {
+        item.open = true;
+        wrap.style.height = '0px';
+        void wrap.offsetHeight;
+        requestAnimationFrame(() => { wrap.style.height = wrap.scrollHeight + 'px'; });
+      }
+    });
+  });
+</script>
+
+<style>
+  .faq { border-top: var(--rule-width) solid var(--rule); }
+  .faq__item { border-bottom: var(--rule-width) solid var(--rule); }
+  .faq__q {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+    padding: var(--space-5) 0; cursor: pointer; list-style: none;
+    font-family: var(--font-display); text-transform: none; font-size: var(--fs-h4);
+    color: var(--ink); font-weight: var(--fw-display);
+  }
+  .faq__q::-webkit-details-marker { display: none; }
+  .faq__icon { position: relative; width: 16px; height: 16px; flex-shrink: 0; transition: transform 200ms var(--ease-out); }
+  .faq__icon::before, .faq__icon::after { content: ""; position: absolute; background: var(--brass); }
+  .faq__icon::before { top: 7px; left: 0; width: 16px; height: 2px; }
+  .faq__icon::after { left: 7px; top: 0; width: 2px; height: 16px; }
+  /* rotating the whole "+" 45° reads as "×" — no separate bar-hide needed */
+  .faq__item[open] .faq__icon { transform: rotate(45deg); }
+
+  /* JS drives the animated height via inline style (wins the cascade while
+     it's active); this covers the zero-JS fallback: instant, unanimated,
+     but still correct open/closed state. */
+  .faq__a-wrap { height: 0; overflow: hidden; transition: height 300ms var(--ease-out); }
+  .faq__item[open] .faq__a-wrap { height: auto; }
+  .faq__a { padding-bottom: var(--space-5); max-width: 65ch; }
+  .faq__a p { color: var(--ink-70); line-height: 1.6; }
+  .faq__a p + p { margin-top: var(--space-3); }
+</style>
