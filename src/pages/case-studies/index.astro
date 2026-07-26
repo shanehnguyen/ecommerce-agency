@@ -1,0 +1,101 @@
+---
+/* /case-studies — an index of articles, not a scroll-through logo wall.
+   Each rebuild gets its own full write-up (see the sibling .astro files);
+   this page is just the table of contents. A case study without a
+   finished article yet still gets a card, just not a live link — an
+   honest "coming soon" beats a dead link or a made-up result. */
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { site } from '../../data/site.config';
+import lynhsDrinks from '../../assets/portfolio/lynhs-drink-portfolio.png';
+import pkCabinets from '../../assets/portfolio/pk-cabinet-portfolio.png';
+
+type Article = {
+  slug?: string; // omit while the write-up isn't live yet
+  name: string;
+  headline: string;
+  dek: string;
+  image: ImageMetadata;
+  zoom?: number;
+};
+
+const articles: Article[] = [
+  {
+    slug: 'lynhs-drinks',
+    name: 'Lynh’s Drinks',
+    headline: 'How I Cut a Drink Catering Brand’s Quote Time From Two Days to Instant',
+    dek: 'The ads were working. The page wasn’t.',
+    image: lynhsDrinks,
+  },
+  {
+    slug: 'pk-cabinets',
+    name: 'PK Cabinets',
+    headline: 'How I Fixed the Conversion Leak in a Cabinet Business’s Catalog',
+    dek: 'Free shipping kicked in at $5,000. Every product page sold one box.',
+    image: pkCabinets,
+    zoom: 1.2,
+  },
+];
+---
+<BaseLayout
+  title="Case Studies"
+  description={`Real Shopify storefront rebuilds ${site.brand} has shipped, written up in full — what was researched, what was decided, and the number being measured.`}
+>
+  <section class="cs-hero">
+    <div class="container">
+      <p class="eyebrow-num mono eyebrow-num--center">Case Studies</p>
+      <h1 class="cs-hero__h">Get the thinking behind these winning consumer brands.</h1>
+    </div>
+  </section>
+
+  <div class="container cs-list">
+    {articles.map((a) => {
+      const Wrapper = a.slug ? 'a' : 'div';
+      return (
+        <Wrapper class="cs-card" href={a.slug ? `/case-studies/${a.slug}` : undefined} data-reveal>
+          <div class="cs-card__shot">
+            <Image src={a.image} alt={`${a.name} storefront`} width={700} format="webp" quality={80} style={a.zoom ? `--shot-zoom:${a.zoom}` : undefined} />
+          </div>
+          <div class="cs-card__text">
+            <span class="cs-card__name mono">{a.name}</span>
+            <h2 class="cs-card__headline">{a.headline}</h2>
+            <p class="cs-card__dek">{a.dek}</p>
+            {a.slug ? <span class="cs-card__read">Read the case study <span aria-hidden="true">→</span></span> : <span class="cs-card__soon mono">Coming soon</span>}
+          </div>
+        </Wrapper>
+      );
+    })}
+  </div>
+</BaseLayout>
+
+<style>
+  .cs-hero { padding-top: clamp(2.5rem, 7vh, 4.5rem); padding-bottom: clamp(1.5rem, 4vh, 2.5rem); text-align: center; }
+  .cs-hero__h { margin-top: var(--space-4); margin-inline: auto; max-width: 26ch; font-size: clamp(2rem, 5vw, 3.25rem); }
+  .cs-hero__sub { margin-top: var(--space-4); font-family: var(--font-serif); font-style: italic; font-size: var(--fs-lede); color: var(--ink-soft); }
+
+  .cs-list { display: flex; flex-direction: column; gap: var(--space-8); padding-block: clamp(1.5rem, 4vh, 3rem) clamp(3rem, 8vh, 5rem); max-width: 56rem; }
+
+  .cs-card {
+    display: grid; grid-template-columns: 12rem 1fr; gap: var(--space-6); align-items: center;
+    padding: var(--space-6); border: var(--rule-width) solid var(--line); border-radius: var(--radius-md);
+    background: var(--bg-raised); text-decoration: none; color: inherit;
+    transition: border-color 200ms var(--ease-out), transform 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
+  }
+  a.cs-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 16px 30px -20px rgba(26, 24, 20, 0.35); }
+  div.cs-card { cursor: default; opacity: 0.85; }
+
+  .cs-card__shot { border-radius: var(--radius-sm); overflow: hidden; aspect-ratio: 4 / 3; border: var(--rule-width) solid var(--line); }
+  .cs-card__shot :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; transform: scale(var(--shot-zoom, 1)); }
+
+  .cs-card__name { display: block; font-size: var(--fs-caption); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--accent-deep); }
+  .cs-card__headline { margin-top: var(--space-2); font-size: clamp(1.375rem, 2.6vw, 1.875rem); line-height: 1.15; }
+  .cs-card__dek { margin-top: var(--space-3); font-family: var(--font-serif); font-style: italic; font-size: var(--fs-lede); color: var(--ink-soft); }
+  .cs-card__read { display: inline-block; margin-top: var(--space-4); font-size: var(--fs-caption); font-weight: var(--fw-body-semi); color: var(--ink); }
+  a.cs-card:hover .cs-card__read span { transform: translateX(3px); display: inline-block; transition: transform 150ms var(--ease-out); }
+  .cs-card__soon { display: inline-block; margin-top: var(--space-4); font-size: var(--fs-caption); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50); }
+
+  @media (max-width: 34em) {
+    .cs-card { grid-template-columns: 1fr; }
+    .cs-card__shot { aspect-ratio: 16 / 10; }
+  }
+</style>

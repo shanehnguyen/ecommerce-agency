@@ -401,6 +401,7 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
         sendLead();
         (window as any).kwTrack?.('LeadQualified', { via: 'apply' });
         (window as any).fbq?.('track', 'Lead');
+        (window as any).fbq?.('track', 'BookingEcommerce');
       }
       setStage('calendar');
       showCalendar();

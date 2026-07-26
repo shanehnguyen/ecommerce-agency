@@ -40,6 +40,10 @@ html.has-cursor, html.has-cursor * { cursor: none; }
   background: color-mix(in srgb, var(--accent-deep) 12%, transparent);
   border-color: var(--accent-deep); opacity: 1;
 }
+/* over the dark footer the ring is nearly invisible (near-black border on a
+   near-black background) — hide it and hand back the native cursor there */
+html.cursor-native, html.cursor-native * { cursor: auto; }
+html.cursor-native .cursor { opacity: 0; }
 @media (prefers-reduced-motion: reduce) {
   html.has-cursor, html.has-cursor * { cursor: auto; }
   .cursor { display: none; }
@@ -108,6 +112,11 @@ a:hover { text-decoration-color: var(--accent-strong); }
   text-transform: uppercase;
   color: var(--accent-deep); /* AA-safe brass on cream */
 }
+
+/* numbered section eyebrow ("01. Portfolio") — muted, not brass; used
+   across the homepage sections and case-study articles alike */
+.eyebrow-num { font-size: var(--fs-eyebrow); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50); }
+.eyebrow-num--center { text-align: center; }
 .section--dark .eyebrow { color: var(--accent-strong); }
 
 .lede { font-size: var(--fs-lede); line-height: var(--lh-body); color: var(--ink-soft); }

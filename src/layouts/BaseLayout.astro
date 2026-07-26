@@ -149,6 +149,10 @@ const fullTitle = title.includes(site.brand) ? title : `${title} | ${site.brand}
             document.addEventListener('mouseover', function (e) {
               var t = e.target.closest && e.target.closest('a, button, [role="button"], summary, input, [data-cursor-hover]');
               dot.classList.toggle('is-hover', !!t);
+              // the dark footer swallows the ring visually (near-black border
+              // on a near-black background) — fall back to the native cursor there
+              var inFooter = e.target.closest && e.target.closest('.footer');
+              document.documentElement.classList.toggle('cursor-native', !!inFooter);
             });
             document.addEventListener('mouseleave', function () { dot.classList.remove('is-active'); });
           }
