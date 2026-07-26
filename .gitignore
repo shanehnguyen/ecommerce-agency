@@ -25,9 +25,14 @@ dist/
 # Design reference screenshots (not site code)
 /inspo/
 
+# Raw/unoptimized source video (the compressed web versions live in public/video/)
+/video-source/
+
 # Internal strategy/planning docs (kept local-only)
 /00-MASTER-OFFER.md
 /01-ICP-DOSSIER.md
 /02-COMPETITOR-TEARDOWN.md
 /03-HOW-ECOMMERCE-BRANDS-MAKE-MONEY.md
 /04-HIGH-CONVERTING-ECOMMERCE-PLAYBOOK (1).md
+
+.vercel

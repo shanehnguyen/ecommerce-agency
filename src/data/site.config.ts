@@ -38,7 +38,7 @@ export const site = {
 
   // ---- Booking / form plumbing ---------------------------------------
   // Calendar shown to QUALIFIED applicants after they submit /apply.
-  bookingUrl: 'https://calendly.com/kitchenwebsites/30-min-strategy-session', // TODO your Calendly link
+  bookingUrl: 'https://calendly.com/shanehnguyen/30-min-strategy-session',
   callLengthMinutes: 30,
 
   // Web3Forms access key — PUBLIC by design (ships in the client form POST;

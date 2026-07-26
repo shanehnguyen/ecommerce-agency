@@ -32,7 +32,7 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
 
           <!-- Q1 — REVENUE (no gate — every band moves the form forward) -->
           <fieldset class="bk-step" data-step>
-            <p class="bk-count">1/3</p>
+            <p class="bk-count">1/4</p>
             <h2 class="bk-q">How much monthly revenue does your ecommerce business do?</h2>
             <div class="bk-field" data-field="revenue">
               <div class="bk-cards bk-cards--row" data-name="revenue" data-radio>
@@ -44,7 +44,7 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
           <!-- Q2 — WHICH OFFER -->
           <fieldset class="bk-step" data-step hidden>
             <button type="button" class="bk-back" data-back><span aria-hidden="true">←</span> Back</button>
-            <p class="bk-count">2/3</p>
+            <p class="bk-count">2/4</p>
             <h2 class="bk-q">Which option are you interested in?</h2>
             <div class="bk-field" data-field="interest">
               <div class="bk-choice" data-name="interest" data-radio>
@@ -62,11 +62,11 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
             </div>
           </fieldset>
 
-          <!-- Q3 — NAME + EMAIL + PHONE → submit -->
+          <!-- Q3 — NAME + EMAIL + PHONE -->
           <fieldset class="bk-step" data-step hidden>
             <button type="button" class="bk-back" data-back><span aria-hidden="true">←</span> Back</button>
-            <p class="bk-count">3/3</p>
-            <h2 class="bk-q">Last thing. How can I reach you?</h2>
+            <p class="bk-count">3/4</p>
+            <h2 class="bk-q">How can I reach you?</h2>
             <div class="bk-fields">
               <div class="bk-field" data-field="fullName">
                 <label class="bk-label" for="bk-fullName">Full name</label>
@@ -80,6 +80,24 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
                 <label class="bk-label" for="bk-phone">Phone</label>
                 <input class="bk-input" id="bk-phone" name="phone" type="tel" autocomplete="tel" placeholder="(555) 555-5555" required />
               </div>
+            </div>
+            <div class="bk-nav"><button type="button" class="btn btn--primary btn--lg" data-next>Continue <span aria-hidden="true">→</span></button></div>
+          </fieldset>
+
+          <!-- Q4 — DO YOU CURRENTLY HAVE A SITE → submit -->
+          <fieldset class="bk-step" data-step hidden>
+            <button type="button" class="bk-back" data-back><span aria-hidden="true">←</span> Back</button>
+            <p class="bk-count">4/4</p>
+            <h2 class="bk-q">Last thing. Do you currently have a site?</h2>
+            <div class="bk-field" data-field="hasSite">
+              <div class="bk-cards bk-cards--yn" data-name="hasSite" data-radio>
+                <button type="button" class="bk-card" data-value="Yes">Yes</button>
+                <button type="button" class="bk-card" data-value="No">No</button>
+              </div>
+            </div>
+            <div class="bk-field" data-field="siteUrl" data-site-url hidden>
+              <label class="bk-label" for="bk-siteUrl">Link to your current site</label>
+              <input class="bk-input" id="bk-siteUrl" name="siteUrl" type="url" autocomplete="url" placeholder="https://yourstore.com" />
             </div>
             <div class="bk-nav"><button type="button" class="btn btn--primary btn--lg" data-submit>{site.cta.label} <span aria-hidden="true">→</span></button></div>
             <p class="bk-form__status mono" data-book-status hidden></p>
@@ -205,6 +223,7 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
         const val = saved[g.dataset.name!];
         if (val) g.querySelectorAll<HTMLElement>('.bk-card').forEach((c) => c.classList.toggle('is-on', c.dataset.value === val));
       });
+      if (saved.hasSite) toggleSiteUrl(saved.hasSite === 'Yes');
     };
     // Re-commit each field's value to itself so an AUTOFILLED value is a real,
     // materialised DOM value before we read it for validation/submit.
@@ -297,6 +316,17 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
       (window as any).kwTrack?.('ApplyStarted');
     };
 
+    // "Do you currently have a site?" — the link field only appears (and
+    // is only required) when the answer is Yes.
+    const siteUrlField = form.querySelector<HTMLElement>('[data-site-url]');
+    const siteUrlInput = siteUrlField?.querySelector<HTMLInputElement>('input');
+    const toggleSiteUrl = (show: boolean) => {
+      if (!siteUrlField || !siteUrlInput) return;
+      siteUrlField.hidden = !show;
+      siteUrlInput.required = show;
+      if (!show) { siteUrlInput.value = ''; answers.siteUrl = ''; clearErr('siteUrl'); }
+    };
+
     // single-choice cards
     form.querySelectorAll<HTMLElement>('[data-radio]').forEach((group) => {
       group.querySelectorAll<HTMLButtonElement>('.bk-card').forEach((card) => {
@@ -308,6 +338,7 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
           persist();
           setStage(stageForCurrent()); // picking revenue flips landed → revenue
           if (group.dataset.name === 'revenue') fireStarted();
+          if (group.dataset.name === 'hasSite') toggleSiteUrl(card.dataset.value === 'Yes');
           maybeAutoAdvance(card);
         });
       });
@@ -352,6 +383,8 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
       fd.append('Phone', answers.phone || '');
       fd.append('Monthly revenue', answers.revenue || '');
       fd.append('Interested in', answers.interest || '');
+      fd.append('Has a site', answers.hasSite || '');
+      if (answers.siteUrl) fd.append('Current site URL', answers.siteUrl);
       if (window.location.search) fd.append('Query params', window.location.search);
       if (document.referrer) fd.append('Referrer', document.referrer);
       fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd }).catch(() => { /* best-effort */ });
@@ -546,6 +579,7 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
   .bk-cards { margin: var(--space-5) auto 0; display: grid; gap: var(--space-3); max-width: 32rem; }
   .bk-cards--row { grid-template-columns: repeat(2, 1fr); max-width: 40rem; }
   @media (min-width: 34em) { .bk-cards--row { grid-template-columns: repeat(3, 1fr); } }
+  .bk-cards--yn { grid-template-columns: repeat(2, 1fr); max-width: 20rem; }
   .bk-card { text-align: center; font-family: var(--font-body); font-size: var(--fs-bodyL); padding: var(--space-4); border: var(--rule-thick) solid var(--line); border-radius: var(--radius-sm); background: #fff; color: var(--ink); cursor: pointer; min-height: 52px; display: flex; align-items: center; justify-content: center; transition: border-color 120ms, background 120ms, transform 120ms; }
   .bk-card:hover { border-color: var(--ink-50); }
   .bk-card.is-on { border-color: var(--ink); background: color-mix(in srgb, var(--accent) 16%, #fff); }

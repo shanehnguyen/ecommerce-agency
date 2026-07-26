@@ -11,6 +11,7 @@
    Signature motion: the large statement-style headings (portfolio heading,
    statement, closing) resolve from near-invisible to full contrast on
    scroll. Respects reduced-motion. */
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CtaBlock from '../components/CtaBlock.astro';
 import FAQ from '../components/FAQ.astro';
@@ -18,6 +19,8 @@ import PortfolioMarquee from '../components/PortfolioMarquee.astro';
 import { site } from '../data/site.config';
 import { homeFaqs } from '../data/faqs';
 import { priceCards } from '../data/pricing';
+import baBefore from '../assets/transformation/before.png';
+import baAfter from '../assets/transformation/after.png';
 
 // All 4 broad FAQ questions (each already rolls up several real objections).
 const topFaqs = homeFaqs;
@@ -56,20 +59,41 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
       <p class="hero__sub">Live in 14 days, then we work for free until it beats your conversion rate.</p>
     </div>
 
-    <!-- 3. VSL — autoplay muted loop when a file is wired. Until then a
-         clearly-marked placeholder; the circular button is the unmute
-         control (unmuting restarts from 0). Scrubbing/seeking ahead is
-         blocked — this is a watch-through video, not a scrubbable player.
-         Drop /video/vsl.mp4 + set data-src to go live. -->
+    <!-- 3. VSL — autoplay muted loop under a dark tint (keeps the unmute
+         button and progress bar legible over any footage). The circular
+         button unmutes and restarts from 0; the bar below is a real
+         scrubber. WebM first (smaller, modern browsers), MP4 fallback.
+         The poster frame paints instantly so there's never a blank/black
+         flash while the (compressed, faststart) video streams in. -->
     <div class="container hero__video">
       <div class="vsl" data-vsl>
-        <video class="vsl__media" autoplay muted loop playsinline preload="none" disablepictureinpicture controlslist="nodownload noplaybackrate" data-src="" aria-label="Founder VSL (placeholder)"></video>
-        <div class="vsl__poster" aria-hidden="true">
-          <span class="vsl__wordmark">{site.wordmark.lead} <span>{site.wordmark.accent}</span></span>
-        </div>
+        <video
+          class="vsl__media"
+          autoplay muted loop playsinline preload="auto"
+          disablepictureinpicture controlslist="nodownload noplaybackrate"
+          poster="/video/vsl-poster.jpg"
+          aria-label="Founder VSL"
+        >
+          <source src="/video/vsl.webm" type="video/webm" />
+          <source src="/video/vsl.mp4" type="video/mp4" />
+        </video>
+        <div class="vsl__tint" aria-hidden="true"></div>
         <button type="button" class="vsl__unmute" data-vsl-unmute aria-label="Unmute video">
-          <span class="vsl__unmute-icon" aria-hidden="true">▶</span>
+          <svg class="vsl__unmute-icon vsl__unmute-icon--muted" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11 5 6 9H3v6h3l5 4V5Z"></path>
+            <line x1="22" y1="9" x2="16" y2="15"></line>
+            <line x1="16" y1="9" x2="22" y2="15"></line>
+          </svg>
+          <svg class="vsl__unmute-icon vsl__unmute-icon--unmuted" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11 5 6 9H3v6h3l5 4V5Z"></path>
+            <path d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+            <path d="M19 5a10 10 0 0 1 0 14"></path>
+          </svg>
         </button>
+        <div class="vsl__progress">
+          <div class="vsl__bar" aria-hidden="true"><div class="vsl__bar-fill" data-vsl-fill></div></div>
+          <input type="range" class="vsl__range" min="0" max="100" step="0.1" value="0" data-vsl-range aria-label="Video progress" />
+        </div>
       </div>
     </div>
 
@@ -126,31 +150,6 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
     </div>
   </section>
 
-  <!-- short single-review proof — placeholder until a real one exists -->
-  <section class="proof">
-    <div class="container proof__grid">
-      <div class="proof__inner" data-reveal>
-        <p class="proof__quote">“Real client review goes here once the first build ships.”</p>
-        <p class="proof__name">Client Name <span class="proof__brand">(Brand, TODO)</span></p>
-        <!-- TODO real numbers once the first build ships: honest placeholder, not invented -->
-        <div class="proof__stats">
-          <div class="proof__stat" data-reveal-child>
-            <span class="proof__stat-value mono">TBD</span>
-            <span class="proof__stat-label">Conversion rate (TODO)</span>
-          </div>
-          <div class="proof__stat" data-reveal-child>
-            <span class="proof__stat-value mono">TBD</span>
-            <span class="proof__stat-label">Revenue added (TODO)</span>
-          </div>
-        </div>
-      </div>
-      <!-- TODO replace with a large screenshot of the finished build -->
-      <div class="proof__shot" aria-hidden="true">
-        <span class="proof__shot-label mono">Screenshot (TODO)</span>
-      </div>
-    </div>
-  </section>
-
   <!-- 8. STATEMENT SECTION -->
   <section class="statement">
     <div class="container">
@@ -169,10 +168,10 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
       <div class="ba-slider" data-reveal>
         <div class="ba-slider__frame" data-ba-frame style="--pos:50%">
           <div class="ba-slider__pane ba-slider__pane--before">
-            <span class="ba-slider__ph mono">Screenshot (TODO)</span>
+            <Image class="ba-slider__shot" src={baBefore} alt="Before" width={1400} format="webp" quality={80} />
           </div>
           <div class="ba-slider__pane ba-slider__pane--after">
-            <span class="ba-slider__ph mono">Screenshot (TODO)</span>
+            <Image class="ba-slider__shot" src={baAfter} alt="After" width={1400} format="webp" quality={80} />
           </div>
           <span class="ba-slider__tag ba-slider__tag--before mono">Before</span>
           <span class="ba-slider__tag ba-slider__tag--after mono">After</span>
@@ -189,6 +188,23 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
     </div>
   </section>
 
+  <!-- proof, right under the before/after comparison it's backing up -->
+  <section class="ba-proof">
+    <div class="container ba-proof__inner" data-reveal>
+      <p class="ba-proof__quote">“They completely revamped my entire website... Lots of my customers were complimenting my website... I was getting too many sales, I had to stop running my ads.”</p>
+      <p class="ba-proof__name">Lynh <span class="ba-proof__brand">(Lynh’s Drinks)</span></p>
+      <div class="ba-proof__stats">
+        <div class="ba-proof__stat" data-reveal-child>
+          <span class="ba-proof__stat-value mono">1.2% → <span data-count-to="7.3" data-count-decimals="1" data-count-suffix="%">7.3%</span></span>
+          <span class="ba-proof__stat-label">Conversion rate</span>
+        </div>
+        <div class="ba-proof__stat" data-reveal-child>
+          <span class="ba-proof__stat-value mono"><span data-count-to="850" data-count-prefix="$">$850</span></span>
+          <span class="ba-proof__stat-label">Avg. order value (+78%)</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- 10. THE BLUEPRINT -->
   <section class="bp">
@@ -317,34 +333,51 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
     update();
   })();
 
-  // ---- VSL: unmute control (inert until a real file is wired) ----
+  // ---- VSL: unmute control + scrubbable progress bar ----
   (function () {
     var vsl = document.querySelector('[data-vsl]');
     if (!vsl) return;
     var media = vsl.querySelector('.vsl__media');
     var btn = vsl.querySelector('[data-vsl-unmute]');
+    var range = vsl.querySelector('[data-vsl-range]');
+    var fill = vsl.querySelector('[data-vsl-fill]');
     if (!media || !btn) return;
-    // If a source is present, start the muted autoplay loop.
-    var src = media.getAttribute('data-src');
-    if (src) { media.src = src; media.play().catch(function () {}); vsl.classList.add('has-video'); }
-
-    // This is a watch-through video, not a scrubbable player: block seeking
-    // forward past where playback naturally reached (native controls are
-    // never shown, but context-menu/keyboard seeking is still possible).
-    var maxReached = 0;
-    media.addEventListener('timeupdate', function () { if (!media.seeking) maxReached = media.currentTime; });
-    media.addEventListener('seeking', function () { if (media.currentTime > maxReached + 0.5) media.currentTime = maxReached; });
+    // Autoplay is handled natively via the `autoplay` attribute; Safari/iOS
+    // in particular can still need a nudge once metadata is ready.
+    media.addEventListener('loadedmetadata', function () { media.play().catch(function () {}); });
 
     btn.addEventListener('click', function () {
-      if (!media.getAttribute('src')) return; // nothing wired yet
       var wasMuted = media.muted;
       media.muted = !wasMuted;
       btn.setAttribute('aria-label', media.muted ? 'Unmute video' : 'Mute video');
       vsl.classList.toggle('is-unmuted', !media.muted);
+      // once the visitor has touched sound at all, the button shrinks into a
+      // corner toggle for good — no snapping back to the big centered
+      // overlay just because they muted again
+      vsl.classList.add('is-engaged');
       // unmuting is a deliberate "watch it properly" action — start over
-      if (wasMuted) { media.currentTime = 0; maxReached = 0; }
+      if (wasMuted) media.currentTime = 0;
       if (media.paused) media.play().catch(function () {});
     });
+
+    if (range && fill) {
+      var scrubbing = false;
+      var setFromMedia = function () {
+        if (scrubbing || !media.duration) return;
+        var pct = (media.currentTime / media.duration) * 100;
+        range.value = String(pct);
+        fill.style.width = pct + '%';
+      };
+      var setFromRange = function () {
+        fill.style.width = range.value + '%';
+        if (media.duration) media.currentTime = (parseFloat(range.value) / 100) * media.duration;
+      };
+      media.addEventListener('timeupdate', setFromMedia);
+      media.addEventListener('loadedmetadata', setFromMedia);
+      range.addEventListener('pointerdown', function () { scrubbing = true; });
+      range.addEventListener('input', setFromRange);
+      range.addEventListener('pointerup', function () { scrubbing = false; });
+    }
   })();
 
 </script>
@@ -406,21 +439,56 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
     display: flex; align-items: center; justify-content: center;
   }
   .vsl__media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .vsl__poster {
-    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-    background: radial-gradient(120% 120% at 50% 40%, rgba(158,123,61,0.14), transparent 60%), linear-gradient(160deg, #14170f, #0d0f0b);
+  /* darkens the footage so the unmute button and progress bar stay legible
+     over any frame while muted — once the visitor unmutes, they've already
+     engaged, so fade it out and let the footage read normally */
+  .vsl__tint {
+    position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.12) 28%, rgba(0,0,0,0.12) 60%, rgba(0,0,0,0.5) 100%);
+    opacity: 1; transition: opacity var(--duration-base) var(--ease-out);
   }
-  .vsl.has-video .vsl__poster { display: none; }
-  .vsl__wordmark { font-family: var(--font-display); font-weight: var(--fw-display); text-transform: uppercase; font-size: clamp(1.25rem, 4vw, 2.25rem); color: var(--dark-ink); letter-spacing: 0.01em; }
-  .vsl__wordmark span { color: var(--accent-strong); }
+  .vsl.is-unmuted .vsl__tint { opacity: 0; }
   .vsl__unmute {
-    position: absolute; z-index: 1; width: 72px; height: 72px; border-radius: 50%;
+    position: absolute; z-index: 2; width: 72px; height: 72px; border-radius: 50%;
     border: 2px solid var(--dark-ink); background: color-mix(in srgb, var(--dark-ink) 12%, transparent);
-    color: var(--dark-ink); font-size: 1.4rem; line-height: 1; padding-left: 4px; cursor: pointer;
+    color: var(--dark-ink); cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    transition: transform var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out);
+    transition: width var(--duration-base) var(--ease-out), height var(--duration-base) var(--ease-out),
+                top var(--duration-base) var(--ease-out), right var(--duration-base) var(--ease-out),
+                transform var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out);
   }
   .vsl__unmute:hover { transform: scale(1.06); background: color-mix(in srgb, var(--dark-ink) 22%, transparent); }
+  /* only one of the two icons is ever shown, matching the actual mute state
+     (never a plain "play" glyph — this button is sound-only, the video is
+     always already playing) */
+  .vsl__unmute-icon { display: none; }
+  .vsl__unmute-icon--muted { display: block; }
+  .vsl.is-unmuted .vsl__unmute-icon--muted { display: none; }
+  .vsl.is-unmuted .vsl__unmute-icon--unmuted { display: block; }
+  /* after the first interaction, get out of the way: shrink into a corner
+     toggle instead of staying a giant circle over the footage */
+  .vsl.is-engaged .vsl__unmute {
+    width: 40px; height: 40px; top: var(--space-4); right: var(--space-4); left: auto; bottom: auto; transform: none;
+  }
+  .vsl.is-engaged .vsl__unmute:hover { transform: scale(1.06); }
+  .vsl.is-engaged .vsl__unmute-icon { width: 16px; height: 16px; }
+
+  /* scrubbable progress bar: a native range input (full touch target) laid
+     over a slim visual track + fill, same "invisible functional control
+     over a custom visual" technique as the before/after slider */
+  .vsl__progress { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: var(--space-4); padding-top: var(--space-6); }
+  .vsl__bar { position: relative; width: 100%; height: 4px; border-radius: 999px; background: rgba(255,255,255,0.3); overflow: hidden; }
+  .vsl__bar-fill { position: absolute; inset: 0 auto 0 0; width: 0%; background: var(--accent-strong); border-radius: 999px; }
+  .vsl__range {
+    position: absolute; inset: 0; width: 100%; height: 100%; margin: 0;
+    appearance: none; -webkit-appearance: none; background: transparent; cursor: pointer;
+  }
+  .vsl__range::-webkit-slider-thumb {
+    appearance: none; -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
+    background: var(--accent-strong); box-shadow: 0 0 0 3px rgba(0,0,0,0.35); cursor: pointer;
+  }
+  .vsl__range::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--accent-strong); border: 0; box-shadow: 0 0 0 3px rgba(0,0,0,0.35); cursor: pointer; }
+  .vsl__range::-moz-range-track { background: transparent; }
 
   /* ---------- signature statement motion ---------- */
   .stmt { transition: opacity 800ms var(--ease-out), color 800ms var(--ease-out); }
@@ -448,19 +516,18 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
     overflow: hidden; cursor: grab; touch-action: pan-y;
   }
   .ba-slider__frame:active { cursor: grabbing; }
-  /* each pane's own placeholder label sits off-center (left third / right
-     third) so the two don't collide at the default 50/50 divider position;
-     real screenshots will fill the whole pane and won't need this */
-  .ba-slider__pane { position: absolute; inset: 0; display: flex; align-items: center; }
-  .ba-slider__pane--before { justify-content: flex-start; padding-left: 12%; }
-  .ba-slider__pane--after { justify-content: flex-end; padding-right: 12%; }
-  .ba-slider__pane--before { background: var(--bg-raised); }
-  .ba-slider__pane--after {
-    background: color-mix(in srgb, var(--accent) 7%, var(--bg-raised));
-    clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+  .ba-slider__pane { position: absolute; inset: 0; background: var(--bg-raised); }
+  /* "before" sits on top, clipped to the divider so it only shows on the
+     left; "after" is the full base layer showing through on the right —
+     old on the left, new on the right, matching the fixed corner tags */
+  .ba-slider__pane--before { z-index: 1; clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
+  .ba-slider__shot { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .ba-slider__tag {
+    position: absolute; top: var(--space-4); z-index: 2; padding: 0.35em 0.75em; border-radius: 999px;
+    font-size: var(--fs-caption); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps);
+    color: var(--bg); background: color-mix(in srgb, var(--ink) 78%, transparent); backdrop-filter: blur(2px);
+    pointer-events: none;
   }
-  .ba-slider__ph { font-size: var(--fs-caption); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50); }
-  .ba-slider__tag { position: absolute; top: var(--space-4); z-index: 2; font-size: var(--fs-caption); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50); pointer-events: none; }
   .ba-slider__tag--before { left: var(--space-4); }
   .ba-slider__tag--after { right: var(--space-4); }
   .ba-slider__divider {
@@ -483,6 +550,17 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
   .ba-slider__range::-moz-range-track { background: transparent; }
   .ba-slider__range:focus-visible ~ .ba-slider__divider .ba-slider__handle { outline: 2px solid var(--accent-deep); outline-offset: 2px; }
 
+  /* ---------- proof, backing up the before/after above it ---------- */
+  .ba-proof { padding-block: clamp(1.5rem, 4vh, 2.5rem); }
+  .ba-proof__inner { max-width: 40rem; margin-inline: auto; text-align: center; }
+  .ba-proof__quote { font-family: var(--font-serif); font-style: italic; font-size: var(--fs-h4); line-height: 1.4; color: var(--ink); }
+  .ba-proof__name { margin-top: var(--space-4); font-size: var(--fs-body); font-weight: var(--fw-body-semi); color: var(--ink-50); }
+  .ba-proof__brand { font-weight: var(--fw-body-regular); }
+  .ba-proof__stats { margin-top: var(--space-6); display: flex; justify-content: center; gap: var(--space-8); }
+  .ba-proof__stat { display: flex; flex-direction: column; }
+  .ba-proof__stat-value { font-size: var(--fs-h4); font-weight: var(--fw-body-bold); color: var(--ink); line-height: 1; }
+  .ba-proof__stat-label { margin-top: var(--space-1); font-size: var(--fs-small); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50); }
+
   /* ---------- 6. PRICING (two offers — bigger, sold harder) ---------- */
   .pricing { padding-block: clamp(2rem, 6vh, 4rem); }
   .pricing__head { text-align: center; margin-bottom: var(--space-12); }
@@ -493,27 +571,6 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
   /* .pcard* itself is shared (components.css) — reused as-is on /apply's
      "which option" question so the two never drift apart. */
   .pricing__cta { margin-top: clamp(3rem, 8vh, 5rem); padding-inline: var(--gutter); }
-
-  /* ---------- short single-review proof ---------- */
-  .proof { padding-block: clamp(2rem, 5vh, 3.5rem); }
-  .proof__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-8); text-align: center; }
-  @media (min-width: 48em) { .proof__grid { grid-template-columns: 1fr 1fr; gap: var(--space-12); text-align: left; align-items: stretch; } }
-  .proof__inner { max-width: 34rem; margin-inline: auto; }
-  @media (min-width: 48em) { .proof__inner { margin-inline: 0; } }
-  .proof__quote { font-family: var(--font-serif); font-style: italic; font-size: var(--fs-h4); line-height: 1.4; color: var(--ink); }
-  .proof__name { margin-top: var(--space-4); font-size: var(--fs-body); font-weight: var(--fw-body-semi); color: var(--ink-50); }
-  .proof__brand { font-weight: var(--fw-body-regular); }
-  .proof__stats { margin-top: var(--space-6); display: flex; justify-content: center; gap: var(--space-8); }
-  @media (min-width: 48em) { .proof__stats { justify-content: flex-start; } }
-  .proof__stat { display: flex; flex-direction: column; }
-  .proof__stat-value { font-size: var(--fs-h4); font-weight: var(--fw-body-bold); color: var(--ink); line-height: 1; }
-  .proof__stat-label { margin-top: var(--space-1); font-size: var(--fs-small); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50); }
-  /* fills whatever height the left column ends up needing, instead of
-     sitting small and centered with dead space around it */
-  .proof__shot { width: 100%; min-height: 16rem; border-radius: var(--radius-md); border: var(--rule-width) dashed var(--line); background: var(--bg-raised); display: flex; align-items: center; justify-content: center; }
-  @media (min-width: 48em) { .proof__shot { height: 100%; min-height: 26rem; } }
-  .proof__shot-label { font-size: var(--fs-caption); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50); }
-
 
   /* ---------- 10. THE BLUEPRINT ---------- */
   /* one distinct, muted color per step (research / build / optimize) so the

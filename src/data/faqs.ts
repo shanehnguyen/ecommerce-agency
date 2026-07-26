@@ -11,35 +11,35 @@ export type Faq = { q: string; a: string | string[] };
 
 export const homeFaqs: Faq[] = [
   {
-    q: 'How fast is this, and what do you need from me?',
+    q: 'Why can you guarantee 14 days?',
     a: [
-      'The scope is fixed and the decisions are already made, so the discovery workshops and approval chains that stretch out an agency timeline just don’t exist here.',
-      'The 14 days start the moment you hand me your brand assets (logo, product photography, existing copy) plus access to your Shopify and analytics, not when you pay, so you control the start line.',
-      'You’re not on daily calls. One kickoff, one consolidated round of feedback, one launch walkthrough.',
+      'We’ve run this exact rebuild enough times that it’s a proven system now, not something being figured out on your dime.',
+      'A full team works your build in parallel, not one person doing it step by step, which is how we compress what usually takes months into two weeks.',
+      'Fast doesn’t mean rushed. Every build goes through the same quality checks it would if we had twelve weeks — we just don’t waste any of them.',
     ],
   },
   {
-    q: 'What if it doesn’t convert better, or something breaks after launch?',
+    q: 'What if it doesn’t convert better?',
     a: [
-      'On day one we screenshot your current analytics together and both sign off on the baseline number.',
-      'If your conversion rate hasn’t beaten that baseline, I keep working free for 60 days until it does. I won’t promise you a specific percentage, because anyone who does is either guessing or lying, and you’d be right not to trust them.',
+      'If your conversion rate hasn’t beaten your original numbers, I keep working for free until it does. I won’t promise you a specific percentage, because anyone who does is either guessing or lying, and you’d be right not to trust them.',
+      'And if you ever feel unsatisfied, I’ll give you a full refund as long as it’s within 60 days.',
       'You also get a 60-day iteration warranty and a six-month code warranty, plus a measurement report on day 44 comparing your old numbers to your new ones by device and traffic source.',
     ],
   },
   {
-    q: 'What’s actually included, and what if I need copy written or I’m on another platform?',
+    q: 'What’s actually included in this?',
     a: [
-      'The base build uses your existing product copy and always includes a conversion strategy document (offer architecture, bundle structure, the objection map for your product page) delivered before design starts.',
-      'Full conversion copywriting for the site is a +$1,200 add-on if you want it written for you.',
-      'If you’re not on Shopify yet, migrating from Wix, WooCommerce, or Squarespace is a +$1,500 add-on with a full 301 redirect map, so you don’t lose the rankings you already have.',
+      'Your full site: homepage, product pages, collection pages, cart, and checkout, all built from scratch and designed mobile first.',
+      'It’s built around what actually converts in your niche, not a generic template, using the layout and copy patterns from the best-converting brands like yours.',
+      'And it comes with the same guarantee as everything else here: I keep working for free until it beats your old numbers, with a full refund if you’re not happy within 60 days.',
     ],
   },
   {
-    q: 'Why is this cheaper than an agency, and who is it actually for?',
+    q: 'Why can’t I just hire a freelancer who’s cheaper?',
     a: [
-      'Because it’s me, not a team with account managers and a discovery phase billed to you. Agencies in this space take 8 to 16 weeks and charge $15,000 to $75,000; I deliver in 14 days at a published price.',
-      'It’s built for real stores doing $20k+ a month, not dropshippers on a generic catalogue or anyone who needs four people to approve a decision.',
-      'I also don’t take the outcome guarantee on a store with fewer than 500 orders a quarter, because I can’t measure it honestly. If that’s you, I’ll tell you on the call and point you to someone who fits.',
+      'You can, but you’re paying for their time, not a result — if the build doesn’t convert, that’s your problem, not theirs, and you’ve lost the time and ad spend either way.',
+      'I charge more because I stake my own time on the outcome: a fixed price, a guarantee that I keep working free until it beats your numbers, and a full refund within 60 days if you’re not happy.',
+      'It’s built for real stores, not dropshippers on a generic catalogue or anyone who needs four people to approve a decision.',
     ],
   },
 ];
