@@ -6,8 +6,10 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import CtaBlock from '../../components/CtaBlock.astro';
 import { site } from '../../data/site.config';
-import pkCabinets from '../../assets/portfolio/pk-cabinet-portfolio.png';
-import pkCatalogBefore from '../../assets/portfolio/pk-cabinet-image.png';
+import pkHero from '../../assets/case-studies/pk-cabinets/hero.png';
+import pkCollections from '../../assets/case-studies/pk-cabinets/collections.png';
+import pkProductsListed from '../../assets/case-studies/pk-cabinets/productslisted.png';
+import pkContractorPage from '../../assets/case-studies/pk-cabinets/contractorpage.png';
 ---
 <BaseLayout
   title="How I Fixed the Conversion Leak in a Cabinet Business’s Catalog"
@@ -21,7 +23,7 @@ import pkCatalogBefore from '../../assets/portfolio/pk-cabinet-image.png';
       <p class="cs-article__dek">One customer buys once. The other buys forty times over five years.</p>
 
       <div class="cs-article__hero">
-        <Image src={pkCabinets} alt="PK Cabinets storefront" width={1200} format="webp" quality={82} style="--shot-zoom:1.2" />
+        <Image src={pkHero} alt="PK Cabinets storefront, homepage hero" width={1200} format="webp" quality={82} />
       </div>
 
       <div class="prose cs-body">
@@ -31,16 +33,28 @@ import pkCatalogBefore from '../../assets/portfolio/pk-cabinet-image.png';
         <p>PK Cabinet sells ready-to-assemble kitchen cabinets direct from the factory. In stock, out the door in three days, nationwide.</p>
         <p>Two very different people were landing on the site. A homeowner remodeling the kitchen she’ll live in for the next fifteen years, and a contractor who will buy a kitchen this month, another one in March, and another one after that.</p>
         <p>The business already knew which one paid the bills. The footer described the company as cabinetry for local businesses. The testimonial header said trusted by contractors and builders. Every product photo, every headline and every call to action on the site was aimed at the homeowner, and the contractor got a link in the navigation labeled Contractor.</p>
+
+        <div class="cs-inline-img">
+          <Image src={pkCollections} alt="PK Cabinets homepage collections, styled for a homeowner" width={1200} format="webp" quality={80} />
+          <p class="cs-inline-img__cap">Every photo on the site was shot for her, not for him.</p>
+        </div>
+
         <p>One customer buys once. The other buys forty times over five years and brings their own clients with them. They were being handed the same page, the same prices and the same checkout.</p>
 
         <div class="cs-inline-img">
-          <Image src={pkCatalogBefore} alt="PK Cabinet's catalog before the rebuild, the same for every visitor" width={1200} format="webp" quality={80} />
+          <Image src={pkProductsListed} alt="PK Cabinet's catalog before the rebuild, the same for every visitor" width={1200} format="webp" quality={80} />
           <p class="cs-inline-img__cap">Before — the same catalog, whether you were buying one kitchen or forty.</p>
         </div>
 
         <h2>What I did before I designed anything</h2>
         <p>I applied to every trade program in the category as a contractor and watched what happened next.</p>
         <p>RTA Cabinet Store, Online Cabinets Direct, The RTA Store, Kitchen Cabinet Kings. All of them have a pro or contractor program. Every single one is the same thing wearing different names: a signup form, an approval wait, and a discount code.</p>
+
+        <div class="cs-inline-img">
+          <Image src={pkContractorPage} alt="PK Cabinet's own contractor page before the rebuild" width={1200} format="webp" quality={80} />
+          <p class="cs-inline-img__cap">Before — PK’s own contractor program: one region, a 48-hour wait.</p>
+        </div>
+
         <p>Not one of them changed the actual experience of buying. After approval you’re still browsing the same catalog, still building the same cart by hand, still guessing whether the sixteen boxes you need are sitting in a warehouse today.</p>
         <p>That told me where the opening was. The category competes on the size of the contractor discount, which is a race everybody loses on margin. Nobody competes on what a contractor is short of, which is time and certainty. A builder with a demo scheduled for the 14th doesn’t need 4% off. He needs to know the boxes exist and will land before his crew does.</p>
 

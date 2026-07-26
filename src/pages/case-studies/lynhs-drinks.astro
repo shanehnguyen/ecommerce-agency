@@ -7,8 +7,10 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import CtaBlock from '../../components/CtaBlock.astro';
 import { site } from '../../data/site.config';
-import lynhsDrinks from '../../assets/portfolio/lynhs-drink-portfolio.png';
+import lynhsAfterHero from '../../assets/case-studies/lynhs-drinks/after-hero.png';
 import lynhsBefore from '../../assets/transformation/before.png';
+import lynhsMenu from '../../assets/case-studies/lynhs-drinks/menu.png';
+import lynhsQuote from '../../assets/case-studies/lynhs-drinks/getinstantquote.png';
 ---
 <BaseLayout
   title="How I Cut a Drink Catering Brand’s Quote Time From Two Days to Instant"
@@ -22,7 +24,7 @@ import lynhsBefore from '../../assets/transformation/before.png';
       <p class="cs-article__dek">The ads were working. The page wasn’t.</p>
 
       <div class="cs-article__hero">
-        <Image src={lynhsDrinks} alt="Lynh’s Drinks storefront" width={1200} format="webp" quality={82} />
+        <Image src={lynhsAfterHero} alt="Lynh’s Drinks storefront, after the rebuild" width={1200} format="webp" quality={82} />
       </div>
 
       <div class="prose cs-body">
@@ -62,8 +64,19 @@ import lynhsBefore from '../../assets/transformation/before.png';
         <h2>The decisions</h2>
         <p><strong>Instant price, not a quote request.</strong> Guest count, package, staffed or drop-off, and you see a real total. A form is a promise to sell to you later. A price on screen is the start of the sale.</p>
         <p>The objection to this is that showing prices lets people filter you out. Correct. That filtering was already happening, except it happened after hours of unpaid quote-writing instead of in four seconds on the page.</p>
+
+        <div class="cs-inline-img">
+          <Image src={lynhsQuote} alt="Lynh’s Drinks instant quote section" width={1200} format="webp" quality={80} />
+          <p class="cs-inline-img__cap">The instant quote replaces the old “email me and wait” form.</p>
+        </div>
+
         <p><strong>The date field comes first.</strong> Every competitor asks for it last, under name, email and phone. It carries the most anxiety and it’s the fastest qualifier available. If the date is taken, the page says so and offers the closest open ones.</p>
         <p><strong>Guest count is the input.</strong> Nobody thinks in units of 400 drinks. They think “we’re expecting about 180 people.” The math happens on our side, and the result shows both per guest and total, because the planner comparing vendors thinks per head and the person signing the check thinks in totals.</p>
+
+        <div class="cs-inline-img">
+          <Image src={lynhsMenu} alt="Lynh’s Drinks menu builder" width={1200} format="webp" quality={80} />
+          <p class="cs-inline-img__cap">Every drink, filterable, no prices attached to browsing.</p>
+        </div>
         <p><strong>The process strip ends on cleanup.</strong> Five steps, and the last one is that the team packs out and leaves the venue clean. Event buyers are paying to remove a problem, and the problem in their head is a sticky table at 11pm, not the drink.</p>
         <p><strong>Reviews sit next to the price.</strong> Not on a separate page, not below the fold. The moment a number appears on screen is the moment someone asks whether these people show up, and the proof needs to be in the same eyeline as the cost.</p>
         <p><strong>The story runs below the configurator.</strong> Twenty years of history is a closing argument. Someone with an event four weeks out and three tabs open wants a date and a number first. The heritage does its work after that, when she’s choosing between two vendors who both quoted her.</p>
