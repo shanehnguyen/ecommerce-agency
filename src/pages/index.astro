@@ -22,7 +22,7 @@ import { priceCards } from '../data/pricing';
 import baBefore from '../assets/transformation/before.png';
 import baAfter from '../assets/transformation/after.png';
 
-// All 4 broad FAQ questions (each already rolls up several real objections).
+// All 5 broad FAQ questions (each already rolls up several real objections).
 const topFaqs = homeFaqs;
 
 // Blueprint — THREE plain-language steps (what actually happens, in order),
@@ -30,7 +30,7 @@ const topFaqs = homeFaqs;
 const blueprint = [
   { n: '01', heading: 'We study your niche', body: 'We study the best-converting brands in your niche to see exactly what makes them convert (layout, copy, checkout flow) before writing a line of code.' },
   { n: '02', heading: 'We build your store', body: 'Homepage, product pages, cart, and checkout: all built from scratch around what we learned, optimized for how your customers actually buy.' },
-  { n: '03', heading: 'We keep optimizing until it wins', body: 'Once it’s live, we track your real numbers (add-to-cart rate, checkout drop-off, mobile vs. desktop) and keep testing changes against them. If it’s not beating your old numbers, we keep working for free until it is.' },
+  { n: '03', heading: 'We keep optimizing until it wins', body: 'Once it’s live, we track your real numbers (add-to-cart rate, checkout drop-off, mobile vs. desktop) and keep testing changes against them. We don’t stop working until it completely outperforms your old numbers.' },
 ]; // TODO real screenshot/mockup per row
 
 // "14 days from today" — computed at build so the date in the final CTA
@@ -56,7 +56,7 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
       <h1 class="hero__h1"><span>Premium converting websites</span><span>for consumer brands</span></h1>
     </div>
     <div class="container">
-      <p class="hero__sub">Live in 14 days, then we work for free until it beats your conversion rate.</p>
+      <p class="hero__sub">Live in 14 days. We don’t stop working until it completely outperforms your old conversion rate.</p>
     </div>
 
     <!-- 3. VSL — autoplay muted loop under a dark tint (keeps the unmute
@@ -197,7 +197,7 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
   <!-- proof, right under the before/after comparison it's backing up -->
   <section class="ba-proof">
     <div class="container ba-proof__inner" data-reveal>
-      <p class="ba-proof__quote">“They completely revamped my entire website... Lots of my customers were complimenting my website... I was getting too many sales, I had to stop running my ads.”</p>
+      <p class="ba-proof__quote">“They completely redid my entire website... Lots of my customers were complimenting my website... I was getting too many sales, I had to stop running my ads.”</p>
       <p class="ba-proof__name">Lynh <span class="ba-proof__brand">(Lynh’s Drinks)</span></p>
       <div class="ba-proof__stats">
         <div class="ba-proof__stat" data-reveal-child>
@@ -271,7 +271,7 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
     </div>
   </section>
 
-  <!-- FAQ (top 4 questions) -->
+  <!-- FAQ (top 5 questions) -->
   <section class="faq-section">
     <div class="container">
       <div class="faq-section__head">
