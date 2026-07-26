@@ -7,8 +7,8 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { site } from '../../data/site.config';
-import lynhsDrinks from '../../assets/portfolio/lynhs-drink-portfolio.png';
-import pkCabinets from '../../assets/portfolio/pk-cabinet-portfolio.png';
+import lynhsDrinks from '../../assets/case-studies/lynhs-drinks/after-hero.png';
+import pkCabinets from '../../assets/case-studies/pk-cabinets/hero.png';
 
 type Article = {
   slug?: string; // omit while the write-up isn't live yet
@@ -33,7 +33,6 @@ const articles: Article[] = [
     headline: 'How I Fixed the Conversion Leak in a Cabinet Business’s Catalog',
     dek: 'One customer buys once. The other buys forty times over five years.',
     image: pkCabinets,
-    zoom: 1.2,
   },
 ];
 ---
