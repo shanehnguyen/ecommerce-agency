@@ -8,10 +8,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import CtaBlock from '../../components/CtaBlock.astro';
 import { site } from '../../data/site.config';
 import lynhsDrinks from '../../assets/portfolio/lynhs-drink-portfolio.png';
+import lynhsBefore from '../../assets/transformation/before.png';
 ---
 <BaseLayout
   title="How I Cut a Drink Catering Brand’s Quote Time From Two Days to Instant"
-  description="Lynh's Drinks was already running Google Ads that worked. The page wasn't. Here's the research, the decisions, and the number being measured."
+  description="Lynh's Drinks was already running Google Ads that worked. The page wasn't. Here's the research, the decisions, and the conversion rate it moved."
 >
   <article class="cs-article">
     <div class="container container--prose">
@@ -28,9 +29,14 @@ import lynhsDrinks from '../../assets/portfolio/lynhs-drink-portfolio.png';
         <p>You’re reading this on the site I rebuilt. Below is the research I did first, the decisions I made, and the number I’m measuring. If you run paid traffic to a page you haven’t touched in two years, the shape of this problem should look familiar.</p>
 
         <h2>The setup</h2>
-        <p>Lynh’s Drinks caters Vietnamese drinks at weddings, birthdays and corporate events across the South Bay. Twenty years in business, booked almost entirely by phone and referral.</p>
+        <p>Lynh’s Drinks caters Vietnamese drinks at weddings, birthdays and corporate events across the South Bay. Twenty years in business, 30,000+ drinks served, booked almost entirely by phone and referral.</p>
         <p>They also run Google Ads. Real budget, real clicks, on terms like “boba catering san jose.” Those clicks landed on a page with photos, a paragraph about quality, and a contact form.</p>
         <p>The ads were doing their job. The page had no conversion event you could count, no price anywhere, and a form that promised a reply within 48 hours. Every dollar of spend was buying a chance to email someone back on Tuesday.</p>
+
+        <div class="cs-inline-img">
+          <Image src={lynhsBefore} alt="Lynh’s Drinks site before the rebuild" width={1200} format="webp" quality={80} />
+          <p class="cs-inline-img__cap">Before — the page the ads were sending clicks to.</p>
+        </div>
 
         <h2>What I did before I designed anything</h2>
         <p>I pulled every drink catering operator I could find in the metro and went through each site the way a buyer would.</p>
@@ -65,8 +71,26 @@ import lynhsDrinks from '../../assets/portfolio/lynhs-drink-portfolio.png';
         <p><strong>Mobile is the design.</strong> This traffic is a link forwarded into a group chat and opened one-handed at 10pm. A sticky bar sits at the bottom of every page and never leaves.</p>
 
         <h2>The number</h2>
-        <p>Quote requests per week, split by source so we can see what the ads produce on their own.</p>
-        <p>Baseline before launch: captured and screenshotted before I touched anything. The 30-day comparison goes up as a follow-up post whether it looks good or not.</p>
+        <p>Conversion rate: the share of visits that turn into a completed quote or booking. That’s the event this whole rebuild was built around, so it’s the only number that mattered.</p>
+
+        <div class="cs-stats" data-reveal>
+          <div class="cs-stat" data-reveal-child>
+            <span class="cs-stat__value mono">1.2% → <span data-count-to="7.3" data-count-decimals="1" data-count-suffix="%">7.3%</span></span>
+            <span class="cs-stat__label">Conversion rate, 30 days post-launch</span>
+          </div>
+          <div class="cs-stat" data-reveal-child>
+            <span class="cs-stat__value mono"><span data-count-to="850" data-count-prefix="$">$850</span></span>
+            <span class="cs-stat__label">Avg. order value (+78%)</span>
+          </div>
+        </div>
+
+        <p>The average order value moving with it says the instant price and guest-count calculator aren’t just converting more visitors. They’re converting them into bigger events.</p>
+
+        <blockquote class="cs-pullquote">
+          “They completely revamped my entire website. Lots of my customers were complimenting my website. I was getting too many sales, I had to stop running my ads.”
+          <span class="cs-pullquote__cite">— Lynh, owner of Lynh’s Drinks</span>
+        </blockquote>
+
         <p>That last part is most of my method. Study the category before you design, find the thing none of them are willing to do, build the page around a countable event, and record the starting number before you change anything. Skipping the last step is how agencies end up with case studies made of adjectives.</p>
       </div>
 

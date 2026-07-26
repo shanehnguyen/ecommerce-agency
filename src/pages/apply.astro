@@ -6,9 +6,10 @@
    <form>; values live in the DOM and persist to sessionStorage so nothing
    is lost. On submit the lead fires to Web3Forms and the Calendly
    calendar takes over the same spot; a booked time shows the confirmation.
-   Exactly 3 questions: monthly revenue (no gate — every band goes through),
-   which offer (shared pricing cards, same as the homepage), then contact
-   details → calendar. */
+   Exactly 4 questions: monthly revenue (no gate — every band goes through),
+   which offer (shared pricing cards, same as the homepage), whether they
+   already have a site, then contact details → calendar. Contact details go
+   last since that's the step that actually submits. */
 import BareLayout from '../layouts/BareLayout.astro';
 import { site } from '../data/site.config';
 import { priceCards } from '../data/pricing';
@@ -62,11 +63,29 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
             </div>
           </fieldset>
 
-          <!-- Q3 — NAME + EMAIL + PHONE -->
+          <!-- Q3 — DO YOU CURRENTLY HAVE A SITE -->
           <fieldset class="bk-step" data-step hidden>
             <button type="button" class="bk-back" data-back><span aria-hidden="true">←</span> Back</button>
             <p class="bk-count">3/4</p>
-            <h2 class="bk-q">How can I reach you?</h2>
+            <h2 class="bk-q">Do you currently have a site?</h2>
+            <div class="bk-field" data-field="hasSite">
+              <div class="bk-cards bk-cards--yn" data-name="hasSite" data-radio>
+                <button type="button" class="bk-card" data-value="Yes">Yes</button>
+                <button type="button" class="bk-card" data-value="No">No</button>
+              </div>
+            </div>
+            <div class="bk-field" data-field="siteUrl" data-site-url hidden>
+              <label class="bk-label" for="bk-siteUrl">Link to your current site</label>
+              <input class="bk-input" id="bk-siteUrl" name="siteUrl" type="url" autocomplete="url" placeholder="https://yourstore.com" />
+            </div>
+            <div class="bk-nav"><button type="button" class="btn btn--primary btn--lg" data-next>Continue <span aria-hidden="true">→</span></button></div>
+          </fieldset>
+
+          <!-- Q4 — NAME + EMAIL + PHONE → submit -->
+          <fieldset class="bk-step" data-step hidden>
+            <button type="button" class="bk-back" data-back><span aria-hidden="true">←</span> Back</button>
+            <p class="bk-count">4/4</p>
+            <h2 class="bk-q">Last thing. How can I reach you?</h2>
             <div class="bk-fields">
               <div class="bk-field" data-field="fullName">
                 <label class="bk-label" for="bk-fullName">Full name</label>
@@ -80,24 +99,6 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
                 <label class="bk-label" for="bk-phone">Phone</label>
                 <input class="bk-input" id="bk-phone" name="phone" type="tel" autocomplete="tel" placeholder="(555) 555-5555" required />
               </div>
-            </div>
-            <div class="bk-nav"><button type="button" class="btn btn--primary btn--lg" data-next>Continue <span aria-hidden="true">→</span></button></div>
-          </fieldset>
-
-          <!-- Q4 — DO YOU CURRENTLY HAVE A SITE → submit -->
-          <fieldset class="bk-step" data-step hidden>
-            <button type="button" class="bk-back" data-back><span aria-hidden="true">←</span> Back</button>
-            <p class="bk-count">4/4</p>
-            <h2 class="bk-q">Last thing. Do you currently have a site?</h2>
-            <div class="bk-field" data-field="hasSite">
-              <div class="bk-cards bk-cards--yn" data-name="hasSite" data-radio>
-                <button type="button" class="bk-card" data-value="Yes">Yes</button>
-                <button type="button" class="bk-card" data-value="No">No</button>
-              </div>
-            </div>
-            <div class="bk-field" data-field="siteUrl" data-site-url hidden>
-              <label class="bk-label" for="bk-siteUrl">Link to your current site</label>
-              <input class="bk-input" id="bk-siteUrl" name="siteUrl" type="url" autocomplete="url" placeholder="https://yourstore.com" />
             </div>
             <div class="bk-nav"><button type="button" class="btn btn--primary btn--lg" data-submit>{site.cta.label} <span aria-hidden="true">→</span></button></div>
             <p class="bk-form__status mono" data-book-status hidden></p>
@@ -352,6 +353,7 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
       if (!step || step !== steps[current]) return;
       if (step.querySelector('input[required], textarea[required]')) return;
       if (step.querySelector('[data-submit]')) return;
+      if (step.querySelector('[data-site-url]:not([hidden])')) return;
       const groups = Array.from(step.querySelectorAll<HTMLElement>('[data-radio]'));
       if (!groups.every((g) => g.querySelector('.is-on'))) return;
       setTimeout(() => { if (steps[current] === step && validStep(step)) advance(); }, 280);

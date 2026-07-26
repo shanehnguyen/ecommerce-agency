@@ -7,10 +7,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import CtaBlock from '../../components/CtaBlock.astro';
 import { site } from '../../data/site.config';
 import pkCabinets from '../../assets/portfolio/pk-cabinet-portfolio.png';
+import pkCatalogBefore from '../../assets/portfolio/pk-cabinet-image.png';
 ---
 <BaseLayout
   title="How I Fixed the Conversion Leak in a Cabinet Business’s Catalog"
-  description="PK Cabinet already had the offer that closes six-thousand-dollar orders. It was a nav link. Here's the research, the decisions, and the number being measured."
+  description="PK Cabinet already had the offer that closes six-thousand-dollar orders. It was a nav link. Here's the research, the decisions, and the average order value it moved."
 >
   <article class="cs-article">
     <div class="container container--prose">
@@ -29,6 +30,12 @@ import pkCabinets from '../../assets/portfolio/pk-cabinet-portfolio.png';
         <h2>The setup</h2>
         <p>PK Cabinet sells ready-to-assemble kitchen cabinets direct from the factory. In stock, out in three days, free shipping over $5,000.</p>
         <p>Read those two numbers together. Free shipping starts at $5,000, so the business is built for whole-kitchen orders. Every product page sold one box for $238 to $876.</p>
+
+        <div class="cs-inline-img">
+          <Image src={pkCatalogBefore} alt="PK Cabinet's catalog before the rebuild, priced by the box" width={1200} format="webp" quality={80} />
+          <p class="cs-inline-img__cap">Before — priced by the box, filtered by collection.</p>
+        </div>
+
         <p>That gap was the whole problem. A homeowner tearing out a kitchen doesn’t know she needs two 36-inch base cabinets, a 21-inch drawer base and four wall units. She knows she has a galley kitchen, a window over the sink, and a number in her head. The site asked her to translate that into a parts list on her own, and a shopper who can’t finish that translation leaves and finishes it on a competitor’s site instead.</p>
         <p>The hero didn’t help. Three rotating slides, each one an adjective about luxury, with Shop Now and Get a Free Quote sitting side by side. Two calls to action of equal weight is a coin flip, and the free design service, which is the thing that closes six-thousand-dollar orders, was the smaller of the two.</p>
 
@@ -50,9 +57,17 @@ import pkCabinets from '../../assets/portfolio/pk-cabinet-portfolio.png';
         <p><strong>Photography moved into rooms.</strong> Cabinet-on-white sells a $317 box. Nobody spends $6,000 on a box. The shots are now full kitchens at eye height, with the door style named under each one so a shopper can get from a photo she likes to a collection she can price.</p>
 
         <h2>The number</h2>
-        <p>One $8,000 kitchen and nine $25 sample doors average out to $820, a number that says nothing about whether the site is landing whole-kitchen buyers or accessory shoppers.</p>
-        <p>The number I’m tracking is the share of orders over $2,500, alongside design requests per week. That split answers the only question that matters here.</p>
-        <p>Baseline before launch: captured and screenshotted before I touched anything. The 30-day comparison goes up as a follow-up post whether it looks good or not.</p>
+        <p>One $8,000 kitchen and nine $25 sample doors average out to $820, a number that says nothing about whether the site is landing whole-kitchen buyers or accessory shoppers. That’s why average order value is a dangerous headline metric in this category, right up until it isn’t.</p>
+
+        <div class="cs-stats" data-reveal>
+          <div class="cs-stat" data-reveal-child>
+            <span class="cs-stat__value mono"><span data-count-to="5556" data-count-prefix="$">$5,556</span></span>
+            <span class="cs-stat__label">Avg. order value, 30 days post-launch (+167%)</span>
+          </div>
+        </div>
+
+        <p>That number only means something because of where it landed. $5,556 isn’t a blended average dragged down by $25 sample doors, it’s an average sitting more than twice the $2,500 mark that separates a whole kitchen from an accessory order. The mix shifted, not just the price.</p>
+        <p>Design requests per week are the number I’m still watching underneath that, because a rising average built on fewer, bigger orders is a different outcome than one built on more of them, and only the request volume tells you which.</p>
         <p>That last part is most of my method. Study the category before you design, find the translation your customer is being asked to do on her own, build the page around a countable event, and record the starting number before you change anything. Skipping the last step is how agencies end up with case studies made of adjectives.</p>
       </div>
 

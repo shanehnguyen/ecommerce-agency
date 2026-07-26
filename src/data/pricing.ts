@@ -22,7 +22,7 @@ export const priceCards: PriceCard[] = [
   {
     name: 'Landing Page',
     description: 'One page, built around a single offer or campaign, for testing fast or running paid traffic.',
-    price: '$2,500', qualifier: 'starting',
+    price: '$2,000', qualifier: 'flat',
     cta: 'Build my landing page', event: 'Pricing:Landing',
     features: ['Fixed price, no hourly billing, no surprises', 'One high-converting page built around a single offer', 'Written and designed to convert cold traffic', 'Live in 7 days on your existing theme'],
   },
@@ -31,6 +31,6 @@ export const priceCards: PriceCard[] = [
     description: 'Your entire storefront rebuilt end to end, the last site you need as you scale.',
     price: '$4,500', qualifier: 'starting', featured: true,
     cta: 'Build my website', event: 'Pricing:Full',
-    features: ['Built to be the only site you need, no ceiling as you scale', 'Homepage, collection, and product templates, fully built out', 'Product page designed mobile first', 'Speed pass to mobile PageSpeed 60+', 'I keep working until it beats your numbers'],
+    features: ['Built to be the only site you need, no ceiling as you scale', 'Unlimited revisions and integrations, no extra invoices', 'Mobile-first design, tuned to hit a 60+ PageSpeed score', 'Live in 14 days'],
   },
 ];
