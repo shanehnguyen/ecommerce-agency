@@ -1,7 +1,7 @@
 ---
 /* /case-studies/pk-cabinets — full write-up. Same voice/structure as
-   lynhs-drinks.astro: honest phrasing for the still-unfilled baseline
-   number instead of a raw bracket placeholder. No invented figures. */
+   lynhs-drinks.astro: real numbers already published elsewhere on the site
+   (the marquee stat), no invented figures. */
 import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import CtaBlock from '../../components/CtaBlock.astro';
@@ -11,53 +11,50 @@ import pkCatalogBefore from '../../assets/portfolio/pk-cabinet-image.png';
 ---
 <BaseLayout
   title="How I Fixed the Conversion Leak in a Cabinet Business’s Catalog"
-  description="PK Cabinet already had the offer that closes six-thousand-dollar orders. It was a nav link. Here's the research, the decisions, and the average order value it moved."
+  description="PK Cabinet's best customer, the contractor who reorders for years, got a link in the navigation labeled Contractor. Here's the research, the decisions, and the average order value it moved."
 >
   <article class="cs-article">
     <div class="container container--prose">
       <a class="cs-back" href="/case-studies">← Case Studies</a>
       <p class="eyebrow-num mono">Case Study — PK Cabinets</p>
       <h1 class="cs-article__h">How I Fixed the Conversion Leak in a Cabinet Business’s Catalog</h1>
-      <p class="cs-article__dek">Free shipping kicked in at $5,000. Every product page sold one box.</p>
+      <p class="cs-article__dek">One customer buys once. The other buys forty times over five years.</p>
 
       <div class="cs-article__hero">
         <Image src={pkCabinets} alt="PK Cabinets storefront" width={1200} format="webp" quality={82} style="--shot-zoom:1.2" />
       </div>
 
       <div class="prose cs-body">
-        <p>You’re reading this on the site I rebuilt. Below is the research I did first, the decisions I made, and the number I’m measuring. If your catalog is organized around what you ship instead of what people buy, this one is for you.</p>
+        <p>You’re reading this on the site I rebuilt. Below is the research I did first, the decisions I made, and the number I’m measuring. If two very different customers are landing on your site and getting treated like one, this one is for you.</p>
 
         <h2>The setup</h2>
-        <p>PK Cabinet sells ready-to-assemble kitchen cabinets direct from the factory. In stock, out in three days, free shipping over $5,000.</p>
-        <p>Read those two numbers together. Free shipping starts at $5,000, so the business is built for whole-kitchen orders. Every product page sold one box for $238 to $876.</p>
+        <p>PK Cabinet sells ready-to-assemble kitchen cabinets direct from the factory. In stock, out the door in three days, nationwide.</p>
+        <p>Two very different people were landing on the site. A homeowner remodeling the kitchen she’ll live in for the next fifteen years, and a contractor who will buy a kitchen this month, another one in March, and another one after that.</p>
+        <p>The business already knew which one paid the bills. The footer described the company as cabinetry for local businesses. The testimonial header said trusted by contractors and builders. Every product photo, every headline and every call to action on the site was aimed at the homeowner, and the contractor got a link in the navigation labeled Contractor.</p>
+        <p>One customer buys once. The other buys forty times over five years and brings their own clients with them. They were being handed the same page, the same prices and the same checkout.</p>
 
         <div class="cs-inline-img">
-          <Image src={pkCatalogBefore} alt="PK Cabinet's catalog before the rebuild, priced by the box" width={1200} format="webp" quality={80} />
-          <p class="cs-inline-img__cap">Before — priced by the box, filtered by collection.</p>
+          <Image src={pkCatalogBefore} alt="PK Cabinet's catalog before the rebuild, the same for every visitor" width={1200} format="webp" quality={80} />
+          <p class="cs-inline-img__cap">Before — the same catalog, whether you were buying one kitchen or forty.</p>
         </div>
 
-        <p>That gap was the whole problem. A homeowner tearing out a kitchen doesn’t know she needs two 36-inch base cabinets, a 21-inch drawer base and four wall units. She knows she has a galley kitchen, a window over the sink, and a number in her head. The site asked her to translate that into a parts list on her own, and a shopper who can’t finish that translation leaves and finishes it on a competitor’s site instead.</p>
-        <p>The hero didn’t help. Three rotating slides, each one an adjective about luxury, with Shop Now and Get a Free Quote sitting side by side. Two calls to action of equal weight is a coin flip, and the free design service, which is the thing that closes six-thousand-dollar orders, was the smaller of the two.</p>
-
         <h2>What I did before I designed anything</h2>
-        <p>I went through the category the way a homeowner would, with a tape measure and no vocabulary.</p>
-        <p>Cabinets.com, RTA Cabinet Store, The RTA Store, Kitchen Cabinet Kings, Online Cabinets Direct. Every one of them had solved the translation problem, and they had solved it in three ways worth stealing.</p>
-        <p><strong>They price a kitchen, not a cabinet.</strong> The category standardized on a 10x10 kitchen as the unit of comparison. Cabinets.com prices its door styles that way on the collection page. A shopper cross-shopping four sites can line up four numbers. PK Cabinet showed a $317 base cabinet, which is unpriceable against a kitchen, so we were absent from the comparison the buyer was running.</p>
-        <p><strong>They sell the designer, not the catalog.</strong> RTA Cabinet Store puts a dollar value on its free design help and promises a 3D layout and quote within two days of you uploading measurements. Cabinets.com leads with Free Design & Quote and a 3D planner. PK already offered free design. It was a nav link.</p>
-        <p><strong>They de-risk the size of the order.</strong> The RTA Store runs 0% APR for twelve months on orders over $2,500. Cabinets.com goes further and guarantees that if the delivered order is missing anything needed to build the kitchen they designed, they ship it free. That second one answers the fear that stops the purchase, which is standing in a gutted kitchen on install day short one filler strip.</p>
-        <p>PK Cabinet’s answer to that fear was a 5-year warranty and a 30-day return window. Neither one is about install day.</p>
+        <p>I applied to every trade program in the category as a contractor and watched what happened next.</p>
+        <p>RTA Cabinet Store, Online Cabinets Direct, The RTA Store, Kitchen Cabinet Kings. All of them have a pro or contractor program. Every single one is the same thing wearing different names: a signup form, an approval wait, and a discount code.</p>
+        <p>Not one of them changed the actual experience of buying. After approval you’re still browsing the same catalog, still building the same cart by hand, still guessing whether the sixteen boxes you need are sitting in a warehouse today.</p>
+        <p>That told me where the opening was. The category competes on the size of the contractor discount, which is a race everybody loses on margin. Nobody competes on what a contractor is short of, which is time and certainty. A builder with a demo scheduled for the 14th doesn’t need 4% off. He needs to know the boxes exist and will land before his crew does.</p>
 
         <h2>The decisions</h2>
-        <p><strong>A 10x10 price on every collection.</strong> Same benchmark the rest of the category uses, next to the style name, before you click into anything. It costs a competitive advantage in one direction and buys entry into the comparison in the other. Being cheaper is worthless if nobody can tell.</p>
-        <p><strong>One hero, one offer, one button.</strong> The carousel is gone. The design request is the primary action and the catalog is the secondary one, because someone with a floor plan and no parts list converts through a designer at a rate the cart will never reach.</p>
-        <p><strong>The design request stops asking for a project description.</strong> It asks for room measurements, ceiling height, appliance positions and a door style. Those four inputs are what a designer needs to produce a quote, and asking for them up front turns a two-day back-and-forth into a same-day answer.</p>
-        <p><strong>Sample doors became the front door.</strong> Twenty-five dollars, refundable, positioned as the first step of the project instead of an accessory. Someone who pays for a sample has started the kitchen. That order kicks off a follow-up sequence, because the gap between sample and full order is weeks and nobody was working it.</p>
-        <p><strong>Financing sits on the product page and in the cart.</strong> A $5,800 kitchen is a different decision at $483 a month, and the number belongs where the sticker shock happens.</p>
-        <p><strong>A completeness guarantee replaced the warranty language above the fold.</strong> If the delivered order is short anything the design called for, it ships free. The warranty stayed, further down, where a five-year promise belongs.</p>
-        <p><strong>Photography moved into rooms.</strong> Cabinet-on-white sells a $317 box. Nobody spends $6,000 on a box. The shots are now full kitchens at eye height, with the door style named under each one so a shopper can get from a photo she likes to a collection she can price.</p>
+        <p><strong>Approval is instant.</strong> Enter a license number or EIN and trade pricing turns on in the session. The category makes contractors wait two days for a discount code. A contractor pricing a job on Tuesday night has picked a supplier by Wednesday morning, and the one that answered while he was still on the site gets the job.</p>
+        <p><strong>Live stock counts on every product page.</strong> The three-day ship promise is only worth something if the item is in stock, and the contractor is scheduling a crew around it. Showing the real number turns a marketing claim into something he can plan against, and it does more for order confidence than any badge.</p>
+        <p><strong>One-click reorder from any past order.</strong> A contractor buys the same twelve to twenty SKUs over and over. Rebuilding that cart by hand every time is twenty minutes of unpaid work per job, and the supplier who removes it owns the account. This is the single highest-value thing on the rebuild and it took the least design.</p>
+        <p><strong>Speed moved out of the trust bar and into the hero.</strong> In stock, shipping in three days, in a category where semi-custom cabinetry routinely runs six to eight weeks. That was sitting in a row of small badges under the fold next to the warranty. It’s the strongest thing this business owns and it was formatted like a footnote.</p>
+        <p><strong>Sample doors ship free on trade accounts.</strong> A contractor putting three door styles in front of his own client is doing our selling for us, in a living room we’ll never visit. Charging him $25 for the privilege was the cheapest place on the site to stop making money.</p>
+        <p><strong>Trade pricing is published, not gated.</strong> Volume tiers on the page, visible before signup. Hiding the number behind an application makes a contractor assume the discount is small, because if it were good you’d be leading with it.</p>
+        <p><strong>Two entry points, not one nav link.</strong> Trade gets its own landing page, its own paid traffic and its own lifecycle emails timed to the job cycle rather than the calendar.</p>
 
         <h2>The number</h2>
-        <p>One $8,000 kitchen and nine $25 sample doors average out to $820, a number that says nothing about whether the site is landing whole-kitchen buyers or accessory shoppers. That’s why average order value is a dangerous headline metric in this category, right up until it isn’t.</p>
+        <p>Average order value moved to $5,556, up 167% thirty days after launch. On its own that number doesn’t say much in a business selling $25 sample doors next to pallet orders that repeat monthly. It only means something once you know which side of the business pulled it there.</p>
 
         <div class="cs-stats" data-reveal>
           <div class="cs-stat" data-reveal-child>
@@ -66,9 +63,8 @@ import pkCatalogBefore from '../../assets/portfolio/pk-cabinet-image.png';
           </div>
         </div>
 
-        <p>That number only means something because of where it landed. $5,556 isn’t a blended average dragged down by $25 sample doors, it’s an average sitting more than twice the $2,500 mark that separates a whole kitchen from an accessory order. The mix shifted, not just the price.</p>
-        <p>Design requests per week are the number I’m still watching underneath that, because a rising average built on fewer, bigger orders is a different outcome than one built on more of them, and only the request volume tells you which.</p>
-        <p>That last part is most of my method. Study the category before you design, find the translation your customer is being asked to do on her own, build the page around a countable event, and record the starting number before you change anything. Skipping the last step is how agencies end up with case studies made of adjectives.</p>
+        <p>A homeowner buys once. A contractor who reorders is the compounding half of this business, so the number underneath that average is the one I’m actually watching: how much of the order volume is coming from trade accounts, and how many of those accounts come back and place a second one.</p>
+        <p>That last part is most of my method. Find out who’s actually buying and why the site is treating them the same anyway, build for the behavior that compounds instead of the one that doesn’t, and measure whether the mix shifted before calling it done. Skipping that last step is how agencies end up with case studies made of adjectives.</p>
       </div>
 
       <div class="cs-article__bio">

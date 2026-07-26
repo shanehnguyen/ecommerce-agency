@@ -1,0 +1,265 @@
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2]:
+    - /url: "#main"
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - link "FlipFix Digital — home" [ref=e5]:
+        - /url: /
+        - generic [ref=e6]: FlipFix Digital
+        - generic [ref=e7]: by Shane N.
+      - list [ref=e9]:
+        - listitem [ref=e10]:
+          - link "Home" [ref=e11]:
+            - /url: /
+        - listitem [ref=e12]:
+          - link "Case Studies" [ref=e13]:
+            - /url: /case-studies
+        - listitem [ref=e14]:
+          - link "Get My Build" [ref=e15]:
+            - /url: /apply?from=Nav%3AGetBuild
+  - main [ref=e17]:
+    - generic [ref=e18]:
+      - heading "Premium converting websites for consumer brands" [level=1] [ref=e20]:
+        - generic [ref=e21]: Premium converting websites
+        - generic [ref=e22]: for consumer brands
+      - paragraph [ref=e24]: Live in 14 days, then we work for free until it beats your conversion rate.
+      - generic [ref=e26]:
+        - generic "Founder VSL" [ref=e27]
+        - button "Unmute video" [ref=e28] [cursor=pointer]
+        - slider "Video progress" [ref=e36] [cursor=pointer]: "0.3"
+      - generic [ref=e39]:
+        - link "GET YOUR BUILD IN 14 DAYS" [ref=e41]:
+          - /url: /apply?from=Hero
+          - generic [ref=e43]: →
+        - paragraph [ref=e44]:
+          - generic [ref=e45]: 01 Short form
+          - generic [ref=e46]: /
+          - generic [ref=e47]: 02 20-minute call
+          - generic [ref=e48]: /
+          - generic [ref=e49]: 03 More revenue
+    - generic [ref=e50]:
+      - generic [ref=e51]:
+        - paragraph [ref=e52]: 01. Portfolio
+        - heading "Be the next success story." [level=2] [ref=e53]
+      - group "Projects. Use the left and right arrow keys to scrub." [ref=e55]:
+        - generic [ref=e56]:
+          - figure "1.9% Conversion rate (+116%)" [ref=e57]:
+            - generic [ref=e58]: Case Furniture
+            - generic [ref=e60]:
+              - generic [ref=e61]: 1.9%
+              - generic [ref=e62]: Conversion rate (+116%)
+          - figure "4.2% Conversion rate (+107%)" [ref=e63]:
+            - generic [ref=e64]: Junglee Craft Cocktails
+            - generic [ref=e66]:
+              - generic [ref=e67]: 4.2%
+              - generic [ref=e68]: Conversion rate (+107%)
+          - figure "2.47% Conversion rate (+89%)" [ref=e69]:
+            - generic [ref=e70]: Kim'C Market
+            - generic [ref=e72]:
+              - generic [ref=e73]: 2.47%
+              - generic [ref=e74]: Conversion rate (+89%)
+          - figure "1.2% → 7.3% Conversion rate" [ref=e75]:
+            - generic [ref=e76]: Lynh's Drinks
+            - generic [ref=e78]:
+              - generic [ref=e79]: 1.2% → 7.3%
+              - generic [ref=e80]: Conversion rate
+          - figure "$137 Avg. order value (+133%)" [ref=e81]:
+            - generic [ref=e82]: Yun Hai Shop
+            - generic [ref=e84]:
+              - generic [ref=e85]: $137
+              - generic [ref=e86]: Avg. order value (+133%)
+          - figure "$5556 Avg. order value (+167%)" [ref=e87]:
+            - generic [ref=e88]: PK Cabinets
+            - generic [ref=e90]:
+              - generic [ref=e91]: $5556
+              - generic [ref=e92]: Avg. order value (+167%)
+          - figure [ref=e93]:
+            - generic [ref=e94]: Case Furniture
+            - generic [ref=e96]:
+              - generic [ref=e97]: 1.9%
+              - generic [ref=e98]: Conversion rate (+116%)
+          - figure [ref=e99]:
+            - generic [ref=e100]: Junglee Craft Cocktails
+            - generic [ref=e102]:
+              - generic [ref=e103]: 4.2%
+              - generic [ref=e104]: Conversion rate (+107%)
+          - figure [ref=e105]:
+            - generic [ref=e106]: Kim'C Market
+            - generic [ref=e108]:
+              - generic [ref=e109]: 2.47%
+              - generic [ref=e110]: Conversion rate (+89%)
+          - figure [ref=e111]:
+            - generic [ref=e112]: Lynh's Drinks
+            - generic [ref=e114]:
+              - generic [ref=e115]: 1.2% → 7.3%
+              - generic [ref=e116]: Conversion rate
+          - figure [ref=e117]:
+            - generic [ref=e118]: Yun Hai Shop
+            - generic [ref=e120]:
+              - generic [ref=e121]: $137
+              - generic [ref=e122]: Avg. order value (+133%)
+          - figure [ref=e123]:
+            - generic [ref=e124]: PK Cabinets
+            - generic [ref=e126]:
+              - generic [ref=e127]: $5556
+              - generic [ref=e128]: Avg. order value (+167%)
+    - generic [ref=e129]:
+      - generic [ref=e130]:
+        - paragraph [ref=e131]: 02. Pricing
+        - heading "Built to convert like crazy." [level=2] [ref=e132]
+        - paragraph [ref=e133]: Two different offers, both designed to increase your conversions and revenue.
+      - generic [ref=e135]:
+        - generic [ref=e136]:
+          - paragraph [ref=e137]: Landing Page
+          - paragraph [ref=e138]: One page, built around a single offer or campaign, for testing fast or running paid traffic.
+          - paragraph [ref=e139]:
+            - generic [ref=e140]: $2,000
+            - generic [ref=e141]: flat
+          - link "Build my landing page" [ref=e142]:
+            - /url: /apply?from=Pricing%3ALanding
+          - separator [ref=e144]
+          - list [ref=e145]:
+            - listitem [ref=e146]: Fixed price, no hourly billing, no surprises
+            - listitem [ref=e147]: One high-converting page built around a single offer
+            - listitem [ref=e148]: Written and designed to convert cold traffic
+            - listitem [ref=e149]: Live in 7 days on your existing theme
+        - generic [ref=e150]:
+          - paragraph [ref=e151]: Most booked
+          - paragraph [ref=e152]: Full Store Build
+          - paragraph [ref=e153]: Your entire storefront rebuilt end to end, the last site you need as you scale.
+          - paragraph [ref=e154]:
+            - generic [ref=e155]: $4,500
+            - generic [ref=e156]: starting
+          - link "Build my website" [ref=e157]:
+            - /url: /apply?from=Pricing%3AFull
+          - separator [ref=e159]
+          - list [ref=e160]:
+            - listitem [ref=e161]: Built to be the only site you need, no ceiling as you scale
+            - listitem [ref=e162]: Unlimited revisions and integrations, no extra invoices
+            - listitem [ref=e163]: Mobile-first design, tuned to hit a 60+ PageSpeed score
+            - listitem [ref=e164]: Live in 14 days
+      - generic [ref=e166]:
+        - link "GET YOUR BUILD IN 14 DAYS" [ref=e168]:
+          - /url: /apply?from=Pricing
+          - generic [ref=e170]: →
+        - paragraph [ref=e171]:
+          - generic [ref=e172]: 01 Short form
+          - generic [ref=e173]: /
+          - generic [ref=e174]: 02 20-minute call
+          - generic [ref=e175]: /
+          - generic [ref=e176]: 03 More revenue
+    - generic [ref=e178]:
+      - paragraph [ref=e179]: 03. The Problem
+      - paragraph [ref=e180]: You need a website that can reliably scale with you.
+      - paragraph [ref=e181]: Stop running a plain Shopify template that looks like everyone else’s. Generic themes cap your conversion rate, no matter how big you grow.
+    - generic [ref=e185]:
+      - img "Before" [ref=e187]
+      - img "After" [ref=e189]
+      - generic: Before
+      - generic: After
+      - slider "Drag to compare the before and after site" [ref=e190]: "50"
+    - generic [ref=e192]:
+      - paragraph [ref=e193]: “They completely revamped my entire website... Lots of my customers were complimenting my website... I was getting too many sales, I had to stop running my ads.”
+      - paragraph [ref=e194]: Lynh (Lynh’s Drinks)
+      - generic [ref=e195]:
+        - generic [ref=e196]:
+          - generic [ref=e197]: 1.2% → 7.3%
+          - generic [ref=e198]: Conversion rate
+        - generic [ref=e199]:
+          - generic [ref=e200]: $850
+          - generic [ref=e201]: Avg. order value (+78%)
+      - link "Read the full case study" [ref=e202]:
+        - /url: /case-studies/lynhs-drinks
+        - text: Read the full case study
+        - generic [ref=e203]: →
+    - generic [ref=e204]:
+      - generic [ref=e205]:
+        - paragraph [ref=e206]: 04. The Blueprint
+        - heading "Here’s exactly how we improve your ad results." [level=2] [ref=e207]
+        - paragraph [ref=e208]: We build you the best-converting site, and guarantee it works, because we don’t stop until it does.
+      - generic [ref=e209]:
+        - generic [ref=e211]:
+          - generic [ref=e212]: "01"
+          - heading "We study your niche" [level=3] [ref=e213]
+          - paragraph [ref=e214]: We study the best-converting brands in your niche to see exactly what makes them convert (layout, copy, checkout flow) before writing a line of code.
+        - generic [ref=e233]:
+          - generic [ref=e234]: "02"
+          - heading "We build your store" [level=3] [ref=e235]
+          - paragraph [ref=e236]: "Homepage, product pages, cart, and checkout: all built from scratch around what we learned, optimized for how your customers actually buy."
+        - generic [ref=e250]:
+          - generic [ref=e251]: "03"
+          - heading "We keep optimizing until it wins" [level=3] [ref=e252]
+          - paragraph [ref=e253]: Once it’s live, we track your real numbers (add-to-cart rate, checkout drop-off, mobile vs. desktop) and keep testing changes against them. If it’s not beating your old numbers, we keep working for free until it is.
+    - generic [ref=e263]:
+      - generic [ref=e264]:
+        - paragraph [ref=e265]: 05. FAQ
+        - heading "Common Questions" [level=2] [ref=e266]
+      - generic [ref=e268]:
+        - group [ref=e269]:
+          - generic "Why can you guarantee 14 days?" [ref=e270] [cursor=pointer]
+        - group [ref=e273]:
+          - generic "What if it doesn’t convert better?" [ref=e274] [cursor=pointer]
+        - group [ref=e277]:
+          - generic "What’s actually included in this?" [ref=e278] [cursor=pointer]
+        - group [ref=e281]:
+          - generic "Why can’t I just hire a freelancer who’s cheaper?" [ref=e282] [cursor=pointer]
+      - paragraph [ref=e285]: ↓
+    - generic [ref=e287]:
+      - heading "14 days from today is August 9th." [level=2] [ref=e288]:
+        - generic [ref=e289]: 14 days
+        - text: from today is August 9th.
+      - generic [ref=e290]:
+        - generic [ref=e291]: Today
+        - generic [ref=e295]: August 9th
+      - paragraph [ref=e298]: Between now and then you’ll pay for every visitor who lands on the page you have right now. That cost is the same whether they buy or leave. You’ve been changing ads, offers, and audiences for months while the page stayed where it was, and 14 days is how long it takes to change that.
+      - paragraph [ref=e299]: Tap the button, fill out the short form, pick a time. The person who reads it and shows up to that call is me.
+      - paragraph [ref=e300]:
+        - text: Prefer email?
+        - link "shanehnguyen@flipfixdigital.com" [ref=e301]:
+          - /url: mailto:shanehnguyen@flipfixdigital.com
+      - generic [ref=e303]:
+        - link "GET YOUR BUILD IN 14 DAYS" [ref=e305]:
+          - /url: /apply?from=Closing
+          - generic [ref=e307]: →
+        - paragraph [ref=e308]:
+          - generic [ref=e309]: 01 Short form
+          - generic [ref=e310]: /
+          - generic [ref=e311]: 02 20-minute call
+          - generic [ref=e312]: /
+          - generic [ref=e313]: 03 More revenue
+      - paragraph [ref=e314]: Shane Nguyen, FlipFix Digital
+  - contentinfo [ref=e315]:
+    - generic [ref=e316]:
+      - generic [ref=e317]:
+        - generic [ref=e318]:
+          - generic [ref=e319]: FlipFix Digital
+          - paragraph [ref=e320]: Conversion-built Shopify storefronts for consumer brands.
+        - generic [ref=e321]:
+          - generic [ref=e322]:
+            - heading "Offers" [level=4] [ref=e323]
+            - link "Landing Page" [ref=e324]:
+              - /url: /#pricing
+            - link "Full Store Build" [ref=e325]:
+              - /url: /#pricing
+          - generic [ref=e326]:
+            - heading "Company" [level=4] [ref=e327]
+            - link "Home" [ref=e328]:
+              - /url: /
+            - link "Case Studies" [ref=e329]:
+              - /url: /case-studies
+            - link "Book" [ref=e330]:
+              - /url: /apply
+          - generic [ref=e331]:
+            - heading "Contact" [level=4] [ref=e332]
+            - link "shanehnguyen@flipfixdigital.com" [ref=e333]:
+              - /url: mailto:shanehnguyen@flipfixdigital.com
+            - link "(408) 908-8131" [ref=e334]:
+              - /url: tel:4089088131
+      - generic [ref=e335]:
+        - generic [ref=e336]: © 2026 FlipFix Digital. Conversion-built Shopify storefronts for consumer brands.
+        - generic [ref=e337]:
+          - link "Privacy" [ref=e338]:
+            - /url: /privacy
+          - text: ·
+          - link "Terms" [ref=e339]:
+            - /url: /terms
