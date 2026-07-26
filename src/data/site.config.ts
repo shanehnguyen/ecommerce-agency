@@ -50,7 +50,7 @@ export const site = {
   analytics: {
     metaPixelId: '1460315575868963', // TODO your Meta Pixel id (or blank to disable)
     ga4Id: '',                        // optional — blank disables GA4
-    clarityId: 'xmofy84bqy',          // TODO your Microsoft Clarity id (or blank to disable)
+    clarityId: 'xslhs1jscu',          // Microsoft Clarity id
   },
 } as const;
 

@@ -403,7 +403,6 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
         sendLead();
         (window as any).kwTrack?.('LeadQualified', { via: 'apply' });
         (window as any).fbq?.('track', 'Lead');
-        (window as any).fbq?.('track', 'BookingEcommerce');
       }
       setStage('calendar');
       showCalendar();
@@ -523,7 +522,7 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
       }
       if (data?.event === 'calendly.event_scheduled') {
         (window as any).kwTrack?.('CallBooked', { via: 'apply' });
-        (window as any).fbq?.('track', 'CallBooked');
+        (window as any).fbq?.('track', 'Schedule');
         setStage('booked', true);
         try { sessionStorage.removeItem(STORE); } catch { /* ignore */ }
         if (flow) flow.hidden = true;

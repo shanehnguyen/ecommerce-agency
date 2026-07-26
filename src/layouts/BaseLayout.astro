@@ -71,10 +71,16 @@ const fullTitle = title.includes(site.brand) ? title : `${title} | ${site.brand}
           window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
         }
         // Delegated CTA tracking: every [data-event] anchor fires window.kwTrack
-        // exactly once per click (no per-button scripts, so no double-firing).
+        // (GA4) exactly once per click (no per-button scripts, so no double-
+        // firing). Every one of these anchors points at /apply, so the same
+        // click also fires a Meta Pixel BookingClicked — the click-level
+        // signal Lead/Schedule alone can't give you.
         document.addEventListener('click', function (e) {
           var a = e.target.closest && e.target.closest('a[data-event]');
-          if (a && window.kwTrack) window.kwTrack(a.getAttribute('data-event'));
+          if (!a) return;
+          var name = a.getAttribute('data-event');
+          if (window.kwTrack) window.kwTrack(name);
+          if (window.fbq) window.fbq('track', 'BookingClicked', { content_name: name });
         });
         var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         // Reveal roots: each [data-reveal] and, inside it, any [data-reveal-child]
