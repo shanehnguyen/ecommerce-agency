@@ -111,7 +111,7 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
     </div>
   </section>
 
-  <!-- 4. PORTFOLIO — moving marquee, not a static grid -->
+  <!-- 4. PORTFOLIO — last 6 clients, screenshot left, the number that moved right -->
   <section class="pf" id="portfolio">
     <div class="container">
       <p class="eyebrow-num mono">01. Portfolio</p>
@@ -303,7 +303,7 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
         </span>
       </div>
       <p>Between now and then you’ll pay for every visitor who lands on the page you have right now. That cost is the same whether they buy or leave. You’ve been changing ads, offers, and audiences for months while the page stayed where it was, and 14 days is how long it takes to change that.</p>
-      <p>Tap the button, fill out the short form, pick a time. The person who reads it and shows up to that call is me.</p>
+      <p>Tap the button, fill out the short form, pick a time.</p>
       <p class="closing__alt">Prefer email? <a href={`mailto:${site.email}`}>{site.email}</a></p>
       <div class="closing__cta">
         <CtaBlock event="Closing" />
@@ -326,7 +326,7 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
     }, { threshold: 0, rootMargin: '0px 0px -12% 0px' });
     stmts.forEach(function (s) { io.observe(s); });
     // failsafe: never leave a heading stuck faint
-    window.addEventListener('load', function () { setTimeout(litAll, 1400); });
+    window.addEventListener('load', function () { setTimeout(litAll, 700); });
   })();
 
   // ---- Before/after comparison slider: sync the range input's value to
@@ -523,7 +523,7 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
 
   /* ---------- signature statement motion ---------- */
   .stmt { transition: opacity 800ms var(--ease-out), color 800ms var(--ease-out); }
-  .js .stmt { opacity: 0.14; }
+  .js .stmt { opacity: 0.35; }
   .js .stmt.is-lit { opacity: 1; }
 
   /* ---------- 4. PORTFOLIO ---------- */

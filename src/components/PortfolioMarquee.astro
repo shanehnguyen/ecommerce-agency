@@ -1,12 +1,10 @@
 ---
-/* PortfolioMarquee — infinite auto-scrolling portfolio drift, adapted from an
-   earlier project's ClientShowcase pattern (same mechanics: rAF drift, pause
-   on hover/focus, click-drag / touch-swipe to scrub, arrow-key scrub, native
-   scroll-snap fallback under reduced-motion). Real work: business name up
-   top, a screenshot filling the card, and a real result stat on the bottom
-   scrim (count-up on scroll, same mechanism as the rest of the site). Cards
-   without an image yet fall back to the placeholder device mockup so the
-   row never looks broken mid-rollout. */
+/* PortfolioMarquee — a simple, static proof list, not a scrolling gimmick:
+   your last 6 clients, the screenshot on the left, the number that moved on
+   the right, and how long you've been working together underneath it. The
+   parent section wraps this in [data-reveal]; each row is a
+   [data-reveal-child] so they stagger in on scroll, same mechanism as the
+   rest of the site (no marquee-specific script needed anymore). */
 import { Image } from 'astro:assets';
 import caseFurniture from '../assets/portfolio/case-furniture.png';
 import junglee from '../assets/portfolio/Junglee.png';
@@ -15,211 +13,87 @@ import lynhsDrinks from '../assets/portfolio/lynhs-drink-portfolio.png';
 import yunHaiShop from '../assets/portfolio/Yun-Hai-Shop.png';
 import pkCabinets from '../assets/portfolio/pk-cabinet-portfolio.png';
 
-// staticPrefix renders as plain text before the counted number (for
-// "1.2% → 7.3%"-style deltas); countPrefix renders inside the counted
-// span itself (for "$5,556"-style figures), so it counts up with it.
-// fromTo is the small "X → Y" line under the label — the actual before/after
-// figures backing the headline rate of change. Lynh's Drinks has a real
-// published baseline (1.2%, from the homepage proof section); the other five
-// only ever had a final number + a % increase, so their "from" is the implied
-// baseline computed from those two real figures (final ÷ (1 + increase)).
-type Stat = { label: string; countTo: string; staticPrefix?: string; countPrefix?: string; suffix?: string; decimals?: string; fromTo?: string };
-type Kind = 'laptop' | 'phone' | 'tablet';
-type Card = { name: string; image?: ImageMetadata; kind?: Kind; stat?: Stat; zoom?: number };
+// fromTo is the small "X → Y" line — the actual before/after figures behind
+// the headline number. Lynh's Drinks has a real published baseline (1.2%,
+// from the homepage proof section); the other five only ever had a final
+// number + a % increase, so their "from" is the implied baseline computed
+// from those two real figures (final ÷ (1 + increase)). months is how long
+// each has been a client, real per-account tenure.
+type Card = {
+  name: string; image: ImageMetadata; zoom?: number; pos?: number; months: number;
+  label: string; countPrefix?: string; countTo: string; suffix?: string; fromTo: string;
+};
 
+// pos = vertical object-position (%) — how far down into the source photo the
+// crop starts. Default (set in CSS) is 45%; Lynh's Drinks and PK Cabinets need
+// a much deeper crop to clear their taller hero photography.
 const cards: Card[] = [
-  { name: 'Case Furniture', image: caseFurniture, stat: { label: 'Conversion rate', countPrefix: '+', countTo: '116', suffix: '%', fromTo: '0.9% → 1.9%' } },
-  { name: 'Junglee Craft Cocktails', image: junglee, stat: { label: 'Conversion rate', countPrefix: '+', countTo: '107', suffix: '%', fromTo: '2.0% → 4.2%' } },
-  { name: "Kim'C Market", image: kincMarket, stat: { label: 'Conversion rate', countPrefix: '+', countTo: '89', suffix: '%', fromTo: '1.3% → 2.47%' } },
-  { name: "Lynh's Drinks", image: lynhsDrinks, stat: { label: 'Conversion rate', countPrefix: '+', countTo: '508', suffix: '%', fromTo: '1.2% → 7.3%' } },
-  { name: 'Yun Hai Shop', image: yunHaiShop, stat: { label: 'Avg. order value (+133%)', countPrefix: '$', countTo: '137', fromTo: '$59 → $137' } },
-  { name: 'PK Cabinets', image: pkCabinets, stat: { label: 'Avg. order value (+167%)', countPrefix: '$', countTo: '5556', fromTo: '$2,081 → $5,556' }, zoom: 1.2 },
+  { name: "Lynh's Drinks", image: lynhsDrinks, months: 4, pos: 80, label: 'Conversion rate', countPrefix: '+', countTo: '508', suffix: '%', fromTo: '1.2% → 7.3%' },
+  { name: 'Case Furniture', image: caseFurniture, months: 5, label: 'Conversion rate', countPrefix: '+', countTo: '116', suffix: '%', fromTo: '0.9% → 1.9%' },
+  { name: 'Junglee Craft Cocktails', image: junglee, months: 2, label: 'Conversion rate', countPrefix: '+', countTo: '107', suffix: '%', fromTo: '2.0% → 4.2%' },
+  { name: "Kim'C Market", image: kincMarket, months: 3, label: 'Conversion rate', countPrefix: '+', countTo: '89', suffix: '%', fromTo: '1.3% → 2.47%' },
+  { name: 'Yun Hai Shop', image: yunHaiShop, months: 3, label: 'Avg. order value', countPrefix: '$', countTo: '137', fromTo: '$59 → $137' },
+  { name: 'PK Cabinets', image: pkCabinets, months: 4, zoom: 1.2, pos: 80, label: 'Avg. order value', countPrefix: '$', countTo: '5556', fromTo: '$2,081 → $5,556' },
 ];
-// Duplicate the set for a seamless loop; the second copy is hidden from AT.
-const loop = [...cards, ...cards];
-const n = cards.length;
 ---
-<div
-  class="pfm__viewport"
-  data-pfm-viewport
-  tabindex="0"
-  role="group"
-  aria-label="Projects. Use the left and right arrow keys to scrub."
->
-  <div class="pfm__track" data-pfm-track>
-    {loop.map((c, i) => {
-      const dup = i >= n;
-      return (
-        <figure class={`pfm-card ${c.image ? '' : `pfm-card--${c.kind ?? 'laptop'}`}`} aria-hidden={dup ? 'true' : undefined}>
-          {c.image ? (
-            <Image class="pfm-card__shot" src={c.image} alt="" width={720} format="webp" quality={78} loading="lazy" style={c.zoom ? `--shot-zoom:${c.zoom}` : undefined} />
-          ) : (
-            <!-- placeholder device mockup until a real screenshot is wired in -->
-            <div class="pfm-card__mock" aria-hidden="true"><span class="pfm-card__screen"></span></div>
-          )}
-          <div class="pfm-card__top">
-            <span class="pfm-card__brand">{c.name}</span>
-          </div>
-          {c.stat && (
-            <figcaption class="pfm-card__stat">
-              <span class="pfm-card__stat-value mono">
-                {c.stat.staticPrefix}
-                <span data-count-to={c.stat.countTo} data-count-prefix={c.stat.countPrefix} data-count-suffix={c.stat.suffix} data-count-decimals={c.stat.decimals}>
-                  {(c.stat.countPrefix ?? '') + c.stat.countTo + (c.stat.suffix ?? '')}
-                </span>
-              </span>
-              <span class="pfm-card__stat-label">{c.stat.label}</span>
-              {c.stat.fromTo && <span class="pfm-card__stat-from mono">{c.stat.fromTo}</span>}
-            </figcaption>
-          )}
-        </figure>
-      );
-    })}
-  </div>
+<div class="pf-list">
+  {cards.map((c) => (
+    <div class="pf-row" data-reveal-child>
+      <div class="pf-row__shot">
+        <Image src={c.image} alt={`${c.name} storefront`} width={960} format="webp" quality={90} style={`${c.zoom ? `--shot-zoom:${c.zoom};` : ''}${c.pos ? `--shot-pos:${c.pos}%;` : ''}`} />
+      </div>
+      <div class="pf-row__info">
+        <span class="pf-row__name mono">{c.name}</span>
+        <span class="pf-row__value mono">
+          <span data-count-to={c.countTo} data-count-prefix={c.countPrefix} data-count-suffix={c.suffix}>
+            {(c.countPrefix ?? '') + c.countTo + (c.suffix ?? '')}
+          </span>
+        </span>
+        <span class="pf-row__label">{c.label}</span>
+        <span class="pf-row__from mono">{c.fromTo}</span>
+        <span class="pf-row__months mono">Working together {c.months} {c.months === 1 ? 'month' : 'months'}</span>
+      </div>
+    </div>
+  ))}
 </div>
-<p class="pfm__hint" data-pfm-hint hidden aria-hidden="true">Drag to explore</p>
 
 <style>
-  .pfm__viewport { overflow: hidden; cursor: grab; touch-action: pan-y; outline-offset: 4px; }
-  .pfm__viewport.is-dragging { cursor: grabbing; }
-  .pfm__track { display: flex; gap: clamp(0.75rem, 1.5vw, 1.25rem); width: max-content; will-change: transform; }
+  .pf-list { display: flex; flex-direction: column; gap: var(--space-5); max-width: 56rem; margin-inline: auto; }
 
-  .pfm-card {
-    position: relative; margin: 0; flex: 0 0 clamp(240px, 27vw, 360px);
-    aspect-ratio: 3 / 4; border-radius: 22px; overflow: hidden;
-    background: linear-gradient(145deg, #2a2f28, #14170f);
-    border: var(--rule-width) solid var(--line);
-    display: flex; align-items: center; justify-content: center;
-    transform: translateY(0);
-    transition: transform 250ms var(--ease-out), box-shadow 250ms var(--ease-out);
-  }
-  .pfm-card:hover, .pfm-card:active {
-    transform: translateY(-4px);
-    box-shadow: 0 22px 40px -18px rgba(0, 0, 0, 0.45);
-  }
-  .pfm-card__screen {
-    width: 70%; height: 55%; border-radius: 12px;
-    background: linear-gradient(160deg, color-mix(in srgb, var(--accent) 30%, #2a2f28), #1b1f1a);
-    box-shadow: inset 0 0 0 2px rgba(237,234,224,0.12), 0 12px 30px -12px rgba(0,0,0,0.6);
-    filter: saturate(0.6);
-    transition: transform 350ms var(--ease-out), filter 350ms var(--ease-out);
-  }
-  .pfm-card:hover .pfm-card__screen, .pfm-card:active .pfm-card__screen {
-    transform: scale(1.05);
-    filter: saturate(1.25);
-  }
-  .pfm-card--phone .pfm-card__screen { width: 38%; height: 70%; border-radius: 20px; }
-  .pfm-card--tablet .pfm-card__screen { width: 58%; height: 64%; border-radius: 16px; }
-
-  /* real work: the screenshot fills the whole card, same hover treatment.
-     --shot-zoom (set per card via inline style) lets a specific photo sit
-     cropped in tighter without fighting the hover-scale transform below. */
-  .pfm-card__shot {
-    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
-    filter: saturate(0.85); transform: scale(var(--shot-zoom, 1));
-    transition: transform 350ms var(--ease-out), filter 350ms var(--ease-out);
-  }
-  .pfm-card:hover .pfm-card__shot, .pfm-card:active .pfm-card__shot {
-    transform: scale(calc(var(--shot-zoom, 1) * 1.05)); filter: saturate(1.1);
+  /* desktop: a single stacked column reads as an oversized, half-empty list
+     once the viewport is wide — switch to 2 columns so 6 clients read as a
+     grid of proof instead of one long scroll. */
+  @media (min-width: 60em) {
+    .pf-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-6) var(--space-8); max-width: 74rem; }
   }
 
-  /* brand name on top, scrim behind it for legibility over any future photo */
-  .pfm-card__top {
-    position: absolute; inset: 0 0 auto 0; z-index: 2; padding: var(--space-5);
-    background: linear-gradient(to bottom, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.32) 60%, transparent 100%);
+  .pf-row {
+    display: grid; grid-template-columns: 12rem 1fr; gap: var(--space-6); align-items: center;
+    padding: var(--space-6); border: var(--rule-width) solid var(--line); border-radius: var(--radius-md);
+    background: var(--bg-raised);
+    transition: border-color 200ms var(--ease-out), transform 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
   }
-  .pfm-card__brand {
-    display: block; color: #fff; font-family: var(--font-display); font-weight: var(--fw-display);
-    font-size: clamp(1.05rem, 1.6vw, 1.375rem); line-height: 1.15; text-transform: uppercase;
-    letter-spacing: 0.01em; text-shadow: 0 2px 10px rgba(0,0,0,0.65);
+  .pf-row:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 16px 30px -20px rgba(26, 24, 20, 0.35); }
+
+  .pf-row__shot { border-radius: var(--radius-sm); overflow: hidden; aspect-ratio: 1 / 1; border: var(--rule-width) solid var(--line); }
+  .pf-row__shot :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: center var(--shot-pos, 45%); display: block; transform: scale(var(--shot-zoom, 1.2)); }
+
+  .pf-row__info { display: flex; flex-direction: column; }
+  .pf-row__name { font-size: var(--fs-caption); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--accent-deep); }
+  .pf-row__value { margin-top: var(--space-2); font-size: clamp(2rem, 4vw, 2.75rem); font-weight: var(--fw-body-bold); color: var(--ink); line-height: 1; }
+  .pf-row__label { margin-top: var(--space-1); font-size: var(--fs-caption); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50); }
+  .pf-row__from { margin-top: var(--space-2); font-size: var(--fs-small); color: var(--ink-50); }
+  .pf-row__months {
+    display: inline-block; margin-top: var(--space-4); padding-top: var(--space-3);
+    border-top: var(--rule-width) solid var(--line);
+    font-size: var(--fs-caption); color: var(--ink-70);
   }
 
-  /* result stat on the bottom scrim */
-  .pfm-card__stat {
-    position: absolute; inset: auto 0 0 0; z-index: 2; padding: var(--space-5);
-    background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
-  }
-  .pfm-card__stat-value { display: block; font-size: clamp(1.25rem, 2.6vw, 1.75rem); font-weight: var(--fw-body-bold); color: #fff; line-height: 1.15; }
-  .pfm-card__stat-label { display: block; margin-top: var(--space-1); font-size: var(--fs-small); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: rgba(255,255,255,0.75); }
-  .pfm-card__stat-from { display: block; margin-top: var(--space-1); font-size: var(--fs-small); color: rgba(255,255,255,0.55); }
-
-  .pfm__hint { text-align: center; margin-top: var(--space-4); font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--ink-50); }
-
-  @media (max-width: 40em) { .pfm-card { flex-basis: clamp(180px, 52vw, 260px); border-radius: 18px; } }
-
-  @media (prefers-reduced-motion: reduce) {
-    .pfm__viewport { overflow-x: auto; scroll-snap-type: x proximity; }
-    .pfm-card { scroll-snap-align: center; }
+  /* mobile: the image column shrinks but stays LEFT of the numbers — never
+     stacks — so the "screenshot, then the result" reading order holds even
+     on a phone. */
+  @media (max-width: 34em) {
+    .pf-row { grid-template-columns: 5.5rem 1fr; gap: var(--space-4); padding: var(--space-4); }
+    .pf-row__value { font-size: clamp(1.5rem, 8vw, 2rem); }
   }
 </style>
-
-<script>
-  // One full cycle of a single card set, in seconds. Higher = slower drift.
-  const SPEED_SECONDS = 46;
-
-  document.querySelectorAll<HTMLElement>('[data-pfm-viewport]').forEach((viewport) => {
-    const track = viewport.querySelector<HTMLElement>('[data-pfm-track]');
-    const hint = viewport.parentElement?.querySelector<HTMLElement>('[data-pfm-hint]');
-    if (!track) return;
-
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) { if (hint) hint.hidden = false; return; } // native scroll handles it
-
-    // setWidth = width of ONE card set (the track holds two identical sets).
-    let setWidth = 0;
-    const measure = () => { setWidth = track.scrollWidth / 2; };
-    measure();
-    window.addEventListener('resize', measure);
-
-    let offset = -40; // small initial left-bleed
-    let paused = false, hovering = false, dragging = false;
-    let startX = 0, startOffset = 0, last = 0;
-
-    // keep offset inside [-setWidth, 0] so the seam is invisible
-    const wrap = () => {
-      if (setWidth <= 0) return;
-      while (offset <= -setWidth) offset += setWidth;
-      while (offset > 0) offset -= setWidth;
-    };
-    const apply = () => { track.style.transform = `translateX(${offset}px)`; };
-
-    const frame = (ts: number) => {
-      const dt = last ? (ts - last) / 1000 : 0; last = ts;
-      if (!paused && setWidth > 0) { offset -= (setWidth / SPEED_SECONDS) * dt; wrap(); apply(); }
-      requestAnimationFrame(frame);
-    };
-    apply();
-    requestAnimationFrame(frame);
-
-    // pause on hover (desktop) and on focus
-    viewport.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { hovering = true; paused = true; } });
-    viewport.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') { hovering = false; if (!dragging) paused = false; } });
-    viewport.addEventListener('focus', () => { paused = true; });
-    viewport.addEventListener('blur', () => { paused = false; });
-
-    // click-drag (desktop) + touch-swipe (mobile) to scrub, then resume
-    viewport.addEventListener('pointerdown', (e) => {
-      dragging = true; paused = true; startX = e.clientX; startOffset = offset;
-      viewport.classList.add('is-dragging');
-      try { viewport.setPointerCapture(e.pointerId); } catch {}
-    });
-    viewport.addEventListener('pointermove', (e) => {
-      if (!dragging) return;
-      offset = startOffset + (e.clientX - startX); wrap(); apply();
-    });
-    const endDrag = () => {
-      if (!dragging) return;
-      dragging = false; viewport.classList.remove('is-dragging');
-      paused = hovering; // stay paused only if mouse is still over it
-    };
-    viewport.addEventListener('pointerup', endDrag);
-    viewport.addEventListener('pointercancel', endDrag);
-
-    // keyboard: arrow keys scrub
-    viewport.addEventListener('keydown', (e) => {
-      const step = 90;
-      if (e.key === 'ArrowLeft') { offset += step; wrap(); apply(); e.preventDefault(); }
-      else if (e.key === 'ArrowRight') { offset -= step; wrap(); apply(); e.preventDefault(); }
-    });
-  });
-</script>
