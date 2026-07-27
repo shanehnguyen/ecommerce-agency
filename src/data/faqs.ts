@@ -29,7 +29,7 @@ export const homeFaqs: Faq[] = [
   {
     q: 'What’s actually included in this?',
     a: [
-      'Your full site: homepage, product pages, collection pages, cart, and checkout, all built from scratch and designed mobile first.',
+      'Your full site: homepage, product pages, collection pages, cart, and checkout, all custom-built from scratch and designed mobile first.',
       'It’s built around what actually converts in your niche, not a generic template, using the layout and copy patterns from the best-converting brands like yours.',
       'And it comes with the same guarantee as everything else here: I don’t stop working until it completely outperforms your old numbers, with a full refund if you’re not happy within 60 days.',
     ],

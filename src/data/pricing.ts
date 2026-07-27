@@ -28,9 +28,9 @@ export const priceCards: PriceCard[] = [
   },
   {
     name: 'Full Store Build',
-    description: 'Your entire storefront rebuilt end to end, the last site you need as you scale.',
+    description: 'Your entire storefront, custom-built around your catalog and brand, the last site you need as you scale.',
     price: '$4,500', qualifier: 'starting', featured: true,
     cta: 'Build my website', event: 'Pricing:Full',
-    features: ['Built to be the only site you need, no ceiling as you scale', 'Unlimited revisions and integrations, no extra invoices', 'Mobile-first design, built to convert any user', 'Live in 14 days or you don’t pay', 'We’ll keep improving until it completely outperforms your old numbers'],
+    features: ['Custom-built to be the only site you need, no ceiling as you scale', 'Unlimited revisions and integrations, no extra invoices', 'Mobile-first design, built to convert any user', 'Live in 14 days or you don’t pay', 'We’ll keep improving until it completely outperforms your old numbers'],
   },
 ];
