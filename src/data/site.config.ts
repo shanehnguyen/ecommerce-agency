@@ -18,9 +18,8 @@ export const site = {
   founder: 'Shane Nguyen',
   tagline: 'Conversion-built Shopify storefronts for consumer brands.',
 
-  // TODO confirm production domain before launch (used for canonical + OG urls)
-  domain: 'shanenguyen.co',
-  url: 'https://shanenguyen.co',
+  domain: 'flipfixdigital.com',
+  url: 'https://www.flipfixdigital.com',
 
   // ---- Contact --------------------------------------------------------
   email: 'shanehnguyen@flipfixdigital.com',

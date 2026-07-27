@@ -5,4 +5,4 @@ Allow: /
 Disallow: /apply
 Disallow: /thank-you
 
-Sitemap: https://shanenguyen.co/sitemap.xml
+Sitemap: https://www.flipfixdigital.com/sitemap.xml
