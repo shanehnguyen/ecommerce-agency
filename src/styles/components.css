@@ -120,20 +120,20 @@ button.pcard.is-on.pcard--featured { border-color: var(--accent); background: co
 button.pcard.is-on .pcard__select { background: var(--accent-strong); color: var(--ink); }
 
 /* ---------- Nav ---------- */
-/* solid dark bar (via .section--dark) so it reads as one consistent color
-   at every scroll position, instead of a translucent/blurred bar picking up
-   whatever section happens to be scrolling underneath it */
+/* translucent/blurred at all times (not just once scrolled) so it blends
+   into whatever's behind it — the hero wash tints --bg with the accent
+   color near the top, and a flat opaque --bg nav read as a visible seam
+   against that instead of matching it. */
 .nav {
   position: sticky; top: 0; z-index: var(--z-nav);
-  background: var(--bg);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid transparent;
   transition: border-color 200ms var(--ease-out), background 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
 }
 .nav[data-scrolled="true"] {
   border-bottom-color: var(--line);
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 8px 24px -18px rgba(26, 24, 20, 0.25);
 }
 .nav__inner {
