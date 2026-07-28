@@ -6,10 +6,10 @@
    <form>; values live in the DOM and persist to sessionStorage so nothing
    is lost. On submit the lead fires to Web3Forms and the Calendly
    calendar takes over the same spot; a booked time shows the confirmation.
-   Exactly 4 questions: monthly revenue (no gate — every band goes through),
-   which offer (shared pricing cards, same as the homepage), whether they
-   already have a site, then contact details → calendar. Contact details go
-   last since that's the step that actually submits. */
+   Exactly 3 questions: which offer (shared pricing cards, same as the
+   homepage), monthly revenue (no gate — every band goes through), then
+   contact details → calendar. Contact details go last since that's the
+   step that actually submits. */
 import BareLayout from '../layouts/BareLayout.astro';
 import { site } from '../data/site.config';
 import { priceCards } from '../data/pricing';
@@ -31,21 +31,9 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
 
         <form class="bk-form" data-book-form novalidate>
 
-          <!-- Q1 — REVENUE (no gate — every band moves the form forward) -->
+          <!-- Q1 — WHICH OFFER -->
           <fieldset class="bk-step" data-step>
-            <p class="bk-count">1/4</p>
-            <h2 class="bk-q">How much monthly revenue does your ecommerce business do?</h2>
-            <div class="bk-field" data-field="revenue">
-              <div class="bk-cards bk-cards--row" data-name="revenue" data-radio>
-                {revenueBands.map((b) => <button type="button" class="bk-card" data-value={b}>{b}</button>)}
-              </div>
-            </div>
-          </fieldset>
-
-          <!-- Q2 — WHICH OFFER -->
-          <fieldset class="bk-step" data-step hidden>
-            <button type="button" class="bk-back" data-back><span aria-hidden="true">←</span> Back</button>
-            <p class="bk-count">2/4</p>
+            <p class="bk-count">1/3</p>
             <h2 class="bk-q">Which option are you interested in?</h2>
             <div class="bk-field" data-field="interest">
               <div class="bk-choice" data-name="interest" data-radio>
@@ -63,25 +51,23 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
             </div>
           </fieldset>
 
-          <!-- Q3 — DO YOU CURRENTLY HAVE A SITE -->
+          <!-- Q2 — REVENUE (no gate — every band moves the form forward) -->
           <fieldset class="bk-step" data-step hidden>
             <button type="button" class="bk-back" data-back><span aria-hidden="true">←</span> Back</button>
-            <p class="bk-count">3/4</p>
-            <h2 class="bk-q">What’s the URL to your site?</h2>
-            <div class="bk-field" data-field="siteUrl">
-              <div class="bk-url-row">
-                <input class="bk-input" id="bk-siteUrl" name="siteUrl" type="url" autocomplete="url" placeholder="https://yourstore.com" />
-                <button type="button" class="btn btn--ghost" data-no-site>Don’t have one</button>
+            <p class="bk-count">2/3</p>
+            <h2 class="bk-q">How much monthly revenue does your ecommerce business do?</h2>
+            <div class="bk-field" data-field="revenue">
+              <div class="bk-cards bk-cards--row" data-name="revenue" data-radio>
+                {revenueBands.map((b) => <button type="button" class="bk-card" data-value={b}>{b}</button>)}
               </div>
             </div>
-            <div class="bk-nav"><button type="button" class="btn btn--primary btn--lg" data-next>Continue <span aria-hidden="true">→</span></button></div>
           </fieldset>
 
-          <!-- Q4 — NAME + EMAIL + PHONE → submit -->
+          <!-- Q3 — NAME + EMAIL + PHONE → submit -->
           <fieldset class="bk-step" data-step hidden>
             <button type="button" class="bk-back" data-back><span aria-hidden="true">←</span> Back</button>
-            <p class="bk-count">4/4</p>
-            <h2 class="bk-q">Last thing. How can I reach you?</h2>
+            <p class="bk-count">3/3</p>
+            <h2 class="bk-q">Last thing — let’s lock this in and build your personalized strategy.</h2>
             <div class="bk-fields">
               <div class="bk-field" data-field="fullName">
                 <label class="bk-label" for="bk-fullName">Full name</label>
@@ -265,7 +251,7 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
     //      forward; the beacon carries whatever they've filled in so far. ----
     const nowMs = () => Date.now();
     const PULSE = { id: pulseId(), stage: 'landed', landedAt: nowMs(), stageTimes: {} as Record<string, number>, ...pulseSource() };
-    const PSTAGES = ['landed', 'revenue', 'offer', 'details', 'calendar', 'booked'];
+    const PSTAGES = ['landed', 'offer', 'revenue', 'details', 'calendar', 'booked'];
     const prank = (s: string) => PSTAGES.indexOf(s);
     PULSE.stageTimes.landed = PULSE.landedAt; // stamp the landing as the first stage time
     const pulsePayload = (final: boolean) => {
@@ -295,12 +281,12 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
       }
       if (up || final) pulseSend(pulsePayload(final), final);
     };
-    // Furthest step → stage. Q1 revenue · Q2 interest (offer) · Q3 details → calendar → booked.
+    // Furthest step → stage. Q1 interest (offer) · Q2 revenue · Q3 details → calendar → booked.
     const stageForCurrent = () =>
-      current >= 2 ? 'details' : current >= 1 ? 'offer'
-      : (answers.revenue ? 'revenue' : 'landed');
+      current >= 2 ? 'details' : current >= 1 ? 'revenue'
+      : (answers.interest ? 'offer' : 'landed');
 
-    // Fire the "started applying" signal once, the moment revenue is picked —
+    // Fire the "started applying" signal once, the moment they pick an offer —
     // marks top-of-funnel intent even if they never finish.
     const STARTED_KEY = 'ff_apply_started_v1';
     let startedFired = false;
@@ -312,17 +298,6 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
       (window as any).kwTrack?.('ApplyStarted');
     };
 
-    // "What's the URL to your site?" — optional field, "Don't have one" is a
-    // decisive escape for applicants with no site yet: clears it and moves on.
-    const siteUrlInput = form.querySelector<HTMLInputElement>('#bk-siteUrl');
-    form.querySelector<HTMLButtonElement>('[data-no-site]')?.addEventListener('click', () => {
-      if (siteUrlInput) siteUrlInput.value = '';
-      answers.siteUrl = '';
-      clearErr('siteUrl');
-      persist();
-      advance();
-    });
-
     // single-choice cards
     form.querySelectorAll<HTMLElement>('[data-radio]').forEach((group) => {
       group.querySelectorAll<HTMLButtonElement>('.bk-card').forEach((card) => {
@@ -332,8 +307,8 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
           answers[group.dataset.name!] = card.dataset.value!;
           clearErr(group.dataset.name!);
           persist();
-          setStage(stageForCurrent()); // picking revenue flips landed → revenue
-          if (group.dataset.name === 'revenue') fireStarted();
+          setStage(stageForCurrent()); // picking an offer flips landed → offer
+          if (group.dataset.name === 'interest') fireStarted();
           maybeAutoAdvance(card);
         });
       });
@@ -378,8 +353,6 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
       fd.append('Phone', answers.phone || '');
       fd.append('Monthly revenue', answers.revenue || '');
       fd.append('Interested in', answers.interest || '');
-      fd.append('Has a site', answers.siteUrl ? 'Yes' : 'No');
-      if (answers.siteUrl) fd.append('Current site URL', answers.siteUrl);
       if (window.location.search) fd.append('Query params', window.location.search);
       if (document.referrer) fd.append('Referrer', document.referrer);
       fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd }).catch(() => { /* best-effort */ });
@@ -570,13 +543,6 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
   .bk-label { display: block; font-family: var(--font-body); font-size: var(--fs-body-sm, var(--fs-caption)); font-weight: var(--fw-body-semi); color: var(--ink-70); margin-bottom: var(--space-2); }
   .bk-fields .bk-input { margin-top: 0; max-width: none; }
 
-  /* Q3 "what's the URL" — input + a "Don't have one" escape button, side by
-     side on desktop, stacked on narrow screens so neither gets cramped. */
-  .bk-url-row { margin: var(--space-5) auto 0; display: flex; gap: var(--space-3); max-width: 32rem; }
-  .bk-url-row .bk-input { margin-top: 0; max-width: none; flex: 1; }
-  .bk-url-row .btn { flex-shrink: 0; white-space: nowrap; }
-  @media (max-width: 30em) { .bk-url-row { flex-direction: column; } }
-
   /* tap-to-select cards */
   .bk-cards { margin: var(--space-5) auto 0; display: grid; gap: var(--space-3); max-width: 32rem; }
   .bk-cards--row { grid-template-columns: repeat(2, 1fr); max-width: 40rem; }
@@ -585,7 +551,7 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
   .bk-card:hover { border-color: var(--ink-50); }
   .bk-card.is-on { border-color: var(--ink); background: color-mix(in srgb, var(--accent) 16%, #fff); }
 
-  /* Q2 "which offer" — a compact selectable card (name + price + one-line
+  /* Q1 "which offer" — a compact selectable card (name + price + one-line
      description only, no features list) so both options fit in one view
      without scrolling, on mobile and desktop alike. Pricing data itself
      still comes from the shared src/data/pricing.ts, just rendered light

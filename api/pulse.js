@@ -4,7 +4,7 @@ import { Redis } from '@upstash/redis';
    /api/pulse — booking-funnel telemetry + drop-off alerts.
 
    The /apply page beacons a "journey" here as a visitor moves through the
-   funnel (landed → revenue → offer → details → calendar → booked). This
+   funnel (landed → offer → revenue → details → calendar → booked). This
    endpoint:
 
      • upserts the journey in Redis (7-day TTL) and indexes it, so /pulse
@@ -43,11 +43,11 @@ const WRITE_RATE_WINDOW_S = 60;
 const MIN_DWELL_FOR_EMAIL_MS = 1500;
 
 // Funnel stages, in order. A journey's stage only ever moves forward.
-const STAGES = ['landed', 'revenue', 'offer', 'details', 'calendar', 'booked'];
+const STAGES = ['landed', 'offer', 'revenue', 'details', 'calendar', 'booked'];
 const STAGE_LABEL = {
   landed: 'Just landed on the page',
-  revenue: 'Answered monthly revenue',
   offer: 'Picked which option they want',
+  revenue: 'Answered monthly revenue',
   details: 'On the contact details step',
   calendar: 'Completed the form — reached the calendar',
   booked: 'Booked a time',
@@ -357,10 +357,53 @@ function buildFunnel(journeys) {
   }));
 }
 
+// -------------------------------------------------------------- purge (DELETE)
+// Deletes visitor journeys that landed on/before a cutoff (default 3 days
+// ago) — the raw tracking rows the dashboard table shows. Leaves the separate
+// lead records (pulse:lead:*, upsertLead above) alone: those are real
+// applicants' contact info for follow-up, not tracking noise, so they keep
+// their own 90-day TTL regardless of this purge.
+async function purge(req, res) {
+  if (!DASHBOARD_TOKEN) {
+    return res.status(503).json({ ok: false, error: 'Dashboard is off. Set a PULSE_TOKEN env var to turn it on.' });
+  }
+  const token = (req.query && (req.query.token || req.query.t)) || '';
+  if (token !== DASHBOARD_TOKEN) {
+    return res.status(401).json({ ok: false, error: 'Bad or missing token.' });
+  }
+
+  const redis = getRedis();
+  if (!redis) return res.status(200).json({ ok: true, removed: 0 });
+
+  const days = Math.max(1, Number(req.query.days) || 3);
+  const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
+
+  let staleIds = [];
+  try {
+    staleIds = await redis.zrange(RECENT_KEY, 0, cutoff, { byScore: true });
+  } catch (err) {
+    console.warn('pulse purge zrange failed:', err.message);
+    return res.status(500).json({ ok: false, error: 'Could not read old entries.' });
+  }
+  staleIds = Array.isArray(staleIds) ? staleIds : [];
+  if (!staleIds.length) return res.status(200).json({ ok: true, removed: 0 });
+
+  try {
+    await redis.del(...staleIds.map((id) => `pulse:j:${id}`));
+    await redis.zremrangebyscore(RECENT_KEY, 0, cutoff);
+  } catch (err) {
+    console.warn('pulse purge delete failed:', err.message);
+    return res.status(500).json({ ok: false, error: 'Delete failed partway through.' });
+  }
+
+  return res.status(200).json({ ok: true, removed: staleIds.length });
+}
+
 // ------------------------------------------------------------------- handler
 export default async function handler(req, res) {
   if (req.method === 'POST') return ingest(req, res);
   if (req.method === 'GET') return dashboard(req, res);
-  res.setHeader('Allow', 'POST, GET');
+  if (req.method === 'DELETE') return purge(req, res);
+  res.setHeader('Allow', 'POST, GET, DELETE');
   return res.status(405).json({ ok: false, error: 'Method not allowed' });
 }

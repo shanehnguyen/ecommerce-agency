@@ -21,6 +21,7 @@ import BareLayout from '../layouts/BareLayout.astro';
           <span data-pl-redis class="pl-redis" hidden></span>
           <span data-pl-updated class="pl-updated"></span>
           <button type="button" class="pl-btn" data-pl-refresh>Refresh</button>
+          <button type="button" class="pl-btn pl-btn--ghost" data-pl-purge hidden>Purge 3d+</button>
           <button type="button" class="pl-btn pl-btn--ghost" data-pl-signout hidden>Sign out</button>
         </div>
       </header>
@@ -59,6 +60,11 @@ import BareLayout from '../layouts/BareLayout.astro';
               <input class="pl-search" type="search" placeholder="Search anything…" data-pl-search />
               <select class="pl-filter" data-pl-filter="stage"><option value="">All stages</option></select>
               <select class="pl-filter" data-pl-filter="entryKind"><option value="">All entries</option></select>
+              <select class="pl-filter" data-pl-filter="ads">
+                <option value="">Ads or not</option>
+                <option value="yes">Ads (Facebook/Instagram)</option>
+                <option value="no">Not ads</option>
+              </select>
               <select class="pl-filter" data-pl-filter="utmSource"><option value="">All utm_source</option></select>
               <select class="pl-filter" data-pl-filter="utmMedium"><option value="">All utm_medium</option></select>
               <select class="pl-filter" data-pl-filter="utmCampaign"><option value="">All utm_campaign</option></select>
@@ -96,6 +102,7 @@ import BareLayout from '../layouts/BareLayout.astro';
   const countEl = $('[data-pl-count]');
   const windowEl = $('[data-pl-window]');
   const signout = $('[data-pl-signout]') as HTMLButtonElement;
+  const purgeBtn = $('[data-pl-purge]') as HTMLButtonElement;
 
   const REDIS_STATE: Record<string, { label: string; cls: string }> = {
     connected: { label: '● database connected', cls: 'is-ok' },
@@ -103,13 +110,13 @@ import BareLayout from '../layouts/BareLayout.astro';
     'not-configured': { label: '● database not configured', cls: 'is-bad' },
   };
 
-  const STAGE_ORDER = ['landed', 'revenue', 'offer', 'details', 'calendar', 'booked'];
+  const STAGE_ORDER = ['landed', 'offer', 'revenue', 'details', 'calendar', 'booked'];
   const STAGE_LABELS: Record<string, string> = {
-    landed: 'Landed', revenue: 'Revenue answered', offer: 'Picked offer',
+    landed: 'Landed', offer: 'Picked offer', revenue: 'Revenue answered',
     details: 'On details', calendar: 'At calendar', booked: 'Booked',
   };
   const STAGE_TONE: Record<string, string> = {
-    landed: 'cool', revenue: 'cool', offer: 'mid', details: 'warm', calendar: 'good', booked: 'good',
+    landed: 'cool', offer: 'cool', revenue: 'mid', details: 'warm', calendar: 'good', booked: 'good',
   };
   const ENTRY_LABEL: Record<string, string> = { cta: 'On-site CTA', ad: 'Ad / tagged', ref: 'Referral', direct: 'Direct' };
   const stageLabel = (s: string) => STAGE_LABELS[s] || s;
@@ -163,6 +170,12 @@ import BareLayout from '../layouts/BareLayout.astro';
     if (j.referrer) return { kind: 'ref', label: 'referral · ' + refHost(j.referrer) };
     return { kind: 'direct', label: 'direct' };
   }
+  // "Ads" = utm_source is Facebook or Instagram (either platform, however it's
+  // tagged — "facebook", "Facebook Ads", "instagram", "fb", "ig", ...).
+  function isAdSource(utmSource: string): boolean {
+    const s = (utmSource || '').toLowerCase();
+    return !!s && (s.includes('facebook') || s.includes('instagram') || s === 'fb' || s === 'ig');
+  }
   function deviceLabel(ua: string): string {
     if (!ua) return '';
     const mobile = /Mobi|Android|iPhone|iPad|iPod/i.test(ua);
@@ -195,6 +208,7 @@ import BareLayout from '../layouts/BareLayout.astro';
       tCal: elapsed('calendar'), tBooked: elapsed('booked'),
       dwell: (Number(j.updatedAt) || landed) - landed,
       entryKind: entry.kind, entryLabel: entry.label,
+      ads: isAdSource(j.utmSource) ? 'yes' : 'no',
       utmSource: j.utmSource || '', utmMedium: j.utmMedium || '', utmCampaign: j.utmCampaign || '',
       utmContent: j.utmContent || '', utmTerm: j.utmTerm || '',
       from: j.source || '',
@@ -218,17 +232,18 @@ import BareLayout from '../layouts/BareLayout.astro';
     { key: 'name',        label: 'Name',          type: 'text',    cls: 'col-biz', get: (r: any) => r.name.toLowerCase(),     cell: nameCell },
     { key: 'reached',     label: 'Reached',       type: 'num',                     get: (r: any) => r.stageRank,               cell: badgeCell },
     { key: 'when',        label: 'Landed',        type: 'num',                     get: (r: any) => r.when,                    cell: whenCell },
-    { key: 'revenue',     label: 'Revenue · Q1',  type: 'text',                    get: (r: any) => r.revenue.toLowerCase(),   cell: (r: any) => txt(r.revenue) },
-    { key: 'interest',    label: 'Interested in · Q2', type: 'text',                get: (r: any) => r.interest.toLowerCase(),  cell: (r: any) => txt(r.interest) },
+    { key: 'interest',    label: 'Interested in · Q1', type: 'text',                get: (r: any) => r.interest.toLowerCase(),  cell: (r: any) => txt(r.interest) },
+    { key: 'revenue',     label: 'Revenue · Q2',  type: 'text',                    get: (r: any) => r.revenue.toLowerCase(),   cell: (r: any) => txt(r.revenue) },
     { key: 'email',       label: 'Email · Q3',    type: 'text',                    get: (r: any) => r.email.toLowerCase(),     cell: (r: any) => txt(r.email) },
     { key: 'phone',       label: 'Phone · Q3',    type: 'text',                    get: (r: any) => r.phone.toLowerCase(),     cell: (r: any) => txt(r.phone) },
-    { key: 'tRevenue',    label: '→ Revenue',     type: 'numNull',                 get: (r: any) => r.tRevenue,                cell: (r: any) => elapsedCell(r.tRevenue) },
     { key: 'tOffer',      label: '→ Offer',       type: 'numNull',                 get: (r: any) => r.tOffer,                  cell: (r: any) => elapsedCell(r.tOffer) },
+    { key: 'tRevenue',    label: '→ Revenue',     type: 'numNull',                 get: (r: any) => r.tRevenue,                cell: (r: any) => elapsedCell(r.tRevenue) },
     { key: 'tDetails',    label: '→ Details',     type: 'numNull',                 get: (r: any) => r.tDetails,                cell: (r: any) => elapsedCell(r.tDetails) },
     { key: 'tCal',        label: '→ Calendar',    type: 'numNull',                 get: (r: any) => r.tCal,                    cell: (r: any) => elapsedCell(r.tCal) },
     { key: 'tBooked',     label: '→ Booked',      type: 'numNull',                 get: (r: any) => r.tBooked,                 cell: (r: any) => elapsedCell(r.tBooked) },
     { key: 'dwell',       label: 'On page',       type: 'num',                     get: (r: any) => r.dwell,                   cell: (r: any) => txt(fmtElapsed(r.dwell)) },
     { key: 'entry',       label: 'Entry',         type: 'text',                    get: (r: any) => r.entryLabel.toLowerCase(),cell: entryCell },
+    { key: 'ads',         label: 'Ads (FB/IG)',   type: 'text',                    get: (r: any) => r.ads,                     cell: (r: any) => r.ads === 'yes' ? '<span class="pl-entry--ad">Yes</span>' : '<span class="pl-dash">—</span>' },
     { key: 'utmSource',   label: 'utm_source',    type: 'text',                    get: (r: any) => r.utmSource.toLowerCase(), cell: (r: any) => txt(r.utmSource) },
     { key: 'utmMedium',   label: 'utm_medium',    type: 'text',                    get: (r: any) => r.utmMedium.toLowerCase(), cell: (r: any) => txt(r.utmMedium) },
     { key: 'utmCampaign', label: 'utm_campaign',  type: 'text',                    get: (r: any) => r.utmCampaign.toLowerCase(),cell: (r: any) => txt(r.utmCampaign) },
@@ -266,7 +281,7 @@ import BareLayout from '../layouts/BareLayout.astro';
   function token(): string { try { return localStorage.getItem(TOKEN_KEY) || ''; } catch { return ''; } }
   function setToken(t: string) { try { if (t) localStorage.setItem(TOKEN_KEY, t); else localStorage.removeItem(TOKEN_KEY); } catch {} }
   function showGate(msg?: string) {
-    gate.hidden = false; body.hidden = true; signout.hidden = true;
+    gate.hidden = false; body.hidden = true; signout.hidden = true; purgeBtn.hidden = true;
     if (msg) { gateErr.textContent = msg; gateErr.hidden = false; }
   }
 
@@ -405,10 +420,10 @@ import BareLayout from '../layouts/BareLayout.astro';
     const cols: [string, (r: any) => any][] = [
       ['Name', (r) => r.name], ['Reached', (r) => stageLabel(r.stage)],
       ['Landed', (r) => r.when ? new Date(r.when).toISOString() : ''],
-      ['Revenue', (r) => r.revenue], ['Interested in', (r) => r.interest], ['Email', (r) => r.email], ['Phone', (r) => r.phone],
-      ['t_to_revenue_s', (r) => secs(r.tRevenue)], ['t_to_offer_s', (r) => secs(r.tOffer)], ['t_to_details_s', (r) => secs(r.tDetails)],
+      ['Interested in', (r) => r.interest], ['Revenue', (r) => r.revenue], ['Email', (r) => r.email], ['Phone', (r) => r.phone],
+      ['t_to_offer_s', (r) => secs(r.tOffer)], ['t_to_revenue_s', (r) => secs(r.tRevenue)], ['t_to_details_s', (r) => secs(r.tDetails)],
       ['t_to_calendar_s', (r) => secs(r.tCal)], ['t_to_booked_s', (r) => secs(r.tBooked)], ['on_page_s', (r) => secs(r.dwell)],
-      ['Entry', (r) => r.entryLabel],
+      ['Entry', (r) => r.entryLabel], ['Ads (FB/IG)', (r) => r.ads === 'yes' ? 'Yes' : 'No'],
       ['utm_source', (r) => r.utmSource], ['utm_medium', (r) => r.utmMedium], ['utm_campaign', (r) => r.utmCampaign],
       ['utm_content', (r) => r.utmContent], ['utm_term', (r) => r.utmTerm],
       ['from', (r) => r.from], ['Paid', (r) => r.paid], ['Referrer', (r) => r.j.referrer || ''],
@@ -446,7 +461,7 @@ import BareLayout from '../layouts/BareLayout.astro';
     if (!r.ok) { note.textContent = `Server error (${r.status}).`; note.hidden = false; return; }
 
     const data = await r.json();
-    note.hidden = true; gate.hidden = true; body.hidden = false; signout.hidden = false;
+    note.hidden = true; gate.hidden = true; body.hidden = false; signout.hidden = false; purgeBtn.hidden = false;
     const journeys = Array.isArray(data.journeys) ? data.journeys : [];
     ALL_ROWS = journeys.map(toRow);
     renderFunnel(Array.isArray(data.funnel) ? data.funnel : []);
@@ -504,6 +519,25 @@ import BareLayout from '../layouts/BareLayout.astro';
   });
   $('[data-pl-refresh]').addEventListener('click', () => load());
   signout.addEventListener('click', () => { setToken(''); showGate(); });
+
+  // Deletes visitor journeys older than 3 days (leaves lead records alone —
+  // see the endpoint comment). Irreversible, so confirm before firing.
+  purgeBtn.addEventListener('click', async () => {
+    const days = 3;
+    if (!window.confirm(`Permanently delete every visitor journey older than ${days} days? This can't be undone.`)) return;
+    purgeBtn.disabled = true;
+    try {
+      const r = await fetch(`/api/pulse?token=${encodeURIComponent(token())}&days=${days}`, { method: 'DELETE' });
+      const data = await r.json();
+      if (!r.ok || !data.ok) { window.alert(`Purge failed: ${data.error || r.status}`); return; }
+      window.alert(`Removed ${data.removed} journey${data.removed === 1 ? '' : 's'} older than ${days} days.`);
+      load();
+    } catch {
+      window.alert('Could not reach the server.');
+    } finally {
+      purgeBtn.disabled = false;
+    }
+  });
 
   const urlToken = new URLSearchParams(location.search).get('token');
   if (urlToken) { setToken(urlToken); history.replaceState(null, '', location.pathname); }
