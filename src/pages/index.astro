@@ -30,7 +30,7 @@ const topFaqs = homeFaqs;
 const blueprint = [
   { n: '01', heading: 'We study your niche', body: 'We study the best-converting brands in your niche to see exactly what makes them convert (layout, copy, checkout flow) before writing a line of code.' },
   { n: '02', heading: 'We build your store', body: 'Homepage, product pages, cart, and checkout: all custom-built from scratch around what we learned, optimized for how your customers actually buy.' },
-  { n: '03', heading: 'We keep optimizing until it wins', body: 'Once it’s live, we track your real numbers (add-to-cart rate, checkout drop-off, mobile vs. desktop) and keep testing changes against them. We don’t stop working until it completely outperforms your old numbers.' },
+  { n: '03', heading: 'We keep optimizing until it wins', body: 'Once it’s live, we track your real numbers (add-to-cart rate, checkout drop-off, mobile vs. desktop) and keep testing changes against them until your new site is clearly winning.' },
 ]; // TODO real screenshot/mockup per row
 
 // "14 days from today" — computed at build so the date in the final CTA
@@ -44,8 +44,8 @@ const ordinal = (n: number) => {
 const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })} ${ordinal(fourteen.getDate())}`;
 ---
 <BaseLayout
-  title="Conversion-Built Shopify Stores for Brands Doing $40k+/Month"
-  description="FlipFix Digital builds custom Shopify storefronts for consumer brands doing $40k+ a month. Live in 14 days or you don't pay, then measured against your old numbers on your own analytics."
+  title="Conversion-Built Shopify Stores for Consumer Brands"
+  description="FlipFix Digital builds custom Shopify storefronts for consumer brands. Live in 14 days or you don't pay, then measured against your old numbers on your own analytics."
 >
   <!-- soft gradient wash behind the hero only, fading to flat bg by the fold -->
   <div class="hero-wash" aria-hidden="true"></div>

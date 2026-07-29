@@ -96,16 +96,13 @@ export const guarantees: Guarantee[] = [
 
 // ---- Who this is for, and who it isn’t ---------------------------------
 export const forYou: string[] = [
-  '$40k+ a month on Shopify',
   'Running paid traffic',
-  '500+ orders last quarter',
   'You’re the decision maker',
   'You have brand assets ready',
   'Under 100 SKUs',
 ];
 
 export const notForYou: string[] = [
-  'Under $20k a month',
   'You have no traffic yet',
   'You’re dropshipping',
   'Four people need to approve',

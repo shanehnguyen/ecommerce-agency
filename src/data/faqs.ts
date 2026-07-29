@@ -1,5 +1,5 @@
 /* =====================================================================
-   faqs.ts — homepage FAQ. Five broad questions, each one rolling up
+   faqs.ts — homepage FAQ. Six broad questions, each one rolling up
    several of the real objections from 00-MASTER-OFFER.md so the answer
    is comprehensive instead of split across a long list. Answers are
    arrays of short, one-beat-per-line paragraphs (FAQ.astro renders each
@@ -31,14 +31,21 @@ export const homeFaqs: Faq[] = [
     a: [
       'Your full site: homepage, product pages, collection pages, cart, and checkout, all custom-built from scratch and designed mobile first.',
       'It’s built around what actually converts in your niche, not a generic template, using the layout and copy patterns from the best-converting brands like yours.',
-      'And it comes with the same guarantee as everything else here: I don’t stop working until it completely outperforms your old numbers, with a full refund if you’re not happy within 60 days.',
+      'And it comes with the same guarantee as everything else here: I keep iterating until you’re happy, with a full refund if that’s within 60 days.',
+    ],
+  },
+  {
+    q: 'How does payment work?',
+    a: [
+      '50% to start, 50% when the site is live and you’ve approved it. No lump sum upfront.',
+      'That second half isn’t due until you’ve actually seen the finished build working, so we’re both on the hook to get it right.',
     ],
   },
   {
     q: 'Why can’t I just hire a freelancer who’s cheaper?',
     a: [
       'You can, but you’re paying for their time, not a result — if the build doesn’t convert, that’s your problem, not theirs, and you’ve lost the time and ad spend either way.',
-      'I charge more because I stake my own time on the outcome: a fixed price, a guarantee that I don’t stop working until it completely outperforms your numbers, and a full refund within 60 days if you’re not happy.',
+      'I charge more because I stake my own time on the outcome: a fixed price, a guarantee that I keep working until you’re winning, and a full refund within 60 days if you’re not happy.',
       'It’s built for real stores, not dropshippers on a generic catalogue or anyone who needs four people to approve a decision.',
     ],
   },
