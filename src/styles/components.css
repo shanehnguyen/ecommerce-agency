@@ -120,20 +120,22 @@ button.pcard.is-on.pcard--featured { border-color: var(--accent); background: co
 button.pcard.is-on .pcard__select { background: var(--accent-strong); color: var(--ink); }
 
 /* ---------- Nav ---------- */
-/* translucent/blurred at all times (not just once scrolled) so it blends
-   into whatever's behind it — the hero wash tints --bg with the accent
-   color near the top, and a flat opaque --bg nav read as a visible seam
-   against that instead of matching it. */
+/* fully transparent by default — the hero wash tints --bg with the accent
+   color near the top, so ANY added color (even a mostly-opaque one) reads
+   as a seam against it. Zero overlay means the nav shows the hero exactly
+   as-is. The frosted blur only kicks in once scrolled past the hero, where
+   it needs to read over arbitrary section content instead. */
 .nav {
   position: sticky; top: 0; z-index: var(--z-nav);
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: transparent;
   border-bottom: 1px solid transparent;
-  transition: border-color 200ms var(--ease-out), background 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
+  transition: border-color 200ms var(--ease-out), background 200ms var(--ease-out), backdrop-filter 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
 }
 .nav[data-scrolled="true"] {
   border-bottom-color: var(--line);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 8px 24px -18px rgba(26, 24, 20, 0.25);
 }
 .nav__inner {

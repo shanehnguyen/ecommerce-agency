@@ -23,7 +23,7 @@ export const homeFaqs: Faq[] = [
     a: [
       'I don’t stop working until your conversion rate completely outperforms your original numbers. I won’t promise you a specific percentage, because anyone who does is either guessing or lying, and you’d be right not to trust them.',
       'And if you ever feel unsatisfied, I’ll give you a full refund as long as it’s within 60 days.',
-      'You also get a 60-day iteration warranty and a six-month code warranty, plus a measurement report on day 44 comparing your old numbers to your new ones by device and traffic source.',
+      'You also get a 60-day iteration warranty and a six-month code warranty.',
     ],
   },
   {
