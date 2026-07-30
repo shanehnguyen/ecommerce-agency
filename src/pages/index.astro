@@ -15,7 +15,6 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CtaBlock from '../components/CtaBlock.astro';
 import FAQ from '../components/FAQ.astro';
-import HeroCollage from '../components/HeroCollage.astro';
 import PortfolioMarquee from '../components/PortfolioMarquee.astro';
 import Timeline from '../components/Timeline.astro';
 import { site } from '../data/site.config';
@@ -49,9 +48,6 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
   title="Conversion-Built Shopify Stores for Consumer Brands"
   description="FlipFix Digital builds custom Shopify storefronts for consumer brands. Live in 14 days or you don't pay, then measured against your old numbers on your own analytics."
 >
-  <!-- 1. INTRO BAND — scattered placeholder collage + auto-scrolling wordmark -->
-  <HeroCollage />
-
   <!-- soft gradient wash behind the hero only, fading to flat bg by the fold -->
   <div class="hero-wash" aria-hidden="true"></div>
 
@@ -185,44 +181,10 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
     </div>
   </section>
 
-  <!-- 6. PRICING (two offers) -->
-  <section class="pricing" id="pricing">
-    <div class="container pricing__head">
-      <p class="eyebrow-num mono">03. The Solution</p>
-      <h2 class="pricing__heading">Built to convert like crazy.</h2>
-      <p class="pricing__sub">Two different offers, both designed to increase your conversions and revenue.</p>
-    </div>
-    <div class="container">
-      <div class="pricing__grid">
-        {priceCards.map((c, i) => (
-          <div class:list={['pcard', { 'pcard--featured': c.featured }]} data-reveal style={`transition-delay:${i * 90}ms`}>
-            {c.featured && <p class="pcard__tag mono">Most booked</p>}
-            <p class="pcard__name mono">{c.name}</p>
-            <p class="pcard__desc">{c.description}</p>
-            <p class="pcard__price">
-              <span data-count-to={c.price.replace(/\D/g, '')} data-count-prefix="$">{c.price}</span>
-              <span class="pcard__qual">{c.qualifier}</span>
-            </p>
-            <a class="btn btn--primary btn--pill pcard__cta" href={`${site.cta.href}?from=${encodeURIComponent(c.event)}`} data-event={c.event}><span class="btn__label">{c.cta}</span></a>
-            <hr class="pcard__divider" />
-            <ul class="pcard__features">
-              {c.features.map((f) => <li data-reveal-child>{f}</li>)}
-            </ul>
-          </div>
-        ))}
-      </div>
-    </div>
-
-    <!-- CTA BLOCK -->
-    <div class="pricing__cta">
-      <CtaBlock event="Pricing" />
-    </div>
-  </section>
-
   <!-- 10. THE BLUEPRINT -->
   <section class="bp">
     <div class="container bp__head">
-      <p class="eyebrow-num mono eyebrow-num--center">04. The Blueprint</p>
+      <p class="eyebrow-num mono eyebrow-num--center">03. The Blueprint</p>
       <h2 class="bp__intro">Here’s exactly how we build a site that converts.</h2>
       <p class="bp__sub">We build the best-converting site for your brand, then keep testing it until the numbers prove it.</p>
     </div>
@@ -274,6 +236,40 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
           </div>
         </div>
       ))}
+    </div>
+  </section>
+
+  <!-- 6. PRICING (two offers) -->
+  <section class="pricing" id="pricing">
+    <div class="container pricing__head">
+      <p class="eyebrow-num mono">04. The Solution</p>
+      <h2 class="pricing__heading">Built to convert like crazy.</h2>
+      <p class="pricing__sub">Two different offers, both designed to increase your conversions and revenue.</p>
+    </div>
+    <div class="container">
+      <div class="pricing__grid">
+        {priceCards.map((c, i) => (
+          <div class:list={['pcard', { 'pcard--featured': c.featured }]} data-reveal style={`transition-delay:${i * 90}ms`}>
+            {c.featured && <p class="pcard__tag mono">Most booked</p>}
+            <p class="pcard__name mono">{c.name}</p>
+            <p class="pcard__desc">{c.description}</p>
+            <p class="pcard__price">
+              <span data-count-to={c.price.replace(/\D/g, '')} data-count-prefix="$">{c.price}</span>
+              <span class="pcard__qual">{c.qualifier}</span>
+            </p>
+            <a class="btn btn--primary btn--pill pcard__cta" href={`${site.cta.href}?from=${encodeURIComponent(c.event)}`} data-event={c.event}><span class="btn__label">{c.cta}</span></a>
+            <hr class="pcard__divider" />
+            <ul class="pcard__features">
+              {c.features.map((f) => <li data-reveal-child>{f}</li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- CTA BLOCK -->
+    <div class="pricing__cta">
+      <CtaBlock event="Pricing" />
     </div>
   </section>
 
@@ -461,6 +457,7 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
      line at any viewport instead of wrapping mid-phrase. */
   .hero__h1 { max-width: 34ch; margin-inline: auto; font-size: clamp(2.25rem, 4.4vw, 3.75rem); }
   .hero__h1 span { display: block; }
+  .hero__h1 span:first-child { white-space: nowrap; }
   .hero__sub { margin: var(--space-5) auto 0; max-width: 44ch; font-family: var(--font-serif); font-style: italic; font-size: var(--fs-lede); color: var(--ink-soft); }
   .hero__video { margin-top: var(--space-6); }
   .hero__cta { margin-top: var(--space-5); }
