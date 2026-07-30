@@ -1,8 +1,8 @@
 ---
-/* /pulse — PRIVATE booking-funnel dashboard. Token-gated (PULSE_TOKEN, checked
+/* /pulse - PRIVATE booking-funnel dashboard. Token-gated (PULSE_TOKEN, checked
    server-side in /api/pulse). Shows the funnel with drop-off at each step, a
    per-source rollup, and a wide, scrollable, sortable, filterable TABLE of every
-   visitor — a column per question (with the time to reach each step) plus every
+   visitor - a column per question (with the time to reach each step) plus every
    UTM / click-id from the URL. This is the source of truth for booking data.
    noindex; not linked anywhere. */
 import BareLayout from '../layouts/BareLayout.astro';
@@ -137,7 +137,7 @@ import BareLayout from '../layouts/BareLayout.astro';
   }
   // ms → compact "12s" / "1m 30s" / "2h 5m"; null/undefined → em dash
   function fmtElapsed(ms: any): string {
-    if (ms == null || !Number.isFinite(ms)) return '—';
+    if (ms == null || !Number.isFinite(ms)) return '-';
     let s = Math.max(0, Math.round(ms / 1000));
     if (s < 60) return `${s}s`;
     const m = Math.floor(s / 60); s = s % 60;
@@ -152,7 +152,7 @@ import BareLayout from '../layouts/BareLayout.astro';
   }
 
   // ---- arrival classification ----
-  // "from" tags follow "page:action" (e.g. "hero:GetBuild") or a bare label —
+  // "from" tags follow "page:action" (e.g. "hero:GetBuild") or a bare label -
   // matches the data-event convention used on every CTA across the site.
   function prettyCta(s: string): string {
     let page = '', locRaw = s;
@@ -171,7 +171,7 @@ import BareLayout from '../layouts/BareLayout.astro';
     return { kind: 'direct', label: 'direct' };
   }
   // "Ads" = utm_source is Facebook or Instagram (either platform, however it's
-  // tagged — "facebook", "Facebook Ads", "instagram", "fb", "ig", ...).
+  // tagged - "facebook", "Facebook Ads", "instagram", "fb", "ig", ...).
   function isAdSource(utmSource: string): boolean {
     const s = (utmSource || '').toLowerCase();
     return !!s && (s.includes('facebook') || s.includes('instagram') || s === 'fb' || s === 'ig');
@@ -220,12 +220,12 @@ import BareLayout from '../layouts/BareLayout.astro';
   }
 
   // ---- cell renderers ----
-  const txt = (v: any) => v ? esc(v) : '<span class="pl-dash">—</span>';
-  const elapsedCell = (ms: any) => (ms == null) ? '<span class="pl-dash">—</span>' : esc(fmtElapsed(ms));
+  const txt = (v: any) => v ? esc(v) : '<span class="pl-dash">-</span>';
+  const elapsedCell = (ms: any) => (ms == null) ? '<span class="pl-dash">-</span>' : esc(fmtElapsed(ms));
   const nameCell = (r: any) => r.name ? esc(r.name) : '<span class="pl-anon">Anonymous</span>';
   const badgeCell = (r: any) => `<span class="pl-badge pl-tone--${STAGE_TONE[r.stage] || 'cool'}">${esc(stageLabel(r.stage))}</span>`;
-  const whenCell = (r: any) => r.when ? `<span title="${esc(new Date(r.when).toLocaleString())}">${esc(ago(r.when))}</span>` : '<span class="pl-dash">—</span>';
-  const entryCell = (r: any) => r.entryLabel ? `<span class="pl-entry--${r.entryKind}">${esc(r.entryLabel)}</span>` : '<span class="pl-dash">—</span>';
+  const whenCell = (r: any) => r.when ? `<span title="${esc(new Date(r.when).toLocaleString())}">${esc(ago(r.when))}</span>` : '<span class="pl-dash">-</span>';
+  const entryCell = (r: any) => r.entryLabel ? `<span class="pl-entry--${r.entryKind}">${esc(r.entryLabel)}</span>` : '<span class="pl-dash">-</span>';
 
   // ---- column model. order = left→right; first is sticky. ----
   const COLUMNS: any[] = [
@@ -243,7 +243,7 @@ import BareLayout from '../layouts/BareLayout.astro';
     { key: 'tBooked',     label: '→ Booked',      type: 'numNull',                 get: (r: any) => r.tBooked,                 cell: (r: any) => elapsedCell(r.tBooked) },
     { key: 'dwell',       label: 'On page',       type: 'num',                     get: (r: any) => r.dwell,                   cell: (r: any) => txt(fmtElapsed(r.dwell)) },
     { key: 'entry',       label: 'Entry',         type: 'text',                    get: (r: any) => r.entryLabel.toLowerCase(),cell: entryCell },
-    { key: 'ads',         label: 'Ads (FB/IG)',   type: 'text',                    get: (r: any) => r.ads,                     cell: (r: any) => r.ads === 'yes' ? '<span class="pl-entry--ad">Yes</span>' : '<span class="pl-dash">—</span>' },
+    { key: 'ads',         label: 'Ads (FB/IG)',   type: 'text',                    get: (r: any) => r.ads,                     cell: (r: any) => r.ads === 'yes' ? '<span class="pl-entry--ad">Yes</span>' : '<span class="pl-dash">-</span>' },
     { key: 'utmSource',   label: 'utm_source',    type: 'text',                    get: (r: any) => r.utmSource.toLowerCase(), cell: (r: any) => txt(r.utmSource) },
     { key: 'utmMedium',   label: 'utm_medium',    type: 'text',                    get: (r: any) => r.utmMedium.toLowerCase(), cell: (r: any) => txt(r.utmMedium) },
     { key: 'utmCampaign', label: 'utm_campaign',  type: 'text',                    get: (r: any) => r.utmCampaign.toLowerCase(),cell: (r: any) => txt(r.utmCampaign) },
@@ -357,7 +357,7 @@ import BareLayout from '../layouts/BareLayout.astro';
     if (r.j.ua) bits.push(`ua ${esc(r.j.ua)}`);
     return `<tr class="pl-detail" hidden><td colspan="${COLUMNS.length}"><div class="pl-detail__in">`
       + (times ? `<div class="pl-detail__times">${times}</div>` : '')
-      + `<div class="pl-detail__raw">${bits.join('  —  ')}</div></div></td></tr>`;
+      + `<div class="pl-detail__raw">${bits.join('  -  ')}</div></div></td></tr>`;
   }
 
   function renderTable(rows: any[]) {
@@ -409,7 +409,7 @@ import BareLayout from '../layouts/BareLayout.astro';
             <span class="pl-fnum">${row.count}</span>
           </div>
           <div class="pl-fbar"><span class="pl-ffill pl-tone--${tone}" style="width:${Math.max(pctOfTop, row.count ? 3 : 0)}%"></span></div>
-          <div class="pl-fdrop">${i > 0 && dropped > 0 ? `↓ ${dropped} left here (${dropPct}%)` : (i === 0 ? '' : '—')}</div>
+          <div class="pl-fdrop">${i > 0 && dropped > 0 ? `↓ ${dropped} left here (${dropPct}%)` : (i === 0 ? '' : '-')}</div>
         </div>`;
     }).join('');
   }
@@ -483,7 +483,7 @@ import BareLayout from '../layouts/BareLayout.astro';
   }
 
   // ---------- events ----------
-  // sort (header click) + row expand — delegated on the persistent table element
+  // sort (header click) + row expand - delegated on the persistent table element
   tableEl.addEventListener('click', (e) => {
     const th = (e.target as HTMLElement).closest('th[data-key]');
     if (th) {
@@ -520,7 +520,7 @@ import BareLayout from '../layouts/BareLayout.astro';
   $('[data-pl-refresh]').addEventListener('click', () => load());
   signout.addEventListener('click', () => { setToken(''); showGate(); });
 
-  // Deletes visitor journeys older than 3 days (leaves lead records alone —
+  // Deletes visitor journeys older than 3 days (leaves lead records alone -
   // see the endpoint comment). Irreversible, so confirm before firing.
   purgeBtn.addEventListener('click', async () => {
     const days = 3;
@@ -640,6 +640,6 @@ import BareLayout from '../layouts/BareLayout.astro';
 </style>
 
 <!-- Global (not scoped): the tiles, table, funnel bars and badges are built with
-     innerHTML in the script, so they never carry Astro's scope attribute — scoped
+     innerHTML in the script, so they never carry Astro's scope attribute - scoped
      rules would silently skip them. Every selector here is pl-* prefixed and this
      page stands alone, so global is safe. -->

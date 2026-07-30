@@ -1,0 +1,57 @@
+---
+/* Timeline — "what working with us actually looks like," day by day.
+   The last point is deliberately NOT a fixed day — there's no single date
+   where "conversion rate up" happens, it's the open-ended promise already
+   stated elsewhere on this page (hero sub, closing section: "we don't
+   stop until it outperforms your old conversion rate"), so its dayLabel
+   reads "Ongoing" instead of a day number. Internal-only build steps are
+   left out — a prospect cares about what THEY see happen, not the build
+   order behind it. */
+const steps = [
+  { dayLabel: 'Day 0', title: 'Quick kickoff call', body: 'A short call to align on goals, scope, and what you need to send over.' },
+  { dayLabel: 'Day 1', title: 'You send your assets, we start working', body: 'Logo, product photos, brand details. The moment they land, we start building your new site.' },
+  { dayLabel: 'Day 14', title: 'Launch day', body: "Your new site goes live, with a before-and-after speed report and exactly how we'll measure it." },
+  { dayLabel: 'Ongoing', title: 'Conversion rate up', body: 'We keep testing copy, layout and checkout flow until the new site is clearly beating the old one.', featured: true },
+];
+---
+<div class="tl">
+  <div class="tl__line" aria-hidden="true"></div>
+  <ol class="tl__list">
+    {steps.map((s) => (
+      <li class:list={['tl__step', { 'tl__step--featured': s.featured }]} data-reveal-child>
+        <span class="tl__dot" aria-hidden="true"></span>
+        <span class="tl__day mono">{s.dayLabel}</span>
+        <span class="tl__title">{s.title}</span>
+        <span class="tl__body">{s.body}</span>
+      </li>
+    ))}
+  </ol>
+</div>
+
+<style>
+  .tl { position: relative; }
+  .tl__list { position: relative; z-index: 1; list-style: none; margin: 0; padding: 0; display: flex; gap: var(--space-4); }
+  .tl__line { position: absolute; top: 6px; left: 0; right: 0; height: 2px; background: var(--line); }
+
+  .tl__step { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; text-align: left; }
+  .tl__dot {
+    width: 14px; height: 14px; flex-shrink: 0; border-radius: 50%;
+    background: var(--bg); border: 2px solid var(--ink);
+    margin-bottom: var(--space-4);
+  }
+  .tl__step--featured .tl__dot {
+    background: var(--accent-strong); border-color: var(--accent-strong);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-strong) 20%, transparent);
+  }
+
+  .tl__day { font-size: var(--fs-caption); letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--accent-deep); }
+  .tl__title { margin-top: var(--space-1); font-family: var(--font-display); font-weight: var(--fw-display); font-size: var(--fs-h4); color: var(--ink); }
+  .tl__body { margin-top: var(--space-2); font-size: var(--fs-caption); line-height: 1.5; color: var(--ink-soft); }
+
+  @media (max-width: 48em) {
+    .tl__list { flex-direction: column; gap: var(--space-8); }
+    .tl__line { top: 0; bottom: 0; left: 6px; right: auto; width: 2px; height: auto; }
+    .tl__step { padding-left: var(--space-8); position: relative; }
+    .tl__dot { position: absolute; left: 0; top: 2px; margin-bottom: 0; }
+  }
+</style>

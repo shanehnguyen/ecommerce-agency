@@ -6,7 +6,7 @@ import BareLayout from '../layouts/BareLayout.astro';
 import { site } from '../data/site.config';
 ---
 <BareLayout
-  title="Booked — see you on the call"
+  title="Booked: see you on the call"
   description="You're on the calendar. One thing to do before we speak."
   noindex={true}
 >
@@ -22,7 +22,7 @@ import { site } from '../data/site.config';
         <p class="ty__hw-note">The whole call is {site.callLengthMinutes} minutes and it’s built around your numbers, not my portfolio.</p>
       </div>
 
-      <p class="ty__sig">See you then.<br />— {site.founder}</p>
+      <p class="ty__sig">See you then.<br />{site.founder}</p>
     </div>
   </section>
 </BareLayout>

@@ -1,11 +1,16 @@
 ---
-/* PortfolioMarquee — a simple, static proof list, not a scrolling gimmick:
-   your last 6 clients, the screenshot on the left, the number that moved on
-   the right, and how long you've been working together underneath it. The
-   parent section wraps this in [data-reveal]; each row is a
-   [data-reveal-child] so they stagger in on scroll, same mechanism as the
-   rest of the site (no marquee-specific script needed anymore). */
-import { Image } from 'astro:assets';
+/* PortfolioMarquee — mobile keeps a static 2-column grid; desktop
+   (>=60em) switches to an actual auto-scrolling marquee instead (the
+   full-bleed 2-col grid read as oversized/heavy at desktop width). The
+   card list renders twice back-to-back for the desktop marquee, as direct
+   siblings in one flex row — a translateX(-50%) loop then moves by
+   exactly half the track's total width, landing precisely on the start of
+   the second (duplicate) copy, same technique as the hero's wordmark
+   marquee elsewhere on this page. The second copy is aria-hidden
+   (decorative repeat, not new content) and skips the scroll-reveal
+   stagger since it's never the first thing on screen — see PortfolioTile.
+*/
+import PortfolioTile from './PortfolioTile.astro';
 import caseFurniture from '../assets/portfolio/case-furniture.png';
 import junglee from '../assets/portfolio/Junglee.png';
 import kincMarket from '../assets/portfolio/kinc-markett.png';
@@ -13,12 +18,11 @@ import lynhsDrinks from '../assets/portfolio/lynhs-drink-portfolio.png';
 import yunHaiShop from '../assets/portfolio/Yun-Hai-Shop.png';
 import pkCabinets from '../assets/portfolio/pk-cabinet-portfolio.png';
 
-// fromTo is the small "X → Y" line — the actual before/after figures behind
-// the headline number. Lynh's Drinks has a real published baseline (1.2%,
-// from the homepage proof section); the other five only ever had a final
-// number + a % increase, so their "from" is the implied baseline computed
-// from those two real figures (final ÷ (1 + increase)). months is how long
-// each has been a client, real per-account tenure.
+// fromTo/months aren't shown in this full-bleed layout (name + headline
+// number only, per the current design), but stay on the record here since
+// they're real client figures/tenure, documented in case a future layout
+// wants them back — see the git history of this file for their prior
+// on-card treatment.
 type Card = {
   name: string; image: ImageMetadata; zoom?: number; pos?: number; months: number;
   label: string; countPrefix?: string; countTo: string; suffix?: string; fromTo: string;
@@ -36,64 +40,48 @@ const cards: Card[] = [
   { name: 'PK Cabinets', image: pkCabinets, months: 4, zoom: 1.2, pos: 80, label: 'Avg. order value', countPrefix: '$', countTo: '5556', fromTo: '$2,081 → $5,556' },
 ];
 ---
+<!-- mobile (<60em): static 2-column grid -->
 <div class="pf-list">
-  {cards.map((c) => (
-    <div class="pf-row" data-reveal-child>
-      <div class="pf-row__shot">
-        <Image src={c.image} alt={`${c.name} storefront`} width={960} format="webp" quality={90} style={`${c.zoom ? `--shot-zoom:${c.zoom};` : ''}${c.pos ? `--shot-pos:${c.pos}%;` : ''}`} />
-      </div>
-      <div class="pf-row__info">
-        <span class="pf-row__name mono">{c.name}</span>
-        <span class="pf-row__value mono">
-          <span data-count-to={c.countTo} data-count-prefix={c.countPrefix} data-count-suffix={c.suffix}>
-            {(c.countPrefix ?? '') + c.countTo + (c.suffix ?? '')}
-          </span>
-        </span>
-        <span class="pf-row__label">{c.label}</span>
-        <span class="pf-row__from mono">{c.fromTo}</span>
-        <span class="pf-row__months mono">Working together {c.months} {c.months === 1 ? 'month' : 'months'}</span>
-      </div>
-    </div>
-  ))}
+  {cards.map((c) => <PortfolioTile card={c} />)}
+</div>
+
+<!-- desktop (>=60em): auto-scrolling marquee -->
+<div class="pf-marquee">
+  <div class="pf-marquee__track">
+    {cards.map((c) => <PortfolioTile card={c} />)}
+    {cards.map((c) => <PortfolioTile card={c} duplicate />)}
+  </div>
 </div>
 
 <style>
-  .pf-list { display: flex; flex-direction: column; gap: var(--space-5); max-width: 56rem; margin-inline: auto; }
+  /* ---------- mobile: 2-column grid, small gap ---------- */
+  .pf-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); max-width: 40rem; margin-inline: auto; }
+  .pf-marquee { display: none; }
 
-  /* desktop: a single stacked column reads as an oversized, half-empty list
-     once the viewport is wide — switch to 2 columns so 6 clients read as a
-     grid of proof instead of one long scroll. */
   @media (min-width: 60em) {
-    .pf-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-6) var(--space-8); max-width: 74rem; }
-  }
+    .pf-list { display: none; }
+    .pf-marquee { display: block; overflow: hidden; }
+    .pf-marquee__track { display: flex; gap: var(--space-5); width: max-content; }
 
-  .pf-row {
-    display: grid; grid-template-columns: 12rem 1fr; gap: var(--space-6); align-items: center;
-    padding: var(--space-6); border: var(--rule-width) solid var(--line); border-radius: var(--radius-md);
-    background: var(--bg-raised);
-    transition: border-color 200ms var(--ease-out), transform 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
-  }
-  .pf-row:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 16px 30px -20px rgba(26, 24, 20, 0.35); }
+    @media (prefers-reduced-motion: no-preference) {
+      .pf-marquee__track { animation: pf-scroll 34s linear infinite; }
+      .pf-marquee:hover .pf-marquee__track,
+      .pf-marquee:focus-within .pf-marquee__track { animation-play-state: paused; }
+    }
+    /* the track holds 2 identical copies of the card list back to back, so
+       -50% (half the track's own width = exactly one copy) is a seamless loop */
+    @keyframes pf-scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    /* reduced motion: no auto-scroll, but the content is still all there —
+       let people scroll it manually instead of losing the second half. */
+    @media (prefers-reduced-motion: reduce) {
+      .pf-marquee { overflow-x: auto; }
+    }
 
-  .pf-row__shot { border-radius: var(--radius-sm); overflow: hidden; aspect-ratio: 1 / 1; border: var(--rule-width) solid var(--line); }
-  .pf-row__shot :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: center var(--shot-pos, 45%); display: block; transform: scale(var(--shot-zoom, 1.2)); }
-
-  .pf-row__info { display: flex; flex-direction: column; }
-  .pf-row__name { font-size: var(--fs-caption); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--accent-deep); }
-  .pf-row__value { margin-top: var(--space-2); font-size: clamp(2rem, 4vw, 2.75rem); font-weight: var(--fw-body-bold); color: var(--ink); line-height: 1; }
-  .pf-row__label { margin-top: var(--space-1); font-size: var(--fs-caption); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50); }
-  .pf-row__from { margin-top: var(--space-2); font-size: var(--fs-small); color: var(--ink-50); }
-  .pf-row__months {
-    display: inline-block; margin-top: var(--space-4); padding-top: var(--space-3);
-    border-top: var(--rule-width) solid var(--line);
-    font-size: var(--fs-caption); color: var(--ink-70);
-  }
-
-  /* mobile: the image column shrinks but stays LEFT of the numbers — never
-     stacks — so the "screenshot, then the result" reading order holds even
-     on a phone. */
-  @media (max-width: 34em) {
-    .pf-row { grid-template-columns: 5.5rem 1fr; gap: var(--space-4); padding: var(--space-4); }
-    .pf-row__value { font-size: clamp(1.5rem, 8vw, 2rem); }
+    /* fixed, moderate card size for the marquee — the full-bleed grid
+       tiles read as oversized at desktop width */
+    .pf-marquee :global(.pf-tile) { width: 300px; flex: none; }
   }
 </style>

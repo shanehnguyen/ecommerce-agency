@@ -17,7 +17,7 @@ import { priceCards } from '../data/pricing';
 const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k', '$100k–$200k', '$200k+'];
 ---
 <BareLayout
-  title="Apply — Get your build in 14 days"
+  title="Apply: Get your build in 14 days"
   description="A two-minute application. If you're a fit, I'll send you a teardown of your current site before we even speak."
   noindex={true}
 >
@@ -67,7 +67,7 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
           <fieldset class="bk-step" data-step hidden>
             <button type="button" class="bk-back" data-back><span aria-hidden="true">←</span> Back</button>
             <p class="bk-count">3/3</p>
-            <h2 class="bk-q">Last thing — let’s lock this in and build your personalized strategy.</h2>
+            <h2 class="bk-q">Last thing: let’s lock this in and build your personalized strategy.</h2>
             <div class="bk-fields">
               <div class="bk-field" data-field="fullName">
                 <label class="bk-label" for="bk-fullName">Full name</label>
@@ -112,7 +112,7 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
       <p class="eyebrow">You’re on the books</p>
       <h2 class="bk-done__h">You’re on the books.</h2>
       <p class="bk-done__p">Check your email for the time and the call link. Before we talk, I’ll dig into your store so we don’t waste a minute playing catch-up.</p>
-      <p class="bk-done__sig">See you then.<br />— {site.founder}</p>
+      <p class="bk-done__sig">See you then.<br />{site.founder}</p>
     </div>
   </section>
 </BareLayout>
@@ -347,7 +347,7 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
       fd.append('access_key', web3Key);
       fd.append('from_name', site.brand);
       if (answers.email) fd.append('replyto', answers.email);
-      fd.append('subject', `🛒 Build application — ${answers.fullName || 'new lead'} · ${answers.revenue} · ${answers.interest}`);
+      fd.append('subject', `🛒 Build application: ${answers.fullName || 'new lead'} · ${answers.revenue} · ${answers.interest}`);
       fd.append('Name', answers.fullName || '');
       fd.append('Email', answers.email || '');
       fd.append('Phone', answers.phone || '');

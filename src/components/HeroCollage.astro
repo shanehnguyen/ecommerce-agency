@@ -1,0 +1,357 @@
+---
+/* HeroCollage — new intro band that sits ABOVE the existing hero (headline,
+   video, CTA below stay exactly as they are). A giant auto-scrolling
+   "Converting Websites" wordmark with a scattered collage of real
+   client-store screenshots layered on top. Just screenshots, no
+   symbolic/decorative objects (no logo card, gold circle, or sticker).
+
+   All 8 screenshots render at the SAME width/aspect ratio — no size
+   hierarchy this round, by request. Whichever ones land in the wordmark's
+   vertical band (roughly top 40–56%) are set BEHIND it (z < 10) so the
+   text stays readable; the rest sit in FRONT (z > 10). See the `behind`
+   flag per object below.
+
+   Three independent breakpoint layouts, not one scaled down:
+   - Desktop (>=1024px): 8 screenshots, hand-placed, uniform size.
+   - Tablet (600–1023px): same 8, same top/left/right/rotate, width scaled
+     x1.4 so they stay legible on a narrower container.
+   - Mobile (<=599px): same 8 screenshots, their own hand-placed
+     coordinates, all kept clear of the nav bar at the top.
+*/
+import { Image } from 'astro:assets';
+import caseFurnitureCollections from '../assets/hero/case-furniture-collections.png';
+import caseFurnitureDetail from '../assets/hero/case-furniture-detail.png';
+import kincmarketDetail from '../assets/hero/kincmarket-detail.png';
+import jungleePdp from '../assets/hero/junglee-pdp.png';
+import jungleeLifestyle from '../assets/hero/junglee-lifestyle.png';
+import pkCabinetsHero from '../assets/hero/pk-cabinets-hero.png';
+import yushanHero from '../assets/hero/yushan-hero.png';
+import yushanDetail from '../assets/hero/yushan-detail.png';
+
+type Obj = {
+  n: number; src: ImageMetadata; alt: string; priority?: boolean;
+  // desktop position — left/right are mutually exclusive (some objects are
+  // deliberately anchored to the right edge and clipped by it)
+  top: number; left?: number; right?: number; width: number; rotate: number; z: number; ratio: string;
+  brighten?: boolean;
+  depth: number;
+  floatX: number; floatY: number; floatRot: number; floatDur: number; floatDelay: number;
+  // mobile gets its own hand-specified position
+  mTop: number; mLeft?: number; mRight?: number; mWidth: number; mRotate: number;
+  mobileHide?: boolean;
+};
+
+const TABLET_SCALE = 1.4;
+const WIDTH = 18;    // every screenshot renders at this same width
+const RATIO = '8 / 5'; // ...and this same aspect ratio, even the naturally-portrait Junglee shot
+
+const objects: Obj[] = [
+  // ---- clear of the wordmark: FRONT ----
+  { n: 1, src: pkCabinetsHero, alt: 'PK Cabinets homepage', priority: true,
+    top: 8, left: 4, width: WIDTH, rotate: -3, z: 14, ratio: RATIO, depth: 0.03,
+    floatX: 16, floatY: -20, floatRot: 2, floatDur: 6.0, floatDelay: 0.2,
+    // mLeft negative — spacing the 5-tile top cluster out on mobile by
+    // letting the two front corner tiles bleed off the left/right edges,
+    // instead of everything overlapping in a tight pile.
+    mTop: 8, mLeft: -8, mWidth: 44, mRotate: -3 },
+  { n: 2, src: caseFurnitureCollections, alt: 'Case Furniture collections page', priority: true,
+    top: 6, right: 4, width: WIDTH, rotate: 4, z: 13, ratio: RATIO, depth: 0.03,
+    floatX: -16, floatY: 20, floatRot: -2, floatDur: 5.0, floatDelay: 0.6,
+    mTop: 8, mRight: -8, mWidth: 44, mRotate: 4 },
+  { n: 3, src: yushanHero, alt: 'Yushan Colour Co. homepage', brighten: true,
+    top: 62, right: 6, width: WIDTH, rotate: -4, z: 15, ratio: RATIO, depth: 0.03,
+    floatX: -16, floatY: 18, floatRot: -2.5, floatDur: 4.8, floatDelay: 0.9,
+    mTop: 74, mRight: 2, mWidth: 42, mRotate: -4 },
+  { n: 4, src: kincmarketDetail, alt: "Kim'C Market product page",
+    top: 64, left: 6, width: WIDTH, rotate: 6, z: 16, ratio: RATIO, depth: 0.04,
+    floatX: 14, floatY: -18, floatRot: 3, floatDur: 4.0, floatDelay: 1.1,
+    mTop: 76, mLeft: 4, mWidth: 42, mRotate: 6 },
+  { n: 8, src: jungleeLifestyle, alt: 'Junglee craft cocktails, lifestyle',
+    top: 62, left: 40, width: WIDTH, rotate: 4, z: 12, ratio: RATIO, depth: 0.035,
+    floatX: 14, floatY: -16, floatRot: 3, floatDur: 4.5, floatDelay: 1.5,
+    mTop: 58, mLeft: 30, mWidth: 42, mRotate: 4 },
+
+  // ---- cross the wordmark's band (~top 40–56%): BEHIND — pulled up
+  // further so they graze the text rather than sit fully inside it. ----
+  { n: 5, src: jungleePdp, alt: 'Junglee craft cocktails product page',
+    top: 22, left: 40, width: WIDTH, rotate: -5, z: 7, ratio: RATIO, depth: 0.05,
+    floatX: -14, floatY: 16, floatRot: -3, floatDur: 3.6, floatDelay: 0.8,
+    mTop: 26, mLeft: 34, mWidth: 40, mRotate: -5 },
+  { n: 6, src: caseFurnitureDetail, alt: 'Case Furniture product page detail',
+    top: 24, left: 20, width: WIDTH, rotate: 5, z: 8, ratio: RATIO, depth: 0.045,
+    floatX: -12, floatY: 14, floatRot: -2, floatDur: 3.9, floatDelay: 0.3,
+    // mLeft negative — deliberately bleeds off the left edge, part of
+    // spacing the 5-tile top cluster out further instead of overlapping.
+    mTop: 32, mLeft: -10, mWidth: 40, mRotate: 5 },
+  { n: 7, src: yushanDetail, alt: 'Yushan Colour Co. product page detail',
+    top: 22, right: 20, width: WIDTH, rotate: -6, z: 9, ratio: RATIO, depth: 0.04,
+    floatX: 12, floatY: -14, floatRot: 3, floatDur: 4.2, floatDelay: 1.3,
+    // mRight negative — bleeds off the right edge, same reason as object 6.
+    mTop: 30, mRight: -10, mWidth: 40, mRotate: -6 },
+];
+
+const posStyle = (o: Obj) => {
+  var css = `--top:${o.top}%;--w:${o.width}%;--rot:${o.rotate}deg;--z:${o.z};--ratio:${o.ratio};`;
+  css += o.left !== undefined ? `--left:${o.left}%;--right:auto;` : `--left:auto;--right:${o.right}%;`;
+  css += `--w-tablet:${(o.width * TABLET_SCALE).toFixed(1)}%;`;
+  css += `--top-m:${o.mTop}%;--w-m:${o.mWidth}%;--rot-m:${o.mRotate}deg;`;
+  css += o.mLeft !== undefined ? `--left-m:${o.mLeft}%;--right-m:auto;` : `--left-m:auto;--right-m:${o.mRight}%;`;
+  return css;
+};
+const floatStyle = (o: Obj) => `--float-x:${o.floatX}px;--float-y:${o.floatY}px;--float-rot:${o.floatRot}deg;--float-dur:${o.floatDur}s;--float-delay:${o.floatDelay}s;`;
+---
+<section class="marquee-hero" aria-hidden="true" data-parallax-hero>
+  <div class="marquee-hero__type">
+    <!-- desktop: one line, "Converting Websites" -->
+    <div class="marquee-line marquee-line--desktop">
+      <span>Converting Websites</span>
+      <span>Converting Websites</span>
+      <span>Converting Websites</span>
+      <span>Converting Websites</span>
+    </div>
+    <!-- mobile: split across two stacked lines, each scrolling independently -->
+    <div class="marquee-line marquee-line--mobile">
+      <span>Converting</span>
+      <span>Converting</span>
+      <span>Converting</span>
+      <span>Converting</span>
+    </div>
+    <div class="marquee-line marquee-line--mobile">
+      <span>Websites</span>
+      <span>Websites</span>
+      <span>Websites</span>
+      <span>Websites</span>
+    </div>
+  </div>
+
+  <!-- purely decorative like the rest of this section (see aria-hidden on
+       the section above) — tabindex="-1" keeps it out of the tab order so a
+       keyboard user never lands on a link that's invisible to their AT. -->
+  <a href="#portfolio" class="marquee-hero__scroll-cue" tabindex="-1">
+    <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="3" x2="12" y2="16"></line>
+      <polyline points="6 11 12 17 18 11"></polyline>
+    </svg>
+  </a>
+
+  <div class="marquee-hero__collage">
+    {objects.map((o) => (
+      <div class={`mtile mtile--${o.n}`} style={posStyle(o)} data-depth={o.depth} data-mobile-hide={o.mobileHide ? 'true' : undefined}>
+        <div class="mtile__float" style={floatStyle(o)}>
+          <div class="mtile__frame">
+            <Image class:list={['mtile__img', { 'mtile__img--bright': o.brighten }]} src={o.src} alt={o.alt} width={640} format="webp" quality={80} loading={o.priority ? 'eager' : 'lazy'} />
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<script>
+  // Pull this section up underneath the sticky nav (nav is already
+  // background:transparent — see components.css — but it normally reserves
+  // its own row above the page, so there was nothing behind it to show
+  // through). Measuring the nav's real rendered height and pulling this
+  // section up by that amount, rather than touching Nav.astro/components.css
+  // directly, keeps every OTHER page's layout (which also uses <Nav />)
+  // completely unaffected — this offset only ever applies to this section.
+  (function () {
+    var nav = document.querySelector('.nav');
+    var hero = document.querySelector('.marquee-hero');
+    if (!nav || !hero) return;
+    function syncNavOverlay() {
+      hero.style.marginTop = '-' + nav.getBoundingClientRect().height + 'px';
+    }
+    syncNavOverlay();
+    window.addEventListener('resize', syncNavOverlay);
+  })();
+
+  // Cursor parallax on the scattered screenshots — each drifts toward/with
+  // the pointer at its own --depth (set inline per object above). Skipped
+  // entirely under reduced-motion; on touch/coarse pointers the cursor term
+  // just stays 0 (mx/my never move), so tiles still idle-float via CSS but
+  // don't chase a pointer that doesn't exist.
+  (function () {
+    var section = document.querySelector('[data-parallax-hero]');
+    if (!section) return;
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
+    var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    var targets = Array.prototype.slice.call(section.querySelectorAll('.mtile')).map(function (el) {
+      return { el: el, depth: parseFloat(el.getAttribute('data-depth')) || 0, cx: 0, cy: 0 };
+    });
+
+    var mx = 0, my = 0;
+    if (canHover) {
+      section.addEventListener('mousemove', function (e) {
+        var rect = section.getBoundingClientRect();
+        mx = e.clientX - rect.left - rect.width / 2;
+        my = e.clientY - rect.top - rect.height / 2;
+      });
+      section.addEventListener('mouseleave', function () { mx = 0; my = 0; });
+    }
+
+    (function tick() {
+      targets.forEach(function (t) {
+        t.cx += (mx * t.depth - t.cx) * 0.08;
+        t.cy += (my * t.depth - t.cy) * 0.08;
+        t.el.style.setProperty('--tx', t.cx.toFixed(2) + 'px');
+        t.el.style.setProperty('--ty', t.cy.toFixed(2) + 'px');
+      });
+      requestAnimationFrame(tick);
+    })();
+  })();
+</script>
+
+<style>
+  .marquee-hero {
+    position: relative;
+    /* the existing hero's background wash (.hero-wash, in index.astro) is
+       absolutely positioned relative to the page rather than scoped to its
+       own section, so without an explicit z-index here it paints on top of
+       this section instead of behind it. z-index: 1 matches .hero's own
+       stacking level and keeps this section un-obscured, with no changes
+       to the existing hero/wash markup or CSS. */
+    z-index: 1;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--bg);
+    height: 88vh;
+    min-height: 560px; /* guard against degenerate short-viewport cases only */
+  }
+
+  /* ---------- giant auto-scrolling wordmark ---------- */
+  .marquee-hero__type {
+    position: absolute; top: 50%; left: 0; right: 0; z-index: 10;
+    transform: translateY(-50%);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+
+  .marquee-line {
+    display: flex; gap: 0.4em; width: max-content;
+    font-family: var(--font-display);
+    font-weight: var(--fw-display);
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--ink);
+  }
+  .marquee-line span { flex: none; }
+  .marquee-line--desktop { font-size: clamp(3.5rem, 14vw, 11rem); }
+  .marquee-line--mobile { display: none; font-size: clamp(2.5rem, 15vw, 5.5rem); }
+
+  /* 4 identical copies + a translateX(-50%) loop = seamless wrap regardless
+     of the text's rendered width (no measuring needed). */
+  @media (prefers-reduced-motion: no-preference) {
+    .marquee-line { animation: marquee-scroll 22s linear infinite; }
+  }
+  @keyframes marquee-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-line { width: 100%; justify-content: center; }
+    .marquee-line span:not(:first-child) { display: none; }
+  }
+
+  /* ---------- scroll cue (mobile only — see below) ---------- */
+  .marquee-hero__scroll-cue {
+    display: none;
+    position: absolute; left: 50%; z-index: 25;
+    transform: translateX(-50%);
+    color: var(--ink);
+    text-decoration: none;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .marquee-hero__scroll-cue { animation: scroll-cue-bounce 1.6s ease-in-out infinite; }
+  }
+  @keyframes scroll-cue-bounce {
+    0%, 100% { transform: translate(-50%, 0); }
+    50%      { transform: translate(-50%, 8px); }
+  }
+
+  /* ---------- collage ---------- */
+  /* deliberately NO z-index here — it must stay "auto" so it doesn't open
+     its own stacking context; each .mtile's --z then compares directly
+     against .marquee-hero__type's z-index (10) as true siblings, which is
+     what lets some screenshots sit behind the wordmark and others in front. */
+  .marquee-hero__collage { position: absolute; inset: 0; }
+
+  /* .mtile (outer) only ever carries the JS parallax translate — updated
+     every animation frame, so it deliberately has NO transition (the JS
+     lerp already does the easing; a CSS transition on top would fight it
+     and read as laggy). The idle float lives one level in (.mtile__float,
+     a CSS keyframe loop); the hover lift + rotate-to-0 live one level
+     deeper still (.mtile__frame). */
+  .mtile {
+    position: absolute;
+    top: var(--top); left: var(--left); right: var(--right); width: var(--w);
+    z-index: var(--z);
+    transform: translate(var(--tx, 0px), var(--ty, 0px));
+  }
+  .mtile:hover { z-index: 30; }
+
+  .mtile__float {
+    animation: tile-float var(--float-dur, 5s) ease-in-out var(--float-delay, 0s) infinite;
+  }
+  @keyframes tile-float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(var(--float-x, 0px), var(--float-y, -8px)) rotate(var(--float-rot, 0deg)); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mtile__float { animation: none; }
+  }
+
+  /* shared screenshot-card frame: identical border, radius (0), shadow */
+  .mtile__frame {
+    position: relative;
+    width: 100%; aspect-ratio: var(--ratio); overflow: hidden;
+    border-radius: 0;
+    transform: rotate(var(--rot));
+    border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+    background: #EFEEE9;
+    box-shadow:
+      0 2px 0 color-mix(in srgb, var(--ink) 6%, transparent),
+      0 10px 30px color-mix(in srgb, var(--ink) 7%, transparent);
+    will-change: transform;
+  }
+  .mtile__frame :global(img) {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; object-position: top;
+  }
+  .mtile__frame :global(img.mtile__img--bright) { filter: brightness(1.15); }
+
+  /* hover: lift + straighten */
+  @media (prefers-reduced-motion: no-preference) {
+    .mtile__frame { transition: transform 250ms ease, box-shadow 250ms ease; }
+    .mtile:hover .mtile__frame {
+      transform: translateY(-5px) rotate(0deg);
+      box-shadow:
+        0 4px 0 color-mix(in srgb, var(--ink) 8%, transparent),
+        0 18px 46px color-mix(in srgb, var(--ink) 12%, transparent);
+    }
+  }
+
+  /* ================== TABLET (600–1023px): same 5 objects, same
+     top/left/right/rotate, width scaled x1.4. ================== */
+  @media (min-width: 600px) and (max-width: 1023px) {
+    .mtile { width: var(--w-tablet); }
+  }
+
+  /* ================== MOBILE (<=599px): own coordinates. ================== */
+  @media (max-width: 599px) {
+    .marquee-hero { height: 80vh; min-height: 520px; }
+    .mtile {
+      top: var(--top-m); left: var(--left-m); right: var(--right-m); width: var(--w-m);
+    }
+    .mtile__frame { transform: rotate(var(--rot-m)); }
+    .mtile:hover .mtile__frame { transform: rotate(var(--rot-m)); }
+
+    /* swap the wordmark: one big line → two smaller stacked lines */
+    .marquee-line--desktop { display: none; }
+    .marquee-line--mobile { display: flex; }
+
+    .marquee-hero__scroll-cue { display: block; bottom: 1.5%; }
+  }
+</style>

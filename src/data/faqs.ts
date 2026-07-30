@@ -15,7 +15,7 @@ export const homeFaqs: Faq[] = [
     a: [
       'We’ve run this exact rebuild enough times that it’s a proven system now, not something being figured out on your dime.',
       'A full team works your build in parallel, not one person doing it step by step, which is how we compress what usually takes months into two weeks.',
-      'Fast doesn’t mean rushed. Every build goes through the same quality checks it would if we had twelve weeks — we just don’t waste any of them.',
+      'Fast doesn’t mean rushed. Every build goes through the same quality checks it would if we had twelve weeks. We just don’t waste any of them.',
     ],
   },
   {
@@ -44,7 +44,7 @@ export const homeFaqs: Faq[] = [
   {
     q: 'Why can’t I just hire a freelancer who’s cheaper?',
     a: [
-      'You can, but you’re paying for their time, not a result — if the build doesn’t convert, that’s your problem, not theirs, and you’ve lost the time and ad spend either way.',
+      'You can, but you’re paying for their time, not a result. If the build doesn’t convert, that’s your problem, not theirs, and you’ve lost the time and ad spend either way.',
       'I charge more because I stake my own time on the outcome: a fixed price, a guarantee that I keep working until you’re winning, and a full refund within 60 days if you’re not happy.',
       'It’s built for real stores, not dropshippers on a generic catalogue or anyone who needs four people to approve a decision.',
     ],

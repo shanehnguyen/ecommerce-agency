@@ -15,7 +15,9 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CtaBlock from '../components/CtaBlock.astro';
 import FAQ from '../components/FAQ.astro';
+import HeroCollage from '../components/HeroCollage.astro';
 import PortfolioMarquee from '../components/PortfolioMarquee.astro';
+import Timeline from '../components/Timeline.astro';
 import { site } from '../data/site.config';
 import { homeFaqs } from '../data/faqs';
 import { priceCards } from '../data/pricing';
@@ -47,16 +49,19 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
   title="Conversion-Built Shopify Stores for Consumer Brands"
   description="FlipFix Digital builds custom Shopify storefronts for consumer brands. Live in 14 days or you don't pay, then measured against your old numbers on your own analytics."
 >
+  <!-- 1. INTRO BAND — scattered placeholder collage + auto-scrolling wordmark -->
+  <HeroCollage />
+
   <!-- soft gradient wash behind the hero only, fading to flat bg by the fold -->
   <div class="hero-wash" aria-hidden="true"></div>
 
   <!-- 2. HERO -->
   <section class="hero">
     <div class="container">
-      <h1 class="hero__h1"><span>Custom converting websites</span><span>for consumer brands</span></h1>
+      <h1 class="hero__h1"><span>Custom websites</span><span>for consumer brands</span></h1>
     </div>
     <div class="container">
-      <p class="hero__sub">Live in 14 days. We don’t stop working until it completely outperforms your old conversion rate.</p>
+      <p class="hero__sub">We don’t stop working until it completely outperforms your old conversion rate.</p>
     </div>
 
     <!-- 3. VSL — autoplay muted loop under a dark tint (keeps the unmute
@@ -122,44 +127,10 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
     </div>
   </section>
 
-  <!-- 6. PRICING (two offers) -->
-  <section class="pricing" id="pricing">
-    <div class="container pricing__head">
-      <p class="eyebrow-num mono">02. Pricing</p>
-      <h2 class="pricing__heading">Built to convert like crazy.</h2>
-      <p class="pricing__sub">Two different offers, both designed to increase your conversions and revenue.</p>
-    </div>
-    <div class="container">
-      <div class="pricing__grid">
-        {priceCards.map((c, i) => (
-          <div class:list={['pcard', { 'pcard--featured': c.featured }]} data-reveal style={`transition-delay:${i * 90}ms`}>
-            {c.featured && <p class="pcard__tag mono">Most booked</p>}
-            <p class="pcard__name mono">{c.name}</p>
-            <p class="pcard__desc">{c.description}</p>
-            <p class="pcard__price">
-              <span data-count-to={c.price.replace(/\D/g, '')} data-count-prefix="$">{c.price}</span>
-              <span class="pcard__qual">{c.qualifier}</span>
-            </p>
-            <a class="btn btn--primary btn--pill pcard__cta" href={`${site.cta.href}?from=${encodeURIComponent(c.event)}`} data-event={c.event}><span class="btn__label">{c.cta}</span></a>
-            <hr class="pcard__divider" />
-            <ul class="pcard__features">
-              {c.features.map((f) => <li data-reveal-child>{f}</li>)}
-            </ul>
-          </div>
-        ))}
-      </div>
-    </div>
-
-    <!-- CTA BLOCK -->
-    <div class="pricing__cta">
-      <CtaBlock event="Pricing" />
-    </div>
-  </section>
-
   <!-- 8. STATEMENT SECTION -->
   <section class="statement">
     <div class="container">
-      <p class="eyebrow-num mono eyebrow-num--center">03. The Problem</p>
+      <p class="eyebrow-num mono eyebrow-num--center">02. The Problem</p>
       <p class="statement__line stmt">You need a website that can <span class="statement__emph">reliably scale</span> with you.</p>
       <p class="statement__sub">Stop running a plain Shopify template that looks like everyone else’s. Generic themes cap your conversion rate, no matter how big you grow.</p>
     </div>
@@ -168,7 +139,8 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
   <!-- before / after — TODO real screenshots once the first build ships.
        Draggable comparison slider: a native range input drives --pos, which
        clips the "after" layer and positions the divider, so it's fully
-       keyboard/touch/screen-reader accessible for free. -->
+       keyboard/touch/screen-reader accessible for free. Sits right under
+       the "Problem" statement above — the same section, visually proving it. -->
   <section class="ba">
     <div class="container">
       <div class="ba-slider" data-reveal>
@@ -205,11 +177,45 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
           <span class="ba-proof__stat-label">Conversion rate</span>
         </div>
         <div class="ba-proof__stat" data-reveal-child>
-          <span class="ba-proof__stat-value mono"><span data-count-to="850" data-count-prefix="$">$850</span></span>
-          <span class="ba-proof__stat-label">Avg. order value (+78%)</span>
+          <span class="ba-proof__stat-value mono">$478 → <span data-count-to="850" data-count-prefix="$">$850</span></span>
+          <span class="ba-proof__stat-label">Avg. order value</span>
         </div>
       </div>
       <a class="ba-proof__link" href="/case-studies/lynhs-drinks">Read the full case study <span aria-hidden="true">→</span></a>
+    </div>
+  </section>
+
+  <!-- 6. PRICING (two offers) -->
+  <section class="pricing" id="pricing">
+    <div class="container pricing__head">
+      <p class="eyebrow-num mono">03. The Solution</p>
+      <h2 class="pricing__heading">Built to convert like crazy.</h2>
+      <p class="pricing__sub">Two different offers, both designed to increase your conversions and revenue.</p>
+    </div>
+    <div class="container">
+      <div class="pricing__grid">
+        {priceCards.map((c, i) => (
+          <div class:list={['pcard', { 'pcard--featured': c.featured }]} data-reveal style={`transition-delay:${i * 90}ms`}>
+            {c.featured && <p class="pcard__tag mono">Most booked</p>}
+            <p class="pcard__name mono">{c.name}</p>
+            <p class="pcard__desc">{c.description}</p>
+            <p class="pcard__price">
+              <span data-count-to={c.price.replace(/\D/g, '')} data-count-prefix="$">{c.price}</span>
+              <span class="pcard__qual">{c.qualifier}</span>
+            </p>
+            <a class="btn btn--primary btn--pill pcard__cta" href={`${site.cta.href}?from=${encodeURIComponent(c.event)}`} data-event={c.event}><span class="btn__label">{c.cta}</span></a>
+            <hr class="pcard__divider" />
+            <ul class="pcard__features">
+              {c.features.map((f) => <li data-reveal-child>{f}</li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- CTA BLOCK -->
+    <div class="pricing__cta">
+      <CtaBlock event="Pricing" />
     </div>
   </section>
 
@@ -217,8 +223,8 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
   <section class="bp">
     <div class="container bp__head">
       <p class="eyebrow-num mono eyebrow-num--center">04. The Blueprint</p>
-      <h2 class="bp__intro">Here’s exactly how we improve your ad results.</h2>
-      <p class="bp__sub">We build you the best-converting site, and guarantee it works, because we don’t stop until it does.</p>
+      <h2 class="bp__intro">Here’s exactly how we build a site that converts.</h2>
+      <p class="bp__sub">We build the best-converting site for your brand, then keep testing it until the numbers prove it.</p>
     </div>
     <div class="container bp__rows">
       {blueprint.map((row) => (
@@ -271,11 +277,24 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
     </div>
   </section>
 
+  <!-- 05. TIMELINE — the real day-by-day (from the Delivery SOP), so a
+       prospect knows what working with us actually looks like, not just
+       what we build. -->
+  <section class="tl-section">
+    <div class="container tl-section__head">
+      <p class="eyebrow-num mono eyebrow-num--center">05. The Timeline</p>
+      <h2 class="tl-section__heading">Here’s what working with us actually looks like.</h2>
+    </div>
+    <div class="container">
+      <div data-reveal><Timeline /></div>
+    </div>
+  </section>
+
   <!-- FAQ (top 5 questions) -->
   <section class="faq-section">
     <div class="container">
       <div class="faq-section__head">
-        <p class="eyebrow-num mono eyebrow-num--center">05. FAQ</p>
+        <p class="eyebrow-num mono eyebrow-num--center">06. FAQ</p>
         <h2 class="faq-section__heading stmt">Common Questions</h2>
       </div>
       <div class="faq-section__list"><FAQ items={topFaqs} /></div>
@@ -302,7 +321,7 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
           <span class="mono">{fourteenLabel}</span>
         </span>
       </div>
-      <p>Between now and then you’ll pay for every visitor who lands on the page you have right now. That cost is the same whether they buy or leave. You’ve been changing ads, offers, and audiences for months while the page stayed where it was, and 14 days is how long it takes to change that.</p>
+      <p>You’re already paying for every visitor who lands on your site, whether they buy or leave. In 14 days, your conversion rate goes up.</p>
       <p>Tap the button, fill out the short form, pick a time.</p>
       <p class="closing__alt">Prefer email? <a href={`mailto:${site.email}`}>{site.email}</a></p>
       <div class="closing__cta">
@@ -539,7 +558,7 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
   .statement__sub { margin: var(--space-5) auto 0; max-width: 48ch; font-family: var(--font-serif); font-size: var(--fs-lede); line-height: 1.6; color: var(--ink-soft); }
 
   /* ---------- before / after: draggable comparison slider ---------- */
-  .ba { padding-block: clamp(2rem, 6vh, 4rem); }
+  .ba { padding-block: clamp(1.25rem, 3.5vh, 2.5rem); }
   .ba-slider { max-width: 64rem; margin-inline: auto; }
   .ba-slider__frame {
     position: relative; aspect-ratio: 16 / 9; border-radius: var(--radius-md);
@@ -737,6 +756,12 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
     .bp__row { grid-template-columns: 1fr; }
     .bp__row-visual { order: -1; }
   }
+
+  /* ---------- 05. TIMELINE ---------- */
+  .tl-section { padding-block: clamp(2.5rem, 7vh, 5rem); }
+  .tl-section__head { text-align: center; }
+  .tl-section__heading { margin-top: var(--space-4); margin-inline: auto; font-size: clamp(2rem, 5vw, 3.25rem); max-width: 28ch; }
+  .tl-section :global(.tl) { margin-top: var(--space-10); max-width: var(--container-standard); margin-inline: auto; }
 
   /* ---------- FAQ ---------- */
   .faq-section { padding-block: clamp(2.5rem, 7vh, 5rem); }
