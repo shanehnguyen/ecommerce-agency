@@ -1,0 +1,114 @@
+---
+/* WhatIDo — "02. What I Actually Do": sits between The Problem and
+   Portfolio. Same interaction as the original Our Timeline: click/tap
+   toggles which row is open (.is-open, accordion — one at a time), which
+   is the ONLY thing that reveals the explanation text. Hover/focus just
+   brightens a row's own label — it does not reveal content, since opening
+   a row grows the list and would shift a stationary mouse into hovering
+   whatever row landed under it next (see OurTimeline's own note on why
+   that fight isn't worth having). Row 1 starts open so the list is never
+   empty on load. */
+const items = [
+  {
+    n: '01', term: 'Customer research',
+    body: 'Before anything is designed, I go through your reviews, your support tickets, and the questions people ask before they order. What they believe when they arrive, what they compare you against, and what stops them at the last click.',
+  },
+  {
+    n: '02', term: 'Funnel mapping',
+    body: 'Where your traffic comes from and how warm it is when it lands. Cold paid social, retargeting, email, and organic arrive believing different things and need different pages. Most stores send all of them to the same one.',
+  },
+  {
+    n: '03', term: 'Ad-to-page match',
+    body: 'I pull your live ads before I design anything. The promise in the ad becomes the headline on the page. The image in the ad becomes the first image on the page. The offer in the ad arrives pre-applied.',
+  },
+  {
+    n: '04', term: 'Copywriting',
+    body: 'Every headline, bullet, button, and caption written against one specific objection, at the awareness level the visitor showed up with. Written after the research, never from a moodboard.',
+  },
+  {
+    n: '05', term: 'Offer presentation',
+    body: 'Same products, same prices. What changes is which tier is pre-selected, what the anchor is, where the shipping threshold sits, and what the page asks for first.',
+  },
+];
+---
+<section class="wido">
+  <div class="container wido__head">
+    <p class="eyebrow-num mono eyebrow-num--center">What I Actually Do</p>
+    <h2 class="wido__heading">How I <span class="wido__accent">improve</span> your conversion rate</h2>
+    <p class="wido__sub">Strategy and copy, done for you. The 5 principles we live by to build your website.</p>
+  </div>
+
+  <div class="container">
+    <ol class="wido__list">
+      {items.map((item, i) => (
+        <li
+          class:list={['wido__row', { 'is-open': i === 0 }]}
+          tabindex="0" role="button" aria-expanded={i === 0 ? 'true' : 'false'}
+        >
+          <div class="wido__row-head">
+            <span class="wido__n mono">{item.n}</span>
+            <h3 class="wido__term">{item.term}</h3>
+          </div>
+          <p class="wido__body">{item.body}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<script>
+  // Click/tap toggles a row open independently — any number of rows can be
+  // open at once, unlike OurTimeline's one-at-a-time accordion. Hover only
+  // brightens (see the top-of-file comment for why).
+  document.querySelectorAll('.wido__list').forEach((list) => {
+    if (list.dataset.widoWired) return;
+    list.dataset.widoWired = 'true';
+    const rows = Array.from(list.querySelectorAll('.wido__row'));
+    rows.forEach((row) => {
+      row.addEventListener('click', () => {
+        const nowOpen = !row.classList.contains('is-open');
+        row.classList.toggle('is-open', nowOpen);
+        row.setAttribute('aria-expanded', String(nowOpen));
+      });
+      row.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        row.click();
+      });
+    });
+  });
+</script>
+
+<style>
+  .wido { padding-block: clamp(2.5rem, 7vh, 5rem); }
+  .wido__head { text-align: center; }
+  .wido__heading { margin-top: var(--space-4); margin-inline: auto; max-width: 32ch; font-size: clamp(2rem, 5vw, 3.25rem); }
+  .wido__accent { color: var(--accent-deep); }
+  .wido__sub { margin: var(--space-4) auto 0; max-width: 48ch; font-family: var(--font-serif); font-style: italic; font-size: var(--fs-lede); line-height: 1.6; color: var(--ink-soft); }
+
+  .wido__list { margin-top: clamp(2rem, 5vh, 3rem); max-width: var(--container-narrow); margin-inline: auto; list-style: none; padding: 0; }
+  .wido__row {
+    padding-block: var(--space-5); border-top: var(--rule-width) solid var(--line);
+    opacity: 0.45; transition: opacity 250ms var(--ease-out); cursor: pointer;
+    text-align: center;
+  }
+  /* no rule above the very first row — with the heading's own spacing above
+     it, that top border read as a second, redundant line before any
+     content starts */
+  .wido__row:first-child { border-top: none; }
+  .wido__row:last-child { border-bottom: var(--rule-width) solid var(--line); }
+  .wido__row.is-open, .wido__row:hover, .wido__row:focus-visible { opacity: 1; }
+
+  .wido__row-head { display: flex; align-items: baseline; justify-content: center; gap: var(--space-3); }
+  .wido__n { font-size: var(--fs-body); color: var(--accent-deep); }
+  .wido__term { font-size: clamp(1.375rem, 2.6vw, 1.875rem); }
+
+  /* only reacts to .is-open (click/tap) — see the top-of-file comment */
+  .wido__body {
+    max-height: 0; opacity: 0; overflow: hidden; margin-top: 0;
+    font-size: var(--fs-body); line-height: 1.6; color: var(--ink-soft); max-width: 62ch;
+    margin-inline: auto;
+    transition: max-height 300ms var(--ease-out), opacity 200ms var(--ease-out), margin-top 300ms var(--ease-out);
+  }
+  .wido__row.is-open .wido__body { max-height: 12rem; opacity: 1; margin-top: var(--space-3); }
+</style>

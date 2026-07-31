@@ -29,7 +29,7 @@ export const priceCards: PriceCard[] = [
     description: 'One page, built around a single offer or campaign, for testing fast or running paid traffic.',
     price: '$2,000', qualifier: 'one-time',
     cta: 'Build my landing page', event: 'Pricing:Landing',
-    features: ['Strategy session', 'Copywriting', 'Design', 'Development', 'A/B test launch & monitoring for conversion'],
+    features: ['Customer research and ad audit', 'Format selection: advertorial, listicle, quiz, comparison, or product page', 'Copywriting', 'Design and development'],
   },
   {
     eyebrow: 'Option 2 · Scale everything',

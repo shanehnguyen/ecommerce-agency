@@ -14,9 +14,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CtaBlock from '../components/CtaBlock.astro';
 import FAQ from '../components/FAQ.astro';
-import PortfolioMarquee from '../components/PortfolioMarquee.astro';
 import TheProblem from '../components/TheProblem.astro';
-import OurTimeline from '../components/OurTimeline.astro';
+import WhatIDo from '../components/WhatIDo.astro';
 import WhatGoesIn from '../components/WhatGoesIn.astro';
 import { site } from '../data/site.config';
 import { homeFaqs } from '../data/faqs';
@@ -105,25 +104,14 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
 
   <TheProblem />
 
-  <!-- 4. PORTFOLIO — last 6 clients, screenshot left, the number that moved right -->
-  <section class="pf" id="portfolio">
-    <div class="container">
-      <p class="eyebrow-num mono">02. Portfolio</p>
-      <h2 class="pf__heading stmt"><span>Same traffic.</span><span>More money.</span></h2>
-    </div>
-    <div class="pf__marquee" data-reveal>
-      <PortfolioMarquee />
-    </div>
-  </section>
+  <WhatIDo />
 
   <WhatGoesIn />
-
-  <OurTimeline />
 
   <!-- 6. PRICING (two offers) -->
   <section class="pricing" id="pricing">
     <div class="container pricing__head">
-      <p class="pricing__eyebrow mono">05. The Solution</p>
+      <p class="pricing__eyebrow mono">The Solution</p>
       <h2 class="pricing__heading">Two <span class="pricing__accent">paths</span>. Zero risk.</h2>
       <p class="pricing__sub">Two different offers, both designed to increase your conversions and revenue.</p>
     </div>
@@ -168,7 +156,7 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
   <section class="faq-section">
     <div class="container">
       <div class="faq-section__head">
-        <p class="eyebrow-num mono eyebrow-num--center">06. FAQ</p>
+        <p class="eyebrow-num mono eyebrow-num--center">FAQ</p>
         <h2 class="faq-section__heading stmt">Common Questions</h2>
       </div>
       <div class="faq-section__list"><FAQ items={topFaqs} /></div>
@@ -408,13 +396,6 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
   .stmt { transition: opacity 800ms var(--ease-out), color 800ms var(--ease-out); }
   .js .stmt { opacity: 0.35; }
   .js .stmt.is-lit { opacity: 1; }
-
-  /* ---------- 4. PORTFOLIO ---------- */
-  .pf { padding-top: var(--space-12); padding-bottom: var(--space-10); }
-  .pf__heading { margin-top: var(--space-4); max-width: 20ch; font-size: clamp(2.25rem, 6vw, 4.5rem); color: var(--ink-soft); text-align: left; }
-  .pf__heading span { display: block; }
-  /* full-bleed: the marquee drifts edge to edge, unconstrained by the text container above it */
-  .pf__marquee { margin-top: var(--space-8); }
 
   /* ---------- 6. PRICING (two offers — made to stand out, pricing-inspo) ---------- */
   .pricing { padding-block: clamp(2.5rem, 7vh, 5rem); }

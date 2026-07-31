@@ -11,6 +11,8 @@ import { site } from '../data/site.config';
       <span class="nav__logo-by">{site.byline}</span>
     </a>
 
+    <img class="nav__partner-logo" src="/shopify-partners.png" alt="Shopify Partners" width="110" height="22" loading="lazy" />
+
     <button
       class="nav__toggle"
       type="button"
@@ -62,4 +64,8 @@ import { site } from '../data/site.config';
      pages without a hero) */
   .js .nav__logo { opacity: 0; animation: nav-logo-in 150ms var(--ease-out) forwards; }
   @keyframes nav-logo-in { to { opacity: 1; } }
+
+  /* desktop-only — mobile's bar is already tight fitting logo + CTA + hamburger */
+  .nav__partner-logo { display: none; height: 20px; width: auto; opacity: 0.85; }
+  @media (min-width: 56em) { .nav__partner-logo { display: block; } }
 </style>

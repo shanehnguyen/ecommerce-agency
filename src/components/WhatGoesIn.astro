@@ -1,5 +1,5 @@
 ---
-/* WhatGoesIn — "03. What Goes In": the 9-ingredient masonry grid that
+/* WhatGoesIn — "03. What Goes In": the 8-ingredient masonry grid that
    replaced the old 3-step Blueprint. Sits ahead of Our Timeline per the
    page's sales order: hero, problem, proof, ingredients, timeline, price,
    FAQ, CTA. Copy is the literal offer breakdown
@@ -15,49 +15,44 @@
 
 const ingredients = [
   {
-    n: '01', title: 'Category Teardown', mock: 'teardown',
-    paragraphs: ['We pull apart the best-converting stores in your category before writing a line of code.'],
-    badge: 'Starts day one. Nothing gets designed before this is done.', arrow: false,
+    n: '01', title: 'How the Offer Is Presented', mock: 'bundle',
+    paragraphs: ['Same products, same prices. What changes is which tier is pre-selected, the anchor, and what the page asks for first.'],
+    badge: "Biggest single lever on revenue per visitor. I don't touch your pricing.", arrow: false,
   },
   {
-    n: '02', title: 'Offer Architecture', mock: 'bundle',
-    paragraphs: ['Bundles and tiers, priced against your real margin — not just conversion rate.'],
-    badge: 'The only ingredient here that can lose you money if done wrong', arrow: false,
+    n: '02', title: 'The Mobile Product Page', mock: 'phone',
+    paragraphs: ["Designed at 390px before it's ever seen on a monitor. Above the fold: price, proof, delivery date, and a sticky add-to-cart that never leaves the screen."],
+    badge: 'Mobile carries 65 to 85% of sessions and converts at roughly half the desktop rate.', arrow: true,
   },
   {
-    n: '03', title: 'Conversion Copywriting', mock: 'checklist',
-    paragraphs: ['Every headline, bullet, and button written from scratch. No lorem, no theme defaults.'],
-    badge: 'Written after the teardown, not before', arrow: false,
+    n: '03', title: 'Proof, Placed at the Doubt', mock: 'reviews',
+    paragraphs: ['Reviews positioned next to the specific hesitation they answer, not collected in a widget at the bottom of the page.'],
+    badge: 'Same reviews, different position, different result.', arrow: false,
   },
   {
-    n: '04', title: 'Social Proof, Placed', mock: 'reviews',
-    paragraphs: ['Reviews placed next to the doubt they answer, not buried in a widget.'],
-    badge: 'Same reviews, different position, different result', arrow: false,
+    n: '04', title: 'Copy That Answers the Objection', mock: 'objection',
+    paragraphs: ['Every headline, bullet, and button written against one specific doubt, at the awareness level the visitor arrived with.'],
+    badge: 'Written after the research, not before.', arrow: false,
   },
   {
-    n: '05', title: 'Imagery and Video System', mock: 'gallery',
-    paragraphs: ["A full gallery and video system, sized and lazy-loaded so it never slows you down."],
-    badge: 'Cold traffic needs to see the product used before it trusts the price', arrow: false,
+    n: '05', title: 'Shipping and Trust, Answered Early', mock: 'trust',
+    paragraphs: ['Delivery dates, shipping cost, stock status, and returns shown on the product page, not discovered in the cart.'],
+    badge: 'Baymard: unexpected extra costs are the number one reason carts get abandoned.', arrow: true,
   },
   {
-    n: '06', title: 'Trust and Shipping Signals', mock: 'trust',
-    paragraphs: ['Delivery dates, stock status, and secure checkout, shown right on the product page.'],
-    badge: 'Baymard: unexpected extra costs are the #1 abandonment reason', arrow: true,
-  },
-  {
-    n: '07', title: 'Mobile First at 390px', mock: 'phone',
-    paragraphs: ["Designed on a phone before it's ever seen on a monitor."],
-    badge: 'Mobile carries 65 to 85% of sessions and converts at about half the desktop rate', arrow: true,
-  },
-  {
-    n: '08', title: 'Speed Budget', mock: 'speed',
-    paragraphs: ['Every element earns its weight. If it slows the page, it gets cut.'],
-    badge: 'Google / Deloitte: 0.1s faster on mobile = +8.4% conversions, +9.2% AOV', arrow: true,
-  },
-  {
-    n: '09', title: 'Cart and Checkout', mock: 'cart',
-    paragraphs: ['Cart, checkout, and upsells — the last three clicks that carry the most lost revenue.'],
+    n: '06', title: 'Cart and Checkout', mock: 'cart',
+    paragraphs: ["Express wallets on, guest checkout on, fields cut, upsells placed where they don't add friction."],
     badge: "70.22% of carts are abandoned. That number hasn't moved in a decade.", arrow: true,
+  },
+  {
+    n: '07', title: 'Speed Budget', mock: 'speed',
+    paragraphs: ['Every element on the page earns its weight against load time. If it slows the page, it gets cut.'],
+    badge: 'Google / Deloitte: 0.1s faster on mobile means +8.4% conversions and +9.2% AOV.', arrow: true,
+  },
+  {
+    n: '08', title: 'Imagery and Video', mock: 'gallery',
+    paragraphs: ['A gallery ordered so each asset kills one objection, sized and lazy-loaded so it never costs you a page load.'],
+    badge: 'Cold traffic needs to see the product used before it trusts the price.', arrow: false,
   },
 ];
 
@@ -67,7 +62,7 @@ const tickerTags = ['Email & SMS capture', 'Variant & stock logic', 'Back-in-sto
 ---
 <section class="wgi" id="what-goes-in">
   <div class="container wgi__head">
-    <p class="eyebrow-num mono eyebrow-num--center">03. What Goes In</p>
+    <p class="eyebrow-num mono eyebrow-num--center">What Goes In</p>
     <h2 class="wgi__heading">Our ingredients. Your <span class="wgi__accent">result</span>.</h2>
     <p class="wgi__sub">Every element used to turn your website into a sales machine.</p>
   </div>
@@ -79,16 +74,6 @@ const tickerTags = ['Email & SMS capture', 'Variant & stock logic', 'Back-in-sto
           <p class="wgi-card__eyebrow mono"><span class="wgi-card__dot" aria-hidden="true"></span>Ingredient {c.n}</p>
           <h3 class="wgi-card__title">{c.title}</h3>
 
-          {c.mock === 'teardown' && (
-            <div class="wgi-mock wgi-mock--teardown" aria-hidden="true">
-              <span class="wgi-mock__pane wgi-mock__pane--1"><span></span><span></span></span>
-              <span class="wgi-mock__pane wgi-mock__pane--2"><span></span><span></span></span>
-              <span class="wgi-mock__pane wgi-mock__pane--3"><span></span><span></span></span>
-              <span class="wgi-mock__glass">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-              </span>
-            </div>
-          )}
           {c.mock === 'bundle' && (
             <div class="wgi-mock wgi-mock--bundle" aria-hidden="true">
               <span class="wgi-mock__row"><span class="wgi-mock__radio"></span><span class="wgi-mock__row-bar"></span></span>
@@ -96,20 +81,12 @@ const tickerTags = ['Email & SMS capture', 'Variant & stock logic', 'Back-in-sto
               <span class="wgi-mock__row wgi-mock__row--hi"><span class="wgi-mock__radio wgi-mock__radio--on"></span><span class="wgi-mock__row-bar"></span><span class="wgi-mock__row-tag mono">Best</span></span>
             </div>
           )}
-          {c.mock === 'checklist' && (
-            <div class="wgi-mock wgi-mock--checklist" aria-hidden="true">
-              <span class="wgi-mock__check is-on">
-                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                <span class="wgi-mock__check-bar"></span>
+          {c.mock === 'objection' && (
+            <div class="wgi-mock wgi-mock--objection" aria-hidden="true">
+              <span class="wgi-mock__doubt">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2 2-2 3.5"></path><circle cx="12" cy="17" r="0.6" fill="currentColor" stroke="none"></circle></svg>
               </span>
-              <span class="wgi-mock__check is-on">
-                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                <span class="wgi-mock__check-bar"></span>
-              </span>
-              <span class="wgi-mock__check">
-                <span class="wgi-mock__check-ring"></span>
-                <span class="wgi-mock__check-bar wgi-mock__check-bar--off"></span>
-              </span>
+              <span class="wgi-mock__answer"></span>
             </div>
           )}
           {c.mock === 'reviews' && (
@@ -208,17 +185,24 @@ const tickerTags = ['Email & SMS capture', 'Variant & stock logic', 'Back-in-sto
   .wgi__accent { color: var(--accent-deep); }
   .wgi__sub { margin: var(--space-4) auto 0; max-width: 48ch; font-family: var(--font-serif); font-style: italic; font-size: var(--fs-lede); line-height: 1.6; color: var(--ink-soft); }
 
-  /* ---------- masonry: CSS multi-column (no JS layout, staggers itself
-     naturally since column heights vary with each card's content). Single
-     column on mobile (2 columns made the already-short copy feel cramped);
-     the section stays short instead via the compact mobile card styles
-     below — smaller padding/type, not more columns. ---------- */
-  .wgi__grid { margin-top: var(--space-8); columns: 1; column-gap: var(--space-3); }
-  @media (min-width: 44em) { .wgi__grid { columns: 2; column-gap: var(--space-6); margin-top: var(--space-10); } }
-  @media (min-width: 56em) { .wgi__grid { columns: 3; } }
+  /* ---------- CSS Grid, not masonry: align-items:stretch makes every card
+     in a row match the tallest card in that row, so the grid ends flush
+     instead of the ragged bottom a column-based masonry gives you. Mobile
+     stays single-column with natural (unstretched) height. ---------- */
+  .wgi__grid { margin-top: var(--space-8); display: grid; grid-template-columns: 1fr; gap: var(--space-3); }
+  @media (min-width: 44em) {
+    .wgi__grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-6); align-items: stretch; margin-top: var(--space-10); }
+  }
+  @media (min-width: 56em) {
+    .wgi__grid { grid-template-columns: repeat(3, 1fr); }
+    /* row 3 has only 2 cards (8 total ÷ 3 cols) — ingredient 08 spans the
+       remaining 2 columns so the last row fills edge to edge instead of
+       leaving a gap. Only at 3-col: at 2-col, 8 cards fill 4 rows exactly. */
+    .wgi__grid .wgi-card:nth-child(8) { grid-column: span 2; }
+  }
 
   .wgi-card {
-    break-inside: avoid; margin-bottom: var(--space-3);
+    display: flex; flex-direction: column;
     background: color-mix(in srgb, var(--accent) 4%, var(--bg-raised));
     border: var(--rule-width) solid var(--line);
     border-radius: var(--wgi-radius);
@@ -234,12 +218,14 @@ const tickerTags = ['Email & SMS capture', 'Variant & stock logic', 'Back-in-sto
   .wgi-card__eyebrow { display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--fs-small); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50); }
   .wgi-card__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
   .wgi-card__title { margin-top: var(--space-3); font-size: clamp(1.5rem, 1.1vw + 1.2rem, 2rem); }
-  .wgi-card__body { margin-top: var(--space-4); }
+  /* fallback min gap for mobile's unstretched single column, where
+     .wgi-card__badge's margin-top:auto collapses to 0 (see .pcard__cta) */
+  .wgi-card__body { margin-top: var(--space-4); margin-bottom: var(--space-5); }
   .wgi-card__body p { font-size: var(--fs-body); line-height: 1.5; color: var(--ink-soft); }
   .wgi-card__body p + p { margin-top: var(--space-3); }
   .wgi-card__badge {
     display: inline-flex; align-items: center; gap: 0.4em;
-    margin-top: var(--space-5);
+    margin-top: auto; align-self: flex-start;
     padding: 0.4em 0.85em; border-radius: 999px;
     background: color-mix(in srgb, var(--ink) 6%, transparent);
     font-size: var(--fs-small); color: var(--ink-soft);
@@ -247,26 +233,6 @@ const tickerTags = ['Email & SMS capture', 'Variant & stock logic', 'Back-in-sto
 
   /* ---------- inline mocks (decorative, aria-hidden, no images) ---------- */
   .wgi-mock { display: flex; align-items: flex-end; gap: var(--space-2); width: 100%; margin-top: var(--space-4); height: 3.5rem; }
-
-  /* aspect-ratio (not a fixed height) because the panes inside are sized off
-     a % of THIS box's own width — a fixed rem height fit at one card width
-     (e.g. desktop 3-col) and clipped into the copy below at any narrower
-     width (mobile single-col, tablet 2-col), since the panes scale with
-     width but the box didn't. */
-  /* height: auto is required here — .wgi-mock (above) sets an explicit
-     height, and an explicit height always wins over aspect-ratio, so
-     without this override the aspect-ratio below is silently ignored and
-     the panes overflow into the copy underneath. Smaller pane % than the
-     other mocks on purpose ("shorter" per feedback — a bit of overlap fan
-     reads fine even compact). */
-  .wgi-mock--teardown { position: relative; height: auto; aspect-ratio: 10 / 3; margin-bottom: var(--space-3); }
-  .wgi-mock__pane { position: absolute; top: 0; width: 32%; aspect-ratio: 4 / 3; padding: 10%; display: flex; flex-direction: column; gap: 14%; border-radius: 6px; background: var(--bg); border: var(--rule-width) solid var(--line); }
-  .wgi-mock__pane span { display: block; height: 12%; border-radius: 2px; background: var(--line); }
-  .wgi-mock__pane span:first-child { width: 45%; background: var(--accent); opacity: 0.6; }
-  .wgi-mock__pane--1 { left: 0; transform: rotate(-6deg); z-index: 1; }
-  .wgi-mock__pane--2 { left: 18%; transform: rotate(2deg); z-index: 2; }
-  .wgi-mock__pane--3 { left: 36%; transform: rotate(8deg); z-index: 1; }
-  .wgi-mock__glass { position: absolute; left: 4%; bottom: 0; z-index: 3; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--bg-raised); border: var(--rule-width) solid var(--ink); color: var(--ink); }
 
   .wgi-mock--bundle { flex-direction: column; align-items: stretch; height: auto; gap: var(--space-2); }
   .wgi-mock__row { display: flex; align-items: center; gap: var(--space-2); padding: 0.4em 0.6em; border-radius: 6px; border: var(--rule-width) solid var(--line); background: var(--bg); }
@@ -276,12 +242,14 @@ const tickerTags = ['Email & SMS capture', 'Variant & stock logic', 'Back-in-sto
   .wgi-mock__radio--on { border-color: var(--accent); background: var(--accent); }
   .wgi-mock__row-tag { font-size: 0.6rem; color: var(--accent-deep); text-transform: uppercase; letter-spacing: var(--tracking-caps); }
 
-  .wgi-mock--checklist { flex-direction: column; align-items: stretch; height: auto; gap: var(--space-2); }
-  .wgi-mock__check { display: flex; align-items: center; gap: var(--space-2); color: var(--ink-50); }
-  .wgi-mock__check.is-on { color: var(--accent-deep); }
-  .wgi-mock__check-bar { display: block; width: 70%; height: 8px; border-radius: 2px; background: color-mix(in srgb, currentColor 30%, var(--line)); }
-  .wgi-mock__check-bar--off { width: 50%; }
-  .wgi-mock__check-ring { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--line); flex-shrink: 0; }
+  /* doubt bubble fades, the answer bar is what's left standing — matches
+     "copy written against one specific doubt" */
+  .wgi-mock--objection { align-items: center; gap: var(--space-3); height: auto; }
+  .wgi-mock__doubt {
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    width: 26px; height: 26px; border-radius: 50%; border: var(--rule-width) dashed var(--line); color: var(--ink-50);
+  }
+  .wgi-mock__answer { flex: 1; height: 10px; border-radius: 3px; background: var(--accent); }
 
   .wgi-mock--reviews { flex-direction: column; align-items: stretch; height: auto; gap: var(--space-2); }
   .wgi-mock__top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); flex-wrap: wrap; }
@@ -326,18 +294,12 @@ const tickerTags = ['Email & SMS capture', 'Variant & stock logic', 'Back-in-sto
   .wgi-mock { transition: transform 300ms var(--ease-out); }
   .wgi-card:hover .wgi-mock { transform: scale(1.04); }
 
-  .wgi-mock__pane, .wgi-mock__glass { transition: transform 300ms var(--ease-out); }
-  .wgi-card:hover .wgi-mock__pane--1 { transform: rotate(-15deg) translate(-3px, -2px); }
-  .wgi-card:hover .wgi-mock__pane--2 { transform: rotate(0deg) translateY(-3px); }
-  .wgi-card:hover .wgi-mock__pane--3 { transform: rotate(17deg) translate(3px, -2px); }
-  .wgi-card:hover .wgi-mock__glass { transform: scale(1.25) rotate(-10deg); }
-
   .wgi-mock__row--hi { transition: transform 300ms var(--ease-out), box-shadow 300ms var(--ease-out); }
   .wgi-card:hover .wgi-mock__row--hi { transform: translateX(4px); box-shadow: 0 8px 16px -10px color-mix(in srgb, var(--accent) 60%, transparent); }
 
-  .wgi-mock__check.is-on svg { transition: transform 250ms var(--ease-out); }
-  .wgi-card:hover .wgi-mock__check.is-on:nth-of-type(1) svg { transform: scale(1.35); }
-  .wgi-card:hover .wgi-mock__check.is-on:nth-of-type(2) svg { transition-delay: 100ms; transform: scale(1.35); }
+  .wgi-mock__doubt, .wgi-mock__answer { transition: opacity 300ms var(--ease-out), transform 300ms var(--ease-out); }
+  .wgi-card:hover .wgi-mock__doubt { opacity: 0.35; transform: scale(0.85); }
+  .wgi-card:hover .wgi-mock__answer { transform: scaleX(1.08); transform-origin: left; }
 
   @keyframes wgi-meter-fill { from { width: 20%; } to { width: 94%; } }
   .wgi-card:hover .wgi-mock__meter-fill { animation: wgi-meter-fill 600ms var(--ease-out); }
@@ -395,13 +357,13 @@ const tickerTags = ['Email & SMS capture', 'Variant & stock logic', 'Back-in-sto
      teardown panes), so shrinking the container alone re-creates the
      overflow-into-copy bug without also re-deriving each mock's math. ---------- */
   @media (max-width: 43.99em) {
-    .wgi-card { padding: var(--space-4); margin-bottom: var(--space-3); }
+    .wgi-card { padding: var(--space-4); }
     .wgi-card__eyebrow { font-size: 0.6rem; }
     .wgi-card__dot { width: 5px; height: 5px; }
     .wgi-card__title { margin-top: var(--space-2); font-size: 1.15rem; }
-    .wgi-card__body { margin-top: var(--space-3); }
+    .wgi-card__body { margin-top: var(--space-3); margin-bottom: var(--space-3); }
     .wgi-card__body p { font-size: var(--fs-small); line-height: 1.35; }
     .wgi-card__body p + p { margin-top: var(--space-2); }
-    .wgi-card__badge { margin-top: var(--space-3); padding: 0.35em 0.65em; font-size: 0.65rem; }
+    .wgi-card__badge { padding: 0.35em 0.65em; font-size: 0.65rem; }
   }
 </style>
