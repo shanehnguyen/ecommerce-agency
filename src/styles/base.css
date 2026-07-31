@@ -25,30 +25,6 @@ html {
   }
 }
 
-/* ---------- Custom cursor (desktop with a real pointer only) ---------- */
-html.has-cursor, html.has-cursor * { cursor: none; }
-.cursor {
-  position: fixed; top: 0; left: 0; z-index: 200; pointer-events: none;
-  width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%;
-  border: 1.5px solid var(--ink); opacity: 0;
-  transition: opacity 150ms var(--ease-out), width 200ms var(--ease-out), height 200ms var(--ease-out),
-              margin 200ms var(--ease-out), background 200ms var(--ease-out), border-color 200ms var(--ease-out);
-}
-.cursor.is-active { opacity: 0.7; }
-.cursor.is-hover {
-  width: 40px; height: 40px; margin: -20px 0 0 -20px;
-  background: color-mix(in srgb, var(--accent-deep) 12%, transparent);
-  border-color: var(--accent-deep); opacity: 1;
-}
-/* over the dark footer the ring is nearly invisible (near-black border on a
-   near-black background) — hide it and hand back the native cursor there */
-html.cursor-native, html.cursor-native * { cursor: auto; }
-html.cursor-native .cursor { opacity: 0; }
-@media (prefers-reduced-motion: reduce) {
-  html.has-cursor, html.has-cursor * { cursor: auto; }
-  .cursor { display: none; }
-}
-
 body {
   font-family: var(--font-body);
   font-size: var(--fs-body);

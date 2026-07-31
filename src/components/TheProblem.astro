@@ -1,0 +1,144 @@
+---
+/* TheProblem — "01. The Problem": restored after being cut earlier this
+   session, now with sharper copy. Opens the page right after the hero —
+   the "agitate the pain" beat before Portfolio proves the fix works.
+   Before/after comparison slider: a native range input drives --pos, which
+   clips the "after" layer and positions the divider, so it's fully
+   keyboard/touch/screen-reader accessible for free. The real conversion and
+   AOV numbers sit right on the image as an overlay (not separate text below
+   it), and the quote right under it is the same client backing up the claim. */
+import { Image } from 'astro:assets';
+import baBefore from '../assets/transformation/before.png';
+import baAfter from '../assets/transformation/after.png';
+---
+<section class="problem">
+  <div class="container">
+    <p class="eyebrow-num mono eyebrow-num--center">01. The Problem</p>
+    <p class="problem__line stmt"><span>You need a website that can</span><span><span class="problem__emph">reliably scale</span> with you.</span></p>
+    <p class="problem__sub">Stop running a plain Shopify template that looks like everyone else’s. Generic themes cap your conversion rate, no matter how big you grow.</p>
+  </div>
+</section>
+
+<section class="ba">
+  <div class="container">
+    <div class="ba-slider" data-reveal>
+      <div class="ba-slider__frame" data-ba-frame style="--pos:50%">
+        <div class="ba-slider__pane ba-slider__pane--before">
+          <Image class="ba-slider__shot" src={baBefore} alt="Before" width={1400} format="webp" quality={80} />
+        </div>
+        <div class="ba-slider__pane ba-slider__pane--after">
+          <Image class="ba-slider__shot" src={baAfter} alt="After" width={1400} format="webp" quality={80} />
+        </div>
+        <span class="ba-slider__tag ba-slider__tag--before mono">Before</span>
+        <span class="ba-slider__tag ba-slider__tag--after mono">After</span>
+        <div class="ba-slider__stats" aria-hidden="true">
+          <span class="ba-slider__stat">
+            <span class="ba-slider__stat-value mono">1.2% → <span data-count-to="7.3" data-count-decimals="1" data-count-suffix="%">7.3%</span></span>
+            <span class="ba-slider__stat-label">Conversion rate</span>
+          </span>
+          <span class="ba-slider__stat">
+            <span class="ba-slider__stat-value mono">$478 → <span data-count-to="850" data-count-prefix="$">$850</span></span>
+            <span class="ba-slider__stat-label">Avg. order value</span>
+          </span>
+        </div>
+        <input class="ba-slider__range" type="range" min="0" max="100" step="0.1" value="50" data-ba-range aria-label="Drag to compare the before and after site" />
+        <div class="ba-slider__divider" aria-hidden="true">
+          <span class="ba-slider__handle">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 6 2 12l6 6M16 6l6 6-6 6"></path>
+            </svg>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- proof, right under the before/after comparison it's backing up -->
+<section class="ba-proof">
+  <div class="container ba-proof__inner" data-reveal>
+    <p class="ba-proof__quote">“They completely redid my entire website... Lots of my customers were complimenting my website... I was getting too many sales, I had to stop running my ads.”</p>
+    <p class="ba-proof__name">Lynh <span class="ba-proof__brand">(Lynh’s Drinks)</span></p>
+  </div>
+</section>
+
+<script>
+  // Before/after comparison slider: sync the range input's value to the
+  // --pos custom property that drives the clip-path + divider.
+  (function () {
+    var frame = document.querySelector('[data-ba-frame]');
+    var range = document.querySelector('[data-ba-range]');
+    if (!frame || !range) return;
+    var update = function () { frame.style.setProperty('--pos', range.value + '%'); };
+    range.addEventListener('input', update);
+    update();
+  })();
+</script>
+
+<style>
+  .problem { padding-top: clamp(3rem, 8vh, 5rem); padding-bottom: clamp(1.5rem, 3vh, 2.5rem); text-align: center; }
+  .problem__line { text-align: center; margin-inline: auto; margin-top: var(--space-5); max-width: 32ch; font-family: var(--font-display); font-weight: var(--fw-display); font-size: clamp(2rem, 5.5vw, 4rem); line-height: 1.05; letter-spacing: -0.02em; text-transform: uppercase; color: var(--ink); }
+  .problem__line > span { display: block; }
+  .problem__emph { color: var(--accent-deep); }
+  .problem__sub { margin: var(--space-5) auto 0; max-width: 48ch; font-family: var(--font-serif); font-size: var(--fs-lede); line-height: 1.6; color: var(--ink-soft); }
+
+  .ba { padding-block: clamp(1.25rem, 3.5vh, 2.5rem); }
+  .ba-slider { max-width: 64rem; margin-inline: auto; }
+  .ba-slider__frame {
+    position: relative; aspect-ratio: 16 / 9; border-radius: var(--radius-md);
+    border: var(--rule-width) solid var(--line); background: var(--bg-raised);
+    overflow: hidden; cursor: grab; touch-action: pan-y;
+  }
+  .ba-slider__frame:active { cursor: grabbing; }
+  .ba-slider__pane { position: absolute; inset: 0; background: var(--bg-raised); }
+  /* "before" sits on top, clipped to the divider so it only shows on the
+     left; "after" is the full base layer showing through on the right —
+     old on the left, new on the right, matching the fixed corner tags */
+  .ba-slider__pane--before { z-index: 1; clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
+  .ba-slider__shot { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .ba-slider__tag {
+    position: absolute; top: var(--space-4); z-index: 2; padding: 0.35em 0.75em; border-radius: 999px;
+    font-size: var(--fs-caption); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps);
+    color: var(--bg); background: color-mix(in srgb, var(--ink) 78%, transparent); backdrop-filter: blur(2px);
+    pointer-events: none;
+  }
+  .ba-slider__tag--before { left: var(--space-4); }
+  .ba-slider__tag--after { right: var(--space-4); }
+  /* the metrics live right on the image they're proving, anchored to the
+     bottom edge over a scrim (same technique as the portfolio tiles'
+     name/result overlay) instead of sitting in separate text below */
+  .ba-slider__stats {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; pointer-events: none;
+    display: flex; justify-content: center; gap: var(--space-8);
+    padding: var(--space-8) var(--space-4) var(--space-4);
+    background: linear-gradient(to top, color-mix(in srgb, var(--ink) 75%, transparent) 0%, color-mix(in srgb, var(--ink) 55%, transparent) 60%, transparent 100%);
+  }
+  .ba-slider__stat { display: flex; flex-direction: column; align-items: center; }
+  .ba-slider__stat-value { font-size: var(--fs-h4); font-weight: var(--fw-body-bold); color: var(--bg); line-height: 1; }
+  .ba-slider__stat-label { margin-top: var(--space-1); font-size: var(--fs-small); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: color-mix(in srgb, var(--bg) 80%, transparent); }
+  .ba-slider__divider {
+    position: absolute; top: 0; bottom: 0; left: var(--pos); width: 2px; margin-left: -1px;
+    background: var(--bg); box-shadow: 0 0 0 1px var(--line); pointer-events: none; z-index: 1;
+  }
+  .ba-slider__handle {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    background: var(--bg); border: var(--rule-width) solid var(--ink); color: var(--ink);
+    box-shadow: 0 10px 24px -12px rgba(26, 24, 20, 0.45);
+  }
+  .ba-slider__range {
+    position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; z-index: 3;
+    appearance: none; -webkit-appearance: none; background: transparent; cursor: grab;
+  }
+  .ba-slider__range:active { cursor: grabbing; }
+  .ba-slider__range::-webkit-slider-thumb { appearance: none; -webkit-appearance: none; width: 40px; height: 40px; opacity: 0; }
+  .ba-slider__range::-moz-range-thumb { width: 40px; height: 40px; opacity: 0; border: 0; }
+  .ba-slider__range::-moz-range-track { background: transparent; }
+  .ba-slider__range:focus-visible ~ .ba-slider__divider .ba-slider__handle { outline: 2px solid var(--accent-deep); outline-offset: 2px; }
+
+  .ba-proof { padding-block: clamp(1.5rem, 4vh, 2.5rem); }
+  .ba-proof__inner { max-width: 40rem; margin-inline: auto; text-align: center; }
+  .ba-proof__quote { font-family: var(--font-serif); font-style: italic; font-size: var(--fs-h4); line-height: 1.4; color: var(--ink); }
+  .ba-proof__name { margin-top: var(--space-4); font-size: var(--fs-body); font-weight: var(--fw-body-semi); color: var(--ink-50); }
+  .ba-proof__brand { font-weight: var(--fw-body-regular); }
+</style>

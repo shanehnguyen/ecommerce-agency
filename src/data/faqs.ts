@@ -11,49 +11,45 @@ export type Faq = { q: string; a: string | string[] };
 
 export const homeFaqs: Faq[] = [
   {
-    q: 'Why can you guarantee 14 days?',
+    q: 'How does the guarantee work?',
     a: [
-      'We’ve run this exact rebuild enough times that it’s a proven system now, not something being figured out on your dime.',
-      'A full team works your build in parallel, not one person doing it step by step, which is how we compress what usually takes months into two weeks.',
-      'Fast doesn’t mean rushed. Every build goes through the same quality checks it would if we had twelve weeks. We just don’t waste any of them.',
+      'Live in 14 days or you don’t pay. That’s the delivery guarantee.',
+      'Once it’s live, I keep testing and iterating for 60 days until your new site is clearly beating your old numbers.',
+      'Still not happy after that? Full refund, no argument.',
     ],
   },
   {
-    q: 'What if it doesn’t convert better?',
+    q: 'How exactly do you improve my conversion rate?',
     a: [
-      'I don’t stop working until your conversion rate completely outperforms your original numbers. I won’t promise you a specific percentage, because anyone who does is either guessing or lying, and you’d be right not to trust them.',
-      'And if you ever feel unsatisfied, I’ll give you a full refund as long as it’s within 60 days.',
-      'You also get a 60-day iteration warranty and a six-month code warranty.',
-    ],
-  },
-  {
-    q: 'What’s actually included in this?',
-    a: [
-      'Your full site: homepage, product pages, collection pages, cart, and checkout, all custom-built from scratch and designed mobile first.',
-      'It’s built around what actually converts in your niche, not a generic template, using the layout and copy patterns from the best-converting brands like yours.',
-      'And it comes with the same guarantee as everything else here: I keep iterating until you’re happy, with a full refund if that’s within 60 days.',
-    ],
-  },
-  {
-    q: 'How does payment work?',
-    a: [
-      '50% to start, 50% when the site is live and you’ve approved it. No lump sum upfront.',
-      'That second half isn’t due until you’ve actually seen the finished build working, so we’re both on the hook to get it right.',
-    ],
-  },
-  {
-    q: 'Why can’t I just hire a freelancer who’s cheaper?',
-    a: [
-      'You can, but you’re paying for their time, not a result. If the build doesn’t convert, that’s your problem, not theirs, and you’ve lost the time and ad spend either way.',
-      'I charge more because I stake my own time on the outcome: a fixed price, a guarantee that I keep working until you’re winning, and a full refund within 60 days if you’re not happy.',
-      'It’s built for real stores, not dropshippers on a generic catalogue or anyone who needs four people to approve a decision.',
+      'We start by tearing apart the best-converting stores in your category, not guessing from a moodboard.',
+      'Then we rebuild your offer, copy, social proof, and checkout around what actually works on your buyer.',
+      'After launch we keep testing against your real numbers until the new site is clearly winning.',
     ],
   },
   {
     q: 'What do you need from me to complete my website?',
     a: [
-      'Not much: your logo, any product photos you already have, and access to your current site and analytics. That’s the whole list.',
-      'No discovery calls, no 40-question intake form, no weeks of back-and-forth before we start. Kickoff is one call, then I take it from there.',
+      'Your logo, product photos, and access to your current site and analytics. That’s it.',
+      'No 40-question intake form, no weeks of back-and-forth. One kickoff call, then I take it from there.',
+    ],
+  },
+  {
+    q: 'How fast can you launch?',
+    a: [
+      'A single landing page: 7 days.',
+      'A full store build: 14 days, or you don’t pay.',
+      'Fast doesn’t mean rushed — every build passes the same checks it would on a 12-week timeline. We just don’t waste any of them.',
+    ],
+  },
+  {
+    q: 'What platforms do you work with?',
+    a: 'Whatever you’re already on. Shopify’s our specialty and where we build fastest, so if you’re not on it yet, I’ll tell you honestly whether switching is worth it for you.',
+  },
+  {
+    q: 'What happens after it converts better?',
+    a: [
+      'The website is 100% yours to keep: code, assets, everything. No lock-in, no forced contract.',
+      'If you want me to keep improving it, adding features, or just keeping it maintained, that’s available for a small monthly fee. Never required.',
     ],
   },
 ];

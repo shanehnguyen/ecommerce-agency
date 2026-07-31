@@ -92,7 +92,7 @@
 
 /* ---------- Pricing card (shared — homepage pricing AND /apply's "which
    option" question use this exact same card, so they never drift apart) ---------- */
-.pcard { position: relative; min-width: 0; background: var(--bg-raised); border: var(--rule-width) solid var(--line); border-radius: var(--radius-md); padding: clamp(var(--space-8), 4vw, var(--space-10)); display: flex; flex-direction: column; text-align: left; width: 100%; }
+.pcard { position: relative; min-width: 0; background: var(--bg-raised); border: var(--rule-width) solid var(--line); border-radius: 14px; padding: clamp(var(--space-8), 4vw, var(--space-10)); display: flex; flex-direction: column; text-align: left; width: 100%; }
 .pcard--featured {
   border-color: var(--accent); border-width: 2px;
   animation: pcard-glow 3s var(--ease-io) infinite;
@@ -102,15 +102,19 @@
   50%      { box-shadow: 0 30px 60px -30px rgba(26, 24, 20, 0.4), 0 0 26px 0px color-mix(in srgb, var(--accent) 45%, transparent); }
 }
 .pcard__tag { position: absolute; top: -0.8em; left: var(--space-8); background: var(--accent); color: var(--bg-raised); padding: 0.3em 0.9em; border-radius: 999px; font-size: var(--fs-caption); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps); }
-.pcard__name { font-size: var(--fs-body); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50); }
+.pcard__eyebrow { font-size: var(--fs-small); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--accent-deep); }
+.pcard__name { margin-top: var(--space-2); font-size: var(--fs-body); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50); }
 .pcard__desc { margin-top: var(--space-2); font-family: var(--font-serif); font-size: var(--fs-body); line-height: 1.4; color: var(--ink-soft); }
-.pcard__price { margin-top: var(--space-4); font-family: var(--font-display); font-weight: var(--fw-display); font-size: clamp(3rem, 6vw, 4rem); line-height: 1; letter-spacing: -0.02em; display: flex; align-items: baseline; gap: var(--space-3); flex-wrap: wrap; }
+.pcard__price { margin-top: var(--space-4); font-family: var(--font-display); font-weight: var(--fw-display); font-size: clamp(3rem, 6vw, 4rem); line-height: 1; letter-spacing: -0.02em; display: flex; align-items: baseline; gap: var(--space-3); flex-wrap: wrap; color: var(--accent-deep); }
 .pcard__qual { font-family: var(--font-body); font-size: var(--fs-body); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50); }
-.pcard__cta { margin-top: var(--space-8); justify-content: center; width: 100%; font-size: var(--fs-lede); padding: var(--space-5) var(--space-8); }
+.pcard__cta { margin-top: auto; justify-content: center; width: 100%; font-size: var(--fs-lede); padding: var(--space-5) var(--space-8); }
 .pcard__divider { margin: var(--space-6) 0; border: 0; border-top: var(--rule-width) solid var(--line); }
-.pcard__features { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-4); }
-.pcard__features li { position: relative; padding-left: var(--space-6); font-family: var(--font-serif); font-size: var(--fs-bodyL); line-height: 1.4; color: var(--ink); }
-.pcard__features li::before { content: ""; position: absolute; left: 0; top: 0.65em; width: 12px; height: 2px; background: var(--accent); }
+.pcard__features { list-style: none; margin: 0 0 var(--space-8); padding: 0; display: grid; gap: var(--space-4); }
+.pcard__features li { display: flex; align-items: baseline; gap: var(--space-3); font-family: var(--font-serif); font-size: var(--fs-bodyL); line-height: 1.4; color: var(--ink); }
+.pcard__check { flex-shrink: 0; color: var(--bg-raised); background: var(--accent-deep); border-radius: 50%; padding: 3px; transform: translateY(3px); }
+.pcard__chips-label { font-size: var(--fs-caption); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50); }
+.pcard__chips { list-style: none; margin: var(--space-3) 0 var(--space-8); padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.pcard__chips li { padding: 0.4em 0.9em; border-radius: 999px; border: var(--rule-width) solid var(--line); background: var(--bg); font-size: var(--fs-caption); color: var(--ink-soft); }
 /* selectable variant: the whole card is a <button>, picked state matches
    the site's other selectable cards (.bk-card.is-on) */
 button.pcard { cursor: pointer; font: inherit; color: inherit; appearance: none; -webkit-appearance: none; }

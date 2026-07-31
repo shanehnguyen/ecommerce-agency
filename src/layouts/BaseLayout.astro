@@ -61,7 +61,6 @@ const fullTitle = title.includes(site.brand) ? title : `${title} | ${site.brand}
       <slot />
     </main>
     <Footer />
-    <div class="cursor" data-cursor aria-hidden="true"></div>
     <script is:inline>
       // Subtle fade-up on scroll + nav shrink/blur on scroll. Respects reduced-motion.
       (function () {
@@ -133,34 +132,6 @@ const fullTitle = title.includes(site.brand) ? title : `${title} | ${site.brand}
               entries.forEach(function (e) { if (e.isIntersecting) { runCount(e.target); countIo.unobserve(e.target); } });
             }, { threshold: 0.6 });
             countEls.forEach(function (e) { countIo.observe(e); });
-          }
-        }
-
-        // Lightweight custom cursor: desktop-with-a-real-pointer only, never
-        // on touch. Scales 1.5x over anything interactive.
-        var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-        if (canHover) {
-          document.documentElement.classList.add('has-cursor');
-          var dot = document.querySelector('[data-cursor]');
-          if (dot) {
-            var cx = 0, cy = 0, x = 0, y = 0;
-            window.addEventListener('mousemove', function (e) { cx = e.clientX; cy = e.clientY; dot.classList.add('is-active'); });
-            var tick = function () {
-              var ease = reduce ? 1 : 0.35;
-              x += (cx - x) * ease; y += (cy - y) * ease;
-              dot.style.transform = 'translate(' + x + 'px,' + y + 'px)';
-              requestAnimationFrame(tick);
-            };
-            requestAnimationFrame(tick);
-            document.addEventListener('mouseover', function (e) {
-              var t = e.target.closest && e.target.closest('a, button, [role="button"], summary, input, [data-cursor-hover]');
-              dot.classList.toggle('is-hover', !!t);
-              // the dark footer swallows the ring visually (near-black border
-              // on a near-black background) — fall back to the native cursor there
-              var inFooter = e.target.closest && e.target.closest('.footer');
-              document.documentElement.classList.toggle('cursor-native', !!inFooter);
-            });
-            document.addEventListener('mouseleave', function () { dot.classList.remove('is-active'); });
           }
         }
       })();

@@ -8,6 +8,7 @@
    ===================================================================== */
 
 export type PriceCard = {
+  eyebrow: string;
   name: string;
   description: string;
   price: string;
@@ -15,22 +16,28 @@ export type PriceCard = {
   cta: string;
   event: string;
   features: string[];
+  /** Full Store Build's list renders as wrapped chips instead of a checklist
+   * (it's a list of pages, not steps) — features[0] stays a lead-in caption. */
+  featuresAsChips?: boolean;
   featured?: boolean;
 };
 
 export const priceCards: PriceCard[] = [
   {
+    eyebrow: 'Option 1 · Prove it fast',
     name: 'Landing Page',
     description: 'One page, built around a single offer or campaign, for testing fast or running paid traffic.',
-    price: '$2,000', qualifier: 'flat',
+    price: '$2,000', qualifier: 'one-time',
     cta: 'Build my landing page', event: 'Pricing:Landing',
-    features: ['Fixed price, no hourly billing, no surprises', 'One high-converting page built around a single offer', 'Written and designed to convert cold traffic', 'Live in 7 days on your existing theme'],
+    features: ['Strategy session', 'Copywriting', 'Design', 'Development', 'A/B test launch & monitoring for conversion'],
   },
   {
+    eyebrow: 'Option 2 · Scale everything',
     name: 'Full Store Build',
-    description: 'Your entire storefront, custom-built around your catalog and brand, the last site you need as you scale.',
+    description: "Everything from the landing page — but for your ENTIRE website. The last site you'll ever need.",
     price: '$4,500', qualifier: 'starting', featured: true,
     cta: 'Build my website', event: 'Pricing:Full',
-    features: ['Custom-built to be the only site you need, no ceiling as you scale', 'Unlimited revisions and integrations, no extra invoices', 'Mobile-first design, built to convert any user', 'Live in 14 days or you don’t pay', 'We’ll keep improving until your new numbers beat the old ones'],
+    features: ['We optimize EVERYTHING', 'Home page', 'Product page', 'Collection page', 'Cart', 'Checkout', 'Upsell flows', 'Landing pages'],
+    featuresAsChips: true,
   },
 ];

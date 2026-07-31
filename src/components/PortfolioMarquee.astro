@@ -54,8 +54,11 @@ const cards: Card[] = [
 </div>
 
 <style>
-  /* ---------- mobile: 2-column grid, small gap ---------- */
-  .pf-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); max-width: 40rem; margin-inline: auto; }
+  /* ---------- mobile: 2-column grid, flat and edge-to-edge (no gap, no
+     radius) — reads as one continuous sheet of screenshots, not spaced-out
+     cards ---------- */
+  .pf-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; max-width: 40rem; margin-inline: auto; }
+  .pf-list :global(.pf-tile) { border-radius: 0; border: 0; }
   .pf-marquee { display: none; }
 
   @media (min-width: 60em) {
