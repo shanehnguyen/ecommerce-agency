@@ -43,7 +43,6 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
                       <span class="bk-offer__name mono">{c.name}</span>
                       {c.featured && <span class="bk-offer__badge mono">Most booked</span>}
                     </span>
-                    <span class="bk-offer__price">{c.price}<span class="bk-offer__qual">{c.qualifier}</span></span>
                     <span class="bk-offer__desc">{c.description}</span>
                   </button>
                 ))}
@@ -565,8 +564,6 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
   .bk-offer__top { display: flex; align-items: center; gap: var(--space-3); }
   .bk-offer__name { font-size: var(--fs-caption); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50); }
   .bk-offer__badge { font-size: var(--fs-small); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--accent-deep); }
-  .bk-offer__price { font-family: var(--font-display); font-weight: var(--fw-display); font-size: var(--fs-h3); line-height: 1; color: var(--ink); }
-  .bk-offer__qual { margin-left: var(--space-2); font-family: var(--font-body); font-size: var(--fs-small); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50); }
   .bk-offer__desc { font-family: var(--font-serif); font-size: var(--fs-body-sm, var(--fs-caption)); line-height: 1.4; color: var(--ink-70); }
 
   /* validation */

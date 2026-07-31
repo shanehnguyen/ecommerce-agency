@@ -14,8 +14,7 @@ export const homeFaqs: Faq[] = [
     q: 'How does the guarantee work?',
     a: [
       'Live in 14 days or you don’t pay. That’s the delivery guarantee.',
-      'Once it’s live, I keep testing and iterating for 60 days until your new site is clearly beating your old numbers.',
-      'Still not happy after that? Full refund, no argument.',
+      'After that, I don’t stop until your new site is clearly outperforming your old numbers. No fixed end date, no arbitrary cutoff — I keep testing until it wins.',
     ],
   },
   {

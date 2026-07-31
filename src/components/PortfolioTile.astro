@@ -81,7 +81,7 @@ const { card: c, duplicate = false } = Astro.props;
     display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
     font-size: clamp(11px, 7cqw, 17px); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--bg);
   }
-  /* before → after (e.g. "1.2% → 7.3%"), not just the final number — sized
+  /* before → after (e.g. "1.2% → 3.4%"), not just the final number — sized
      smaller than the old single-number display since it's a longer string
      (the PK Cabinets one, "$2,081 → $5,556", is the longest at 16 chars). */
   .pf-tile__value { font-size: clamp(0.9rem, 7cqw, 1.4rem); font-weight: var(--fw-body-bold); color: var(--bg); line-height: 1.25; }
