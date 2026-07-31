@@ -35,7 +35,7 @@ export const priceCards: PriceCard[] = [
     eyebrow: 'Option 2 · Scale everything',
     name: 'Full Store Build',
     description: "Everything from the landing page — but for your ENTIRE website. The last site you'll ever need.",
-    price: '$4,500', qualifier: 'starting', featured: true,
+    price: '$4,500', qualifier: 'one-time', featured: true,
     cta: 'Build my website', event: 'Pricing:Full',
     features: ['We optimize EVERYTHING', 'Home page', 'Product page', 'Collection page', 'Cart', 'Checkout', 'Upsell flows', 'Landing pages'],
     featuresAsChips: true,
