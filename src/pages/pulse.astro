@@ -46,6 +46,12 @@ import BareLayout from '../layouts/BareLayout.astro';
           <div class="pl-funnel" data-pl-funnel></div>
         </div>
 
+        <!-- VSL watch-through -->
+        <div class="pl-card">
+          <h2 class="pl-h2">VSL retention <span class="pl-dim">· last 7 days</span></h2>
+          <div class="pl-vsl" data-pl-vsl></div>
+        </div>
+
         <!-- which CTA / source converts -->
         <div class="pl-card">
           <h2 class="pl-h2">By CTA / source <span class="pl-dim">· visitors → booked</span></h2>
@@ -93,6 +99,7 @@ import BareLayout from '../layouts/BareLayout.astro';
   const note = $('[data-pl-note]');
   const tilesEl = $('[data-pl-tiles]');
   const funnelEl = $('[data-pl-funnel]');
+  const vslEl = $('[data-pl-vsl]');
   const sourcesEl = $('[data-pl-sources]');
   const tableEl = $('[data-pl-table]');
   const tscrollEl = $('[data-pl-tscroll]');
@@ -414,6 +421,51 @@ import BareLayout from '../layouts/BareLayout.astro';
     }).join('');
   }
 
+  // ---------- VSL retention chart ----------
+  // Each `seconds` entry is "count of sessions that reached at least this
+  // second" (see /api/vsl) — already dense (every second up to a session's
+  // final watermark got incremented), so no gap-filling is needed, just a
+  // defensive hold-last-value in case a second is ever missing.
+  function renderVsl(r) {
+    const starts = (r && r.starts) || 0;
+    const points: any[] = (r && r.seconds) || [];
+    if (!starts || !points.length) {
+      vslEl.innerHTML = '<p class="pl-empty">No VSL views yet.</p>';
+      return;
+    }
+    const byCount = new Map(points.map((p) => [p.second, p.count]));
+    const maxSecond = Math.max(r.duration || 0, points[points.length - 1].second);
+    const pctAtOrBefore = (s: number) => {
+      let v = 100;
+      for (let i = 0; i <= s; i++) { if (byCount.has(i)) v = (byCount.get(i) / starts) * 100; }
+      return v;
+    };
+
+    const W = 600, H = 160, PAD = 4;
+    const xAt = (s: number) => PAD + (maxSecond ? (s / maxSecond) * (W - PAD * 2) : 0);
+    const yAt = (pct: number) => PAD + (1 - pct / 100) * (H - PAD * 2);
+    const coords: [number, number][] = [];
+    for (let s = 0; s <= maxSecond; s++) coords.push([xAt(s), yAt(pctAtOrBefore(s))]);
+    const line = coords.map((c, i) => `${i === 0 ? 'M' : 'L'}${c[0].toFixed(1)},${c[1].toFixed(1)}`).join(' ');
+    const area = `${line} L${xAt(maxSecond).toFixed(1)},${yAt(0).toFixed(1)} L${xAt(0).toFixed(1)},${yAt(0).toFixed(1)} Z`;
+
+    const at = (frac: number) => Math.round(pctAtOrBefore(Math.round(maxSecond * frac)));
+    vslEl.innerHTML = `
+      <div class="pl-vsl__stats">
+        <span><b>${starts}</b> play${starts === 1 ? '' : 's'}</span>
+        <span>25%<b>${at(0.25)}%</b></span>
+        <span>50%<b>${at(0.5)}%</b></span>
+        <span>75%<b>${at(0.75)}%</b></span>
+        <span>Finished<b>${at(1)}%</b></span>
+      </div>
+      <svg class="pl-vsl__svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+        <path d="${esc(area)}" class="pl-vsl__area"></path>
+        <path d="${esc(line)}" class="pl-vsl__line" fill="none"></path>
+      </svg>
+      <div class="pl-vsl__axis"><span>${fmtElapsed(0)}</span><span>${fmtElapsed(maxSecond * 500)}</span><span>${fmtElapsed(maxSecond * 1000)}</span></div>
+    `;
+  }
+
   // ---------- CSV export (current filtered view) ----------
   function exportCsv() {
     const rows = filterRows(ALL_ROWS);
@@ -465,6 +517,7 @@ import BareLayout from '../layouts/BareLayout.astro';
     const journeys = Array.isArray(data.journeys) ? data.journeys : [];
     ALL_ROWS = journeys.map(toRow);
     renderFunnel(Array.isArray(data.funnel) ? data.funnel : []);
+    renderVsl(data.vslRetention || { starts: 0, seconds: [], duration: 0 });
     renderSources(Array.isArray(data.sources) ? data.sources : []);
     applyAndRender();
     windowEl.textContent = '· last 7 days';
@@ -586,6 +639,14 @@ import BareLayout from '../layouts/BareLayout.astro';
   .pl-fbar { height: 12px; background: var(--line); border-radius: 999px; overflow: hidden; }
   .pl-ffill { display: block; height: 100%; border-radius: 999px; transition: width 400ms cubic-bezier(.2,.7,.2,1); }
   .pl-fdrop { font-size: var(--fs-caption); color: var(--ink-50); font-family: var(--font-mono); min-height: 1em; }
+
+  /* VSL retention */
+  .pl-vsl__stats { margin-top: var(--space-3); display: flex; flex-wrap: wrap; gap: var(--space-5); font-family: var(--font-mono); font-size: var(--fs-body-sm, var(--fs-caption)); color: var(--ink-70); }
+  .pl-vsl__stats b { display: inline-block; margin-left: 6px; color: var(--ink); font-weight: var(--fw-body-semi); }
+  .pl-vsl__svg { margin-top: var(--space-4); width: 100%; height: 160px; display: block; }
+  .pl-vsl__area { fill: color-mix(in srgb, var(--accent) 18%, transparent); stroke: none; }
+  .pl-vsl__line { stroke: var(--accent-deep, var(--accent)); stroke-width: 2; vector-effect: non-scaling-stroke; }
+  .pl-vsl__axis { display: flex; justify-content: space-between; margin-top: var(--space-2); font-size: var(--fs-caption); font-family: var(--font-mono); color: var(--ink-50); }
 
   .pl-tone--cool { background: #6b8cae; }
   .pl-tone--mid  { background: #A78B4F; }

@@ -328,7 +328,47 @@ async function dashboard(req, res) {
     }
   }
 
-  return res.status(200).json({ ok: true, redisStatus, journeys, funnel: buildFunnel(journeys), sources: buildSources(journeys), stages: STAGES });
+  const vslRetention = await buildVslRetention(redis);
+
+  return res.status(200).json({ ok: true, redisStatus, journeys, funnel: buildFunnel(journeys), sources: buildSources(journeys), stages: STAGES, vslRetention });
+}
+
+// Sums the last 7 days of /api/vsl's daily histograms into one retention
+// curve: how many sessions reached at least second N, out of how many
+// started. Degrades to an empty curve if Redis isn't configured.
+async function buildVslRetention(redis) {
+  if (!redis) return { starts: 0, seconds: [], duration: 0 };
+  const pad = (n) => String(n).padStart(2, '0');
+  const now = Date.now();
+  const dayKeys = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(now - i * 86400000);
+    dayKeys.push(`vsl:hist:${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}`);
+  }
+  let starts = 0;
+  let duration = 0;
+  const totals = {};
+  try {
+    const [hashes, storedDuration] = await Promise.all([
+      Promise.all(dayKeys.map((k) => redis.hgetall(k))),
+      redis.get('vsl:duration'),
+    ]);
+    duration = Number(storedDuration) || 0;
+    for (const h of hashes) {
+      if (!h) continue;
+      for (const [field, val] of Object.entries(h)) {
+        const n = Number(val) || 0;
+        if (field === 'starts') { starts += n; continue; }
+        const sec = Number(field);
+        if (Number.isFinite(sec)) totals[sec] = (totals[sec] || 0) + n;
+      }
+    }
+  } catch (err) {
+    console.warn('vsl retention read failed:', err.message);
+  }
+  const seconds = Object.keys(totals).map(Number).sort((a, b) => a - b)
+    .map((second) => ({ second, count: totals[second] }));
+  return { starts, seconds, duration };
 }
 
 // Per-CTA / source rollup: how many arrived from each ?from tag and how many of
