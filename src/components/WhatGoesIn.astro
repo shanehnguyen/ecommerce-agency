@@ -209,9 +209,12 @@ const tickerTags = ['Email & SMS capture', 'Variant & stock logic', 'Back-in-sto
     box-shadow: 0 14px 30px -22px rgba(26, 24, 20, 0.3);
     padding: var(--space-6);
     transition: transform var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
-    /* below-fold cards skip layout/paint work until they're near the viewport */
+    /* below-fold cards skip layout/paint work until they're near the viewport.
+       height only, not the contain-intrinsic-size shorthand — that sets width
+       too, and a fixed 420px placeholder width overflows mobile viewports
+       narrower than that while the card is off-screen. */
     content-visibility: auto;
-    contain-intrinsic-size: 420px;
+    contain-intrinsic-height: 420px;
   }
   .wgi-card:hover { transform: translateY(-2px); border-color: var(--ink-50); }
 

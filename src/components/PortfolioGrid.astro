@@ -1,0 +1,50 @@
+---
+/* PortfolioGrid — static grid, no carousel/marquee: 2 columns on desktop
+   (>=60em), single column on mobile. Each tile shows the client name on
+   top and the result stat on the bottom, same as before. Yun Hai Shop and
+   Cited Supplements are pulled for now (not permanently gone — see git
+   history for their card entries when they're ready to go back in). */
+import PortfolioTile from './PortfolioTile.astro';
+import lynhsDrinks from '../assets/portfolio/lynhs-drinks.png';
+import caseFurniture from '../assets/portfolio/case-furniture.png';
+import junglee from '../assets/portfolio/junglee.png';
+import kimcMarket from '../assets/portfolio/kimc-market.png';
+import pkCabinet from '../assets/portfolio/pk-cabinet.png';
+import yushanColour from '../assets/portfolio/yushan-colour.png';
+
+type Card = {
+  name: string; image: ImageMetadata; zoom?: number; pos?: number;
+  label?: string; fromTo?: string;
+};
+
+const cards: Card[] = [
+  { name: "Lynh's Drinks", image: lynhsDrinks, label: 'Conversion rate', fromTo: '1.2% → 3.4%' },
+  { name: 'Case Furniture', image: caseFurniture, label: 'Conversion rate', fromTo: '0.9% → 1.9%' },
+  { name: 'Junglee Craft Cocktails', image: junglee, label: 'Conversion rate', fromTo: '2.0% → 4.2%' },
+  { name: "Kim'C Market", image: kimcMarket, label: 'Conversion rate', fromTo: '1.3% → 2.47%' },
+  { name: 'PK Cabinets', image: pkCabinet, label: 'Avg. order value', fromTo: '$2,081 → $5,556' },
+  { name: 'Yushan Colour', image: yushanColour, label: 'Conversion rate', fromTo: '1.3% → 2.5%' },
+];
+---
+<div class="pf-grid">
+  {cards.map((c) => <PortfolioTile card={c} />)}
+</div>
+
+<style>
+  /* mobile: padding-inline matches the row gap so each tile sits with the
+     same amount of space on all four sides (top/bottom from the gap,
+     left/right from the viewport edge) instead of edge-to-edge horizontally
+     but gapped vertically. */
+  .pf-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+    padding-inline: var(--space-3);
+    max-width: 32rem;
+    margin-inline: auto;
+  }
+
+  @media (min-width: 60em) {
+    .pf-grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-5); padding-inline: 0; max-width: var(--container-standard); }
+  }
+</style>

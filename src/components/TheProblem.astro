@@ -2,10 +2,10 @@
 /* TheProblem — "01. The Problem": opens the page right after the hero
    with the pain, then immediately proves the fix works. The before/after
    slider that used to sit here was cut in favor of the real Portfolio
-   marquee (6 real clients beats one illustrative screenshot), moved in
-   whole from its old standalone section — no heading of its own, it reads
-   as continued proof under the problem statement above it. */
-import PortfolioMarquee from './PortfolioMarquee.astro';
+   grid (real clients beats one illustrative screenshot), moved in whole
+   from its old standalone section — no heading of its own, it reads as
+   continued proof under the problem statement above it. */
+import PortfolioGrid from './PortfolioGrid.astro';
 ---
 <section class="problem">
   <div class="container">
@@ -16,8 +16,8 @@ import PortfolioMarquee from './PortfolioMarquee.astro';
 </section>
 
 <section class="pf" id="portfolio">
-  <div class="pf__marquee" data-reveal>
-    <PortfolioMarquee />
+  <div class="pf__grid" data-reveal>
+    <PortfolioGrid />
   </div>
 </section>
 

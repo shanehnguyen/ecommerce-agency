@@ -1,45 +1,41 @@
 ---
 /* PortfolioTile — one screenshot card (image + name/result overlays),
-   used by PortfolioMarquee for both the mobile grid and the desktop
-   marquee. Extracted to its own component because Astro's frontmatter
-   script can't contain template markup directly — only the template
-   section below the second `---` can. */
+   used by PortfolioGrid. Extracted to its own component because Astro's
+   frontmatter script can't contain template markup directly — only the
+   template section below the second `---` can. */
 import { Image } from 'astro:assets';
 
 type Card = {
-  name: string; image: ImageMetadata; zoom?: number; pos?: number; months: number;
-  label: string; countPrefix?: string; countTo: string; suffix?: string; fromTo: string;
+  name: string; image: ImageMetadata; zoom?: number; pos?: number;
+  label?: string; fromTo?: string;
 };
 
 interface Props {
   card: Card;
-  // the decorative second copy used only to make the desktop marquee loop
-  // seamlessly — hidden from assistive tech entirely and skipped from the
-  // scroll-reveal stagger (it's never the first thing on screen).
-  duplicate?: boolean;
 }
-const { card: c, duplicate = false } = Astro.props;
+const { card: c } = Astro.props;
 ---
 <div
   class="pf-tile"
-  data-reveal-child={duplicate ? undefined : true}
-  aria-hidden={duplicate ? 'true' : undefined}
+  data-reveal-child
   style={`${c.zoom ? `--shot-zoom:${c.zoom};` : ''}${c.pos ? `--shot-pos:${c.pos}%;` : ''}`}
 >
-  <Image class="pf-tile__img" src={c.image} alt={`${c.name} storefront`} width={640} format="webp" quality={90} />
+  <Image class="pf-tile__img" src={c.image} alt={`${c.name} storefront`} width={800} format="webp" quality={90} />
   <span class="pf-tile__top">
     <span class="pf-tile__name">{c.name}</span>
   </span>
-  <span class="pf-tile__bottom">
-    <span class="pf-tile__value mono">{c.fromTo}</span>
-    <span class="pf-tile__label">{c.label}</span>
-  </span>
+  {c.label && c.fromTo && (
+    <span class="pf-tile__bottom">
+      <span class="pf-tile__value mono">{c.fromTo}</span>
+      <span class="pf-tile__label">{c.label}</span>
+    </span>
+  )}
 </div>
 
 <style>
   .pf-tile {
     position: relative;
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 3 / 2;
     overflow: hidden;
     border-radius: 16px;
     border: var(--rule-width) solid var(--line);
@@ -79,11 +75,11 @@ const { card: c, duplicate = false } = Astro.props;
      grow tall enough to run into the bottom overlay, whatever the tile width. */
   .pf-tile__name {
     display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
-    font-size: clamp(11px, 7cqw, 17px); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--bg);
+    font-size: clamp(11px, 5cqw, 17px); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--bg);
   }
   /* before → after (e.g. "1.2% → 3.4%"), not just the final number — sized
      smaller than the old single-number display since it's a longer string
      (the PK Cabinets one, "$2,081 → $5,556", is the longest at 16 chars). */
-  .pf-tile__value { font-size: clamp(0.9rem, 7cqw, 1.4rem); font-weight: var(--fw-body-bold); color: var(--bg); line-height: 1.25; }
-  .pf-tile__label { margin-top: var(--space-1); font-size: clamp(9px, 5cqw, 14px); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: color-mix(in srgb, var(--bg) 80%, transparent); }
+  .pf-tile__value { font-size: clamp(0.9rem, 5cqw, 1.4rem); font-weight: var(--fw-body-bold); color: var(--bg); line-height: 1.25; }
+  .pf-tile__label { margin-top: var(--space-1); font-size: clamp(9px, 3.5cqw, 14px); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: color-mix(in srgb, var(--bg) 80%, transparent); }
 </style>

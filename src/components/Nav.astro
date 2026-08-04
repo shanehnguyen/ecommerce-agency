@@ -1,7 +1,7 @@
 ---
-/* Regular sticky nav — wordmark + byline, three links (Home, Case Studies,
-   Book), Book styled as the one action. Collapses to a hamburger dropdown
-   on mobile. No overlay/transparent mode — same bar on every page. */
+/* Regular sticky nav — wordmark + byline, two links (Home, Book), Book
+   styled as the one action. Collapses to a hamburger dropdown on mobile.
+   No overlay/transparent mode — same bar on every page. */
 import { site } from '../data/site.config';
 ---
 <header class="nav" data-nav>
@@ -27,7 +27,6 @@ import { site } from '../data/site.config';
     <div class="nav__menu">
       <ul class="nav__links" id="nav-links" data-nav-menu>
         <li><a href="/">Home</a></li>
-        <li><a href="/case-studies">Case Studies</a></li>
         <li><a class="btn btn--primary nav__book" href={`${site.cta.href}?from=${encodeURIComponent('Nav:GetBuild')}`} data-event="Nav:GetBuild"><span class="btn__label">Get My Build</span></a></li>
       </ul>
     </div>
