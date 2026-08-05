@@ -123,10 +123,6 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
             <p class="pcard__eyebrow mono">{c.eyebrow}</p>
             <p class="pcard__name mono">{c.name}</p>
             <p class="pcard__desc">{c.description}</p>
-            <p class="pcard__price">
-              <span data-count-to={c.price.replace(/\D/g, '')} data-count-prefix="$">{c.price}</span>
-              <span class="pcard__qual">{c.qualifier}</span>
-            </p>
             <hr class="pcard__divider" />
             {c.featuresAsChips ? (
               <>
