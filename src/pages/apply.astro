@@ -599,12 +599,10 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
      needs to fit one screen with no scrolling, on mobile included. The
      header and the funnel's own top padding are left untouched (same as
      steps 2/3, so the heading lands in the same spot every step) — only
-     the footer hides and the cards/question size down to make room. */
-  :global(body.is-q1 .bare-legal) { display: none; }
+     the cards/question size down to make room. */
   :global(body.is-q1) .bk-intro__h1 { font-size: clamp(1.15rem, 4vw, 1.5rem); }
-  :global(body.is-q1) .bk-form { margin-top: var(--space-5); }
   :global(body.is-q1) .bk-q { font-size: clamp(1.05rem, 3.2vw, 1.25rem); }
-  :global(body.is-q1) .bk-choice { gap: var(--space-3); margin-top: var(--space-4); }
+  :global(body.is-q1) .bk-choice { gap: var(--space-3); }
   @media (min-width: 34em) { :global(body.is-q1) .bk-choice { grid-template-columns: 1fr 1fr; } }
   :global(body.is-q1) .bk-offer { padding: var(--space-4); gap: var(--space-2); }
   :global(body.is-q1) .bk-offer__name { font-size: var(--fs-body); }
@@ -623,8 +621,7 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
      trim back further so the stacked pair still fits one screen. */
   @media (max-width: 33.99em) {
     :global(body.is-q1) .bk-count { margin-bottom: 4px; }
-    :global(body.is-q1) .bk-form { margin-top: var(--space-2); }
-    :global(body.is-q1) .bk-choice { gap: var(--space-1); margin-top: 4px; }
+    :global(body.is-q1) .bk-choice { gap: var(--space-1); }
     :global(body.is-q1) .bk-offer { padding: 6px var(--space-4); gap: 4px; }
     :global(body.is-q1) .bk-offer__top { gap: 4px var(--space-2); }
     :global(body.is-q1) .bk-offer__badge { padding: 0.2em 0.6em; }
