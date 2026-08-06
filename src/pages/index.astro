@@ -13,6 +13,8 @@
    scroll. Respects reduced-motion. */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CtaBlock from '../components/CtaBlock.astro';
+import Cta from '../components/Cta.astro';
+import ScarcityBar from '../components/ScarcityBar.astro';
 import FAQ from '../components/FAQ.astro';
 import TheProblem from '../components/TheProblem.astro';
 import WhatIDo from '../components/WhatIDo.astro';
@@ -20,19 +22,14 @@ import WhatGoesIn from '../components/WhatGoesIn.astro';
 import { site } from '../data/site.config';
 import { homeFaqs } from '../data/faqs';
 import { priceCards } from '../data/pricing';
+import { fourteenDayLabel } from '../utils/dates';
 
 // All 5 broad FAQ questions (each already rolls up several real objections).
 const topFaqs = homeFaqs;
 
 // "14 days from today" — computed at build so the date in the final CTA
 // stays real on every deploy instead of hardcoding one that goes stale.
-const fourteen = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
-const ordinal = (n: number) => {
-  const s = ['th', 'st', 'nd', 'rd'];
-  const v = n % 100;
-  return `${n}${s[(v - 20) % 10] || s[v] || s[0]}`;
-};
-const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })} ${ordinal(fourteen.getDate())}`;
+const fourteenLabel = fourteenDayLabel();
 ---
 <BaseLayout
   title="Conversion-Built Shopify Stores for Consumer Brands"
@@ -104,16 +101,24 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
 
   <TheProblem />
 
+  <!-- mid-page CTA — right after the problem + portfolio proof, while the
+       "he's already done this for real brands" feeling is freshest -->
+  <section class="mid-cta">
+    <div class="container">
+      <Cta event="Problem" pill />
+    </div>
+  </section>
+
   <WhatIDo />
 
-  <WhatGoesIn />
-
-  <!-- 6. PRICING (two offers) -->
+  <!-- 6. PRICING (two offers) — sits right after "what I actually do" so
+       anyone already sold by the process/proof above can act immediately,
+       instead of the offer being buried below the full ingredients list. -->
   <section class="pricing" id="pricing">
     <div class="container pricing__head">
       <p class="pricing__eyebrow mono">The Solution</p>
       <h2 class="pricing__heading">Two <span class="pricing__accent">paths</span>. Zero risk.</h2>
-      <p class="pricing__sub">Two different offers, both designed to increase your conversions and revenue.</p>
+      <p class="pricing__sub">No matter the option, we guarantee we’ll beat your current conversion rate, at no added cost. We won’t settle until it does.</p>
     </div>
     <div class="container">
       <div class="pricing__grid">
@@ -121,7 +126,7 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
           <div class:list={['pcard', { 'pcard--featured': c.featured }]} data-reveal style={`transition-delay:${i * 90}ms`}>
             {c.featured && <p class="pcard__tag mono">Most booked</p>}
             <p class="pcard__eyebrow mono">{c.eyebrow}</p>
-            <p class="pcard__name mono">{c.name}</p>
+            <p class="pcard__name">{c.name}</p>
             <p class="pcard__desc">{c.description}</p>
             <hr class="pcard__divider" />
             {c.featuresAsChips ? (
@@ -147,6 +152,8 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
       </div>
     </div>
   </section>
+
+  <WhatGoesIn />
 
   <!-- FAQ (top 5 questions) -->
   <section class="faq-section">
@@ -188,6 +195,8 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
       <p class="closing__sig">{site.founder}, {site.brand}</p>
     </div>
   </section>
+
+  <ScarcityBar />
 </BaseLayout>
 
 <script>
@@ -450,6 +459,9 @@ const fourteenLabel = `${fourteen.toLocaleDateString('en-US', { month: 'long' })
   .stmt { transition: opacity 800ms var(--ease-out), color 800ms var(--ease-out); }
   .js .stmt { opacity: 0.35; }
   .js .stmt.is-lit { opacity: 1; }
+
+  /* ---------- mid-page CTA (after the problem/proof) ---------- */
+  .mid-cta { padding-block: clamp(0.5rem, 2vh, 1.25rem); text-align: center; }
 
   /* ---------- 6. PRICING (two offers — made to stand out, pricing-inspo) ---------- */
   .pricing { padding-block: clamp(2.5rem, 7vh, 5rem); }

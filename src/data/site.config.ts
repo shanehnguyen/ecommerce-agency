@@ -30,7 +30,7 @@ export const site = {
 
   // ---- Scarcity (LOAD-BEARING — must be true; update monthly) ----------
   scarcity: {
-    slotsOpen: 2,
+    slotsOpen: 3,
     month: 'August',                 // TODO update monthly
     nextAvailable: 'August 4',       // TODO named next-available start date
   },

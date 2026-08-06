@@ -37,7 +37,7 @@ export const priceCards: PriceCard[] = [
     description: "Everything from the landing page — but for your ENTIRE website. The last site you'll ever need.",
     price: '$4,500', qualifier: 'one-time', featured: true,
     cta: 'Build my website', event: 'Pricing:Full',
-    features: ['We optimize EVERYTHING', 'Home page', 'Product page', 'Collection page', 'Cart', 'Checkout', 'Upsell flows', 'Landing pages'],
+    features: ['We optimize EVERYTHING', 'Home page', 'Product page', 'Collection page', 'Cart', 'Checkout', 'Upsell flows', 'Landing pages', '+ more'],
     featuresAsChips: true,
   },
 ];

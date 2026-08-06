@@ -1,0 +1,107 @@
+---
+/* ScarcityBar — the "if you click off you'll never get this again" moment,
+   as a dismissible sticky bottom bar rather than a blocking popup. Home
+   page only (mounted directly in index.astro, not sitewide). Fires once
+   per session, once the visitor has scrolled to the middle of the "What
+   Goes In" ingredients section (TARGET_SELECTOR in the script) — by that
+   point they've read the problem, the proof, and how the process works,
+   so they're a real, engaged reader rather than someone who bounced in
+   the first few seconds. The number is real, not fabricated:
+   site.scarcity.slotsOpen is a manually-maintained TRUE capacity cap (see
+   site.config.ts). */
+import { site } from '../data/site.config';
+import Cta from './Cta.astro';
+---
+<div class="scarcity-bar section--dark" data-scarcity-bar hidden>
+  <button type="button" class="scarcity-bar__close" data-bar-close aria-label="Dismiss">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg>
+  </button>
+  <div class="scarcity-bar__inner">
+    <p class="scarcity-bar__text">Only <strong>{site.scarcity.slotsOpen}</strong> builds left for {site.scarcity.month}.</p>
+    <Cta event="ScarcityBar" size="md" pill center={false} label="APPLY TO GET YOUR BUILD IN 14 DAYS" />
+  </div>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-scarcity-bar]');
+  if (root) {
+    const STORE = 'ff_scarcity_bar_v1';
+    const TARGET_SELECTOR = '#what-goes-in';
+    let shown = false;
+    try { shown = sessionStorage.getItem(STORE) === '1'; } catch { /* ignore */ }
+
+    const target = document.querySelector(TARGET_SELECTOR);
+    if (!shown && target) {
+      const dismiss = () => {
+        root.classList.remove('is-open');
+        try { sessionStorage.setItem(STORE, '1'); } catch { /* ignore */ }
+      };
+      const reveal = () => {
+        if (shown) return;
+        shown = true;
+        window.removeEventListener('scroll', onScroll);
+        root.hidden = false;
+        requestAnimationFrame(() => root.classList.add('is-open'));
+      };
+
+      // IntersectionObserver's `threshold` is a fraction of the TARGET's
+      // own height, not "have you scrolled to its middle" — on a section
+      // taller than the viewport (this one, on mobile especially), the
+      // visible fraction never reaches 0.5 and the callback never fires.
+      // So instead: compare the viewport's own center against the
+      // section's document-relative midpoint directly.
+      let ticking = false;
+      const checkMid = () => {
+        ticking = false;
+        const rect = target.getBoundingClientRect();
+        const sectionMidY = window.scrollY + rect.top + rect.height / 2;
+        const viewportCenterY = window.scrollY + window.innerHeight / 2;
+        if (viewportCenterY >= sectionMidY) reveal();
+      };
+      const onScroll = () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(checkMid);
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      checkMid(); // covers a deep-link/refresh landing already past the midpoint
+
+      root.querySelector<HTMLElement>('[data-bar-close]')?.addEventListener('click', dismiss);
+    }
+  }
+</script>
+
+<style>
+  .scarcity-bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--z-sticky);
+    border-top: var(--rule-thick) solid var(--accent-strong);
+    padding: var(--space-5) var(--gutter) var(--space-3);
+    padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
+    transform: translateY(100%);
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .scarcity-bar[hidden] { display: none; }
+  .scarcity-bar.is-open { transform: translateY(0); }
+
+  .scarcity-bar__inner {
+    max-width: var(--container-standard); margin-inline: auto;
+    display: flex; align-items: center; justify-content: center; text-align: center; flex-wrap: wrap;
+    gap: var(--space-2) var(--space-5);
+  }
+  .scarcity-bar__text { font-size: var(--fs-body-sm, var(--fs-caption)); font-weight: var(--fw-body-semi); }
+  .scarcity-bar__text strong { color: var(--accent-strong); }
+
+  .scarcity-bar__inner :global(.cta-block) { margin: 0; }
+  .scarcity-bar__inner :global(.btn) { min-height: 38px; padding: var(--space-2) var(--space-6); font-size: var(--fs-caption); }
+
+  .scarcity-bar__close {
+    position: absolute; top: var(--space-2); right: var(--space-2);
+    display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; flex-shrink: 0;
+    background: none; border: 0; border-radius: 50%; color: var(--dark-soft); cursor: pointer; transition: background 120ms, color 120ms;
+  }
+  .scarcity-bar__close:hover { background: var(--dark-line); color: var(--dark-ink); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scarcity-bar { transition: none; }
+  }
+</style>

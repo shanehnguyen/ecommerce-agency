@@ -13,13 +13,17 @@ interface Props {
   center?: boolean;
   pill?: boolean;
   class?: string;
+  /** Override the site-wide CTA label — use sparingly; every button reads
+   * the same everywhere by design, this is only for a placement that needs
+   * different wording (e.g. the scarcity bar). */
+  label?: string;
 }
-const { event, size = 'lg', derisk, center = true, pill = false, class: cls = '' } = Astro.props;
+const { event, size = 'lg', derisk, center = true, pill = false, class: cls = '', label } = Astro.props;
 const href = `${site.cta.href}?from=${encodeURIComponent(event)}`;
 ---
 <div class:list={['cta-block', { 'cta-block--center': center }, cls]}>
   <a class:list={['btn', 'btn--primary', { 'btn--lg': size === 'lg', 'btn--pill': pill }]} href={href} data-event={event}>
-    <span class="btn__label">{site.cta.label}</span>
+    <span class="btn__label">{label || site.cta.label}</span>
     <span aria-hidden="true">→</span>
   </a>
   {derisk && <span class="cta-block__derisk">{derisk}</span>}
