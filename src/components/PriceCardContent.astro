@@ -1,0 +1,67 @@
+---
+/* PriceCardContent — the INSIDE of a pricing card (tag, eyebrow, name,
+   description, value stack, bonuses, anchor + price math). Shared by the
+   homepage pricing section (wrapped in a div + CTA link) and /apply's
+   "which option" question (wrapped in a selectable <button>), so the two
+   render the exact same offer and never drift. Styles live in
+   components.css (.pcard__*) — global, so they apply from both wrappers.
+
+   `animate` adds the data-reveal-child stagger attributes. Homepage only:
+   the reveal system (BaseLayout script + [data-reveal] parent) doesn't
+   exist on /apply, and a data-reveal-child with no revealed parent stays
+   permanently invisible. */
+import type { PriceCard } from '../data/pricing';
+
+interface Props {
+  card: PriceCard;
+  animate?: boolean;
+}
+const { card: c, animate = false } = Astro.props;
+const child = animate ? '' : undefined; // '' renders a bare attribute; undefined omits it
+---
+{c.featured && <p class="pcard__tag mono">Most booked</p>}
+<p class="pcard__eyebrow mono">{c.eyebrow}</p>
+<p class="pcard__name">{c.name}</p>
+<p class="pcard__desc">{c.description}</p>
+<hr class="pcard__divider" />
+{c.stack ? (
+  <>
+    <ul class="pcard__stack">
+      {c.stack.map((s) => (
+        <li data-reveal-child={child}>
+          <svg class="pcard__check" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <span class="pcard__stack-label">{s}</span>
+        </li>
+      ))}
+      {c.bonuses?.map((b) => (
+        <li data-reveal-child={child} class="pcard__stack-bonus">
+          <span class="pcard__bonus-tag mono">Bonus</span>
+          <span class="pcard__stack-label">{b}</span>
+        </li>
+      ))}
+    </ul>
+    <div class="pcard__math" data-reveal-child={child}>
+      {c.anchor && <p class="pcard__anchor">{c.anchor}</p>}
+      <p class="pcard__mathrow pcard__mathrow--invest">
+        <span>Your investment</span>
+        <span class="pcard__invest-val"><span class="pcard__invest-num">{c.price}</span> <span class="pcard__invest-qualifier mono">{c.qualifier}</span></span>
+      </p>
+    </div>
+  </>
+) : c.featuresAsChips ? (
+  <>
+    <p class="pcard__chips-label mono">{c.features[0]}</p>
+    <ul class="pcard__chips">
+      {c.features.slice(1).map((f) => <li data-reveal-child={child}>{f}</li>)}
+    </ul>
+  </>
+) : (
+  <ul class="pcard__features">
+    {c.features.map((f) => (
+      <li data-reveal-child={child}>
+        <svg class="pcard__check" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        {f}
+      </li>
+    ))}
+  </ul>
+)}

@@ -20,6 +20,7 @@ import TheProblem from '../components/TheProblem.astro';
 import WhatIDo from '../components/WhatIDo.astro';
 import WhatGoesIn from '../components/WhatGoesIn.astro';
 import PortfolioMarquee from '../components/PortfolioMarquee.astro';
+import PriceCardContent from '../components/PriceCardContent.astro';
 import { site } from '../data/site.config';
 import { homeFaqs } from '../data/faqs';
 import { priceCards } from '../data/pricing';
@@ -42,10 +43,10 @@ const fourteenLabel = fourteenDayLabel();
   <!-- 2. HERO -->
   <section class="hero">
     <div class="container">
-      <h1 class="hero__h1"><span>Custom websites</span><span>for consumer brands in 14 days</span></h1>
+      <h1 class="hero__h1"><span>Shopify stores that convert <span class="hero__h1-nb">1.5–2x</span> higher, in 14 days</span></h1>
     </div>
     <div class="container">
-      <p class="hero__sub">We don’t stop until it outperforms your old conversion rate.</p>
+      <p class="hero__sub">Done for you. If it doesn’t beat your current conversion rate, we keep working for free.</p>
     </div>
 
     <!-- 3. VSL — autoplay muted loop under a dark tint (keeps the unmute
@@ -102,19 +103,12 @@ const fourteenLabel = fourteenDayLabel();
 
   <TheProblem />
 
-  <!-- mid-page CTA — right after the problem + portfolio proof, while the
-       "he's already done this for real brands" feeling is freshest -->
-  <section class="mid-cta">
-    <div class="container">
-      <Cta event="Problem" pill />
-    </div>
-  </section>
-
-  <WhatIDo />
-
-  <!-- 6. PRICING (two offers) — sits right after "what I actually do" so
-       anyone already sold by the process/proof above can act immediately,
-       instead of the offer being buried below the full ingredients list. -->
+  <!-- 6. PRICING (two offers) — sits directly after the problem + portfolio
+       proof: by this point the visitor has seen the promise, the guarantee,
+       and real client numbers, so the offer answers the natural next
+       question ("what is it and what does it cost?") before scroll-depth
+       decay loses them. The process/ingredients sections follow as
+       justification for anyone still on the fence. -->
   <section class="pricing" id="pricing">
     <div class="container pricing__head">
       <h2 class="pricing__heading">Two <span class="pricing__accent">paths</span>. Zero risk.</h2>
@@ -124,28 +118,7 @@ const fourteenLabel = fourteenDayLabel();
       <div class="pricing__grid">
         {priceCards.map((c, i) => (
           <div class:list={['pcard', { 'pcard--featured': c.featured }]} data-reveal style={`transition-delay:${i * 90}ms`}>
-            {c.featured && <p class="pcard__tag mono">Most booked</p>}
-            <p class="pcard__eyebrow mono">{c.eyebrow}</p>
-            <p class="pcard__name">{c.name}</p>
-            <p class="pcard__desc">{c.description}</p>
-            <hr class="pcard__divider" />
-            {c.featuresAsChips ? (
-              <>
-                <p class="pcard__chips-label mono">{c.features[0]}</p>
-                <ul class="pcard__chips">
-                  {c.features.slice(1).map((f) => <li data-reveal-child>{f}</li>)}
-                </ul>
-              </>
-            ) : (
-              <ul class="pcard__features">
-                {c.features.map((f) => (
-                  <li data-reveal-child>
-                    <svg class="pcard__check" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                    {f}
-                  </li>
-                ))}
-              </ul>
-            )}
+            <PriceCardContent card={c} animate />
             <a class="btn btn--primary btn--pill pcard__cta" href={`${site.cta.href}?from=${encodeURIComponent(c.event)}`} data-event={c.event}><span class="btn__label">{c.cta}</span></a>
           </div>
         ))}
@@ -154,6 +127,16 @@ const fourteenLabel = fourteenDayLabel();
   </section>
 
   <PortfolioMarquee />
+
+  <!-- mid-page CTA — after the offer, catching anyone who scrolled past
+       the pricing cards without clicking -->
+  <section class="mid-cta">
+    <div class="container">
+      <Cta event="Problem" pill />
+    </div>
+  </section>
+
+  <WhatIDo />
 
   <WhatGoesIn />
 
@@ -174,7 +157,7 @@ const fourteenLabel = fourteenDayLabel();
   <section class="closing section--dark">
     <div class="container closing__inner">
       <h2 class="closing__h stmt">
-        <span class="closing__h-days"><span data-count-to="14">14</span> days</span> from today is {fourteenLabel}.
+        Your new store, live in <span class="closing__h-days"><span data-count-to="14">14</span> days</span>.
       </h2>
       <div class="countdown-track" data-reveal aria-hidden="true">
         <span class="countdown-track__point">
@@ -187,8 +170,8 @@ const fourteenLabel = fourteenDayLabel();
           <span class="mono">{fourteenLabel}</span>
         </span>
       </div>
-      <p>You’re already paying for every visitor who lands on your site, whether they buy or leave. In 14 days, your conversion rate goes up.</p>
-      <p>Tap the button, fill out the short form, pick a time.</p>
+      <p>Book today, and it’s live by {fourteenLabel}. Guaranteed to convert higher than the site you have now.</p>
+      <p>Tap the button. Fill out the form. Pick a time.</p>
       <p class="closing__alt">Prefer email? <a href={`mailto:${site.email}`}>{site.email}</a></p>
       <div class="closing__cta">
         <CtaBlock event="Closing" />
@@ -341,9 +324,9 @@ const fourteenLabel = fourteenDayLabel();
      last. Delays overlap rather than chain off full durations so the whole
      thing lands under ~1s instead of stacking to a slow crawl. */
   @keyframes hero-rise { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
-  .js .hero__h1 span { opacity: 0; animation: hero-rise 500ms var(--ease-out) forwards; }
-  .js .hero__h1 span:nth-child(1) { animation-delay: 100ms; }
-  .js .hero__h1 span:nth-child(2) { animation-delay: 160ms; }
+  .js .hero__h1 > span { opacity: 0; animation: hero-rise 500ms var(--ease-out) forwards; }
+  .js .hero__h1 > span:nth-child(1) { animation-delay: 100ms; }
+  .js .hero__h1 > span:nth-child(2) { animation-delay: 160ms; }
   .js .hero__sub { opacity: 0; animation: hero-rise 450ms var(--ease-out) 260ms forwards; }
   .js .hero__cta :global(.cta-block) { opacity: 0; animation: hero-rise 450ms var(--ease-out) 360ms forwards; }
   .js .hero__cta :global(.cta-repeat__process > span:nth-child(1)),
@@ -371,12 +354,14 @@ const fourteenLabel = fourteenDayLabel();
      space-5 to the CTA. */
   .hero { position: relative; z-index: 1; padding-top: var(--space-12); padding-bottom: var(--space-10); text-align: center; }
   /* inherits the global h1 (uppercase Archivo display, var(--fs-h1)) — only
-     margin/max-width are overridden, same as the reference hero. ch scales
-     with the font itself, so "Custom converting websites" stays on one
-     line at any viewport instead of wrapping mid-phrase. */
-  .hero__h1 { max-width: 34ch; margin-inline: auto; font-size: clamp(2.25rem, 4.4vw, 3.75rem); }
-  .hero__h1 span { display: block; }
-  .hero__h1 span:first-child { white-space: nowrap; }
+     margin/max-width are overridden, same as the reference hero. One span,
+     balance-wrapped: ~3 even lines on mobile, 2 on desktop — no nowrap,
+     since "Shopify stores that convert 1.5–2x higher" is too long to pin
+     to a single line at phone widths. */
+  .hero__h1 { max-width: 34ch; margin-inline: auto; font-size: clamp(2rem, 4.4vw, 3.75rem); }
+  .hero__h1 > span { display: block; text-wrap: balance; }
+  /* the multiplier is the claim — never let "1.5–2x" split across lines */
+  .hero__h1-nb { white-space: nowrap; }
   .hero__sub { margin: var(--space-5) auto 0; max-width: 44ch; font-family: var(--font-serif); font-style: italic; font-size: var(--fs-lede); color: var(--ink-soft); }
   .hero__video { margin-top: var(--space-6); }
   .hero__cta { margin-top: var(--space-5); }
@@ -474,8 +459,16 @@ const fourteenLabel = fourteenDayLabel();
   .pricing__sub { margin-top: var(--space-4); font-size: var(--fs-lede); color: var(--ink-soft); max-width: 42ch; margin-inline: auto; }
   .pricing__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); max-width: 64rem; margin-inline: auto; }
   @media (min-width: 44em) { .pricing__grid { grid-template-columns: 1fr 1fr; gap: var(--space-8); } }
-  /* .pcard* itself is shared (components.css) — reused as-is on /apply's
-     "which option" question so the two never drift apart. */
+  /* .pcard* card styles (including the value stack) are shared in
+     components.css — rendered via PriceCardContent.astro on both the
+     homepage and /apply so the two never drift apart. Only the pricing
+     SECTION layout + the homepage-only CTA link are styled here. */
+  @media (max-width: 40em) {
+    .pricing__head { margin-bottom: var(--space-6); }
+    .pricing__sub { font-size: var(--fs-body); }
+    .pricing__grid { gap: var(--space-4); }
+    .pcard__cta { padding: var(--space-3) var(--space-6); font-size: var(--fs-body); }
+  }
 
   /* ---------- FAQ ---------- */
   .faq-section { padding-block: clamp(2.5rem, 7vh, 5rem); }
