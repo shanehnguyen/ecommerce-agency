@@ -2,11 +2,11 @@
 /* ScarcityBar — the "if you click off you'll never get this again" moment,
    as a dismissible sticky bottom bar rather than a blocking popup. Home
    page only (mounted directly in index.astro, not sitewide). Fires once
-   per session, once the visitor has scrolled to the middle of the "What
-   Goes In" ingredients section (TARGET_SELECTOR in the script) — by that
-   point they've read the problem, the proof, and how the process works,
-   so they're a real, engaged reader rather than someone who bounced in
-   the first few seconds. The number is real, not fabricated:
+   per session, once the visitor has scrolled to the middle of the FAQ
+   section (TARGET_SELECTOR in the script) — by that point they've read
+   the problem, the proof, the pricing, and the deal timeline, so they're
+   a real, engaged reader rather than someone who bounced in the first
+   few seconds. The number is real, not fabricated:
    site.scarcity.slotsOpen is a manually-maintained TRUE capacity cap (see
    site.config.ts). */
 import { site } from '../data/site.config';
@@ -26,7 +26,7 @@ import Cta from './Cta.astro';
   const root = document.querySelector<HTMLElement>('[data-scarcity-bar]');
   if (root) {
     const STORE = 'ff_scarcity_bar_v1';
-    const TARGET_SELECTOR = '#what-goes-in';
+    const TARGET_SELECTOR = '#faq';
     let shown = false;
     try { shown = sessionStorage.getItem(STORE) === '1'; } catch { /* ignore */ }
 

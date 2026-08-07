@@ -33,9 +33,10 @@ const child = animate ? '' : undefined; // '' renders a bare attribute; undefine
           <span class="pcard__stack-label">{s}</span>
         </li>
       ))}
+      {c.bonuses && <li class="pcard__stack-caption mono" data-reveal-child={child}>Free bonuses</li>}
       {c.bonuses?.map((b) => (
         <li data-reveal-child={child} class="pcard__stack-bonus">
-          <span class="pcard__bonus-tag mono">Bonus</span>
+          <svg class="pcard__check pcard__check--plus" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
           <span class="pcard__stack-label">{b}</span>
         </li>
       ))}

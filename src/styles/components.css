@@ -123,11 +123,15 @@
 .pcard__stack { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-4); }
 .pcard__stack li { display: flex; align-items: baseline; gap: var(--space-3); font-family: var(--font-serif); font-size: var(--fs-bodyL); line-height: 1.4; color: var(--ink); }
 .pcard__stack-label { flex: 1; }
-.pcard__bonus-tag {
-  flex-shrink: 0; align-self: center; padding: 0.2em 0.6em; border-radius: 999px;
-  background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent-deep);
-  font-size: var(--fs-small); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps);
+/* one small caption labels the whole bonus group; each bonus row then uses
+   a brass "+" in the same slot as the checkmarks, so nothing pushes the
+   label text to the right */
+.pcard__stack-caption {
+  margin-top: var(--space-2);
+  font-size: var(--fs-small); font-weight: var(--fw-body-semi);
+  text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50);
 }
+.pcard__check--plus { background: var(--accent); }
 .pcard__math { margin: var(--space-6) 0 var(--space-8); padding-top: var(--space-5); border-top: var(--rule-width) solid var(--line); display: grid; gap: var(--space-2); }
 .pcard__anchor { font-family: var(--font-serif); font-style: italic; font-size: var(--fs-body); color: var(--ink-50); }
 .pcard__mathrow { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); }
@@ -147,7 +151,7 @@
   .pcard__divider { margin: var(--space-3) 0; }
   .pcard__stack { gap: var(--space-2); }
   .pcard__stack li { font-size: var(--fs-body); line-height: 1.3; }
-  .pcard__bonus-tag { font-size: 0.6rem; padding: 0.2em 0.5em; }
+  .pcard__stack-caption { margin-top: var(--space-1); font-size: 0.6875rem; }
   .pcard__math { margin: var(--space-3) 0 var(--space-4); padding-top: var(--space-3); gap: var(--space-1); }
   .pcard__anchor { font-size: var(--fs-body-sm, var(--fs-caption)); }
   .pcard__invest-num { font-size: 1.5rem; }

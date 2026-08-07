@@ -18,7 +18,6 @@ import ScarcityBar from '../components/ScarcityBar.astro';
 import FAQ from '../components/FAQ.astro';
 import TheProblem from '../components/TheProblem.astro';
 import TheDeal from '../components/TheDeal.astro';
-import WhatGoesIn from '../components/WhatGoesIn.astro';
 import PortfolioMarquee from '../components/PortfolioMarquee.astro';
 import PriceCardContent from '../components/PriceCardContent.astro';
 import { site } from '../data/site.config';
@@ -141,10 +140,8 @@ const fourteenLabel = fourteenDayLabel();
     </div>
   </section>
 
-  <WhatGoesIn />
-
   <!-- FAQ (top 5 questions) -->
-  <section class="faq-section">
+  <section class="faq-section" id="faq">
     <div class="container">
       <div class="faq-section__head">
         <h2 class="faq-section__heading stmt">Common Questions</h2>
