@@ -16,43 +16,43 @@
 const ingredients = [
   {
     n: '01', title: 'How the Offer Is Presented', mock: 'bundle',
-    paragraphs: ['Same products, same prices. What changes is which tier is pre-selected, the anchor, and what the page asks for first.'],
-    badge: "Biggest single lever on revenue per visitor. I don't touch your pricing.", arrow: false,
+    paragraphs: ['We keep your prices the same. We just show them in a smarter order, so more people pick your best option.'],
+    badge: "The easiest way to make more money without changing a thing.", arrow: false,
   },
   {
     n: '02', title: 'The Mobile Product Page', mock: 'phone',
-    paragraphs: ["Designed at 390px before it's ever seen on a monitor. Above the fold: price, proof, delivery date, and a sticky add-to-cart that never leaves the screen."],
-    badge: 'Mobile carries 65 to 85% of sessions and converts at roughly half the desktop rate.', arrow: true,
+    paragraphs: ['We build for phones first. Your price, reviews, and buy button are always easy to see and tap.'],
+    badge: 'Most of your customers shop on their phone. We make sure it works great there.', arrow: true,
   },
   {
     n: '03', title: 'Proof, Placed at the Doubt', mock: 'reviews',
-    paragraphs: ['Reviews positioned next to the specific hesitation they answer, not collected in a widget at the bottom of the page.'],
-    badge: 'Same reviews, different position, different result.', arrow: false,
+    paragraphs: ['We put your reviews right where people start to hesitate. They see proof exactly when they need it.'],
+    badge: 'Same reviews. Better spot. More sales.', arrow: false,
   },
   {
     n: '04', title: 'Copy That Answers the Objection', mock: 'objection',
-    paragraphs: ['Every headline, bullet, and button written against one specific doubt, at the awareness level the visitor arrived with.'],
-    badge: 'Written after the research, not before.', arrow: false,
+    paragraphs: ["Every word on your site answers a real question your customer has in their head."],
+    badge: 'We study your customers first. Then we write.', arrow: false,
   },
   {
     n: '05', title: 'Shipping and Trust, Answered Early', mock: 'trust',
-    paragraphs: ['Delivery dates, shipping cost, stock status, and returns shown on the product page, not discovered in the cart.'],
-    badge: 'Baymard: unexpected extra costs are the number one reason carts get abandoned.', arrow: true,
+    paragraphs: ['We show shipping costs, delivery dates, and returns right on the product page. No surprises later.'],
+    badge: 'The #1 reason people leave without buying? Surprise costs. (Baymard Institute)', arrow: true,
   },
   {
     n: '06', title: 'Cart and Checkout', mock: 'cart',
-    paragraphs: ["Express wallets on, guest checkout on, fields cut, upsells placed where they don't add friction."],
-    badge: "70.22% of carts are abandoned. That number hasn't moved in a decade.", arrow: true,
+    paragraphs: ["We turn on fast checkout, like Apple Pay. People can buy without making an account."],
+    badge: "7 out of 10 shopping carts get abandoned. That hasn't changed in 10 years.", arrow: true,
   },
   {
-    n: '07', title: 'Speed Budget', mock: 'speed',
-    paragraphs: ['Every element on the page earns its weight against load time. If it slows the page, it gets cut.'],
-    badge: 'Google / Deloitte: 0.1s faster on mobile means +8.4% conversions and +9.2% AOV.', arrow: true,
+    n: '07', title: 'Page Speed', mock: 'speed',
+    paragraphs: ['We keep your site fast. Anything that slows it down gets removed.'],
+    badge: 'Google found a 0.1 second faster site means up to 8% more sales.', arrow: true,
   },
   {
     n: '08', title: 'Imagery and Video', mock: 'gallery',
-    paragraphs: ['A gallery ordered so each asset kills one objection, sized and lazy-loaded so it never costs you a page load.'],
-    badge: 'Cold traffic needs to see the product used before it trusts the price.', arrow: false,
+    paragraphs: ["We pick photos and videos that answer your customer's questions before they even ask. And they load fast."],
+    badge: 'People need to see your product in action before they trust the price.', arrow: false,
   },
 ];
 
@@ -62,9 +62,8 @@ const tickerTags = ['Email & SMS capture', 'Variant & stock logic', 'Back-in-sto
 ---
 <section class="wgi" id="what-goes-in">
   <div class="container wgi__head">
-    <p class="eyebrow-num mono eyebrow-num--center">What Goes In</p>
     <h2 class="wgi__heading">Our ingredients. Your <span class="wgi__accent">result</span>.</h2>
-    <p class="wgi__sub">Every element used to turn your website into a sales machine.</p>
+    <p class="wgi__sub">Everything we add to help your website sell more.</p>
   </div>
 
   <div class="container">
@@ -190,7 +189,11 @@ const tickerTags = ['Email & SMS capture', 'Variant & stock logic', 'Back-in-sto
      instead of the ragged bottom a column-based masonry gives you. Mobile
      stays single-column with natural (unstretched) height. ---------- */
   .wgi__grid { margin-top: var(--space-8); display: grid; grid-template-columns: 1fr; gap: var(--space-3); }
+  /* mobile: only ingredients 1-5 show — 6-8 were making this section too
+     long a scroll before reaching pricing. Still in the DOM, just hidden. */
+  .wgi__grid .wgi-card:nth-child(n+6) { display: none; }
   @media (min-width: 44em) {
+    .wgi__grid .wgi-card:nth-child(n+6) { display: flex; }
     .wgi__grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-6); align-items: stretch; margin-top: var(--space-10); }
   }
   @media (min-width: 56em) {

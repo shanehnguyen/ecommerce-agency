@@ -16,8 +16,8 @@ export type PriceCard = {
   cta: string;
   event: string;
   features: string[];
-  /** Full Store Build's list renders as wrapped chips instead of a checklist
-   * (it's a list of pages, not steps) — features[0] stays a lead-in caption. */
+  /** When true, renders as wrapped chips instead of a checklist, with
+   * features[0] as a lead-in caption. Neither card uses this currently. */
   featuresAsChips?: boolean;
   featured?: boolean;
 };
@@ -34,10 +34,14 @@ export const priceCards: PriceCard[] = [
   {
     eyebrow: 'Option 2 · Scale everything',
     name: 'Full Store Build',
-    description: "Everything from the landing page — but for your ENTIRE website. The last site you'll ever need.",
+    description: "A complete Shopify store or website built to convert higher. The last site you'll ever need.",
     price: '$4,500', qualifier: 'one-time', featured: true,
     cta: 'Build my website', event: 'Pricing:Full',
-    features: ['We optimize EVERYTHING', 'Home page', 'Product page', 'Collection page', 'Cart', 'Checkout', 'Upsell flows', 'Landing pages', '+ more'],
-    featuresAsChips: true,
+    features: [
+      'Option 1 but for every page',
+      'Every page optimized for conversion + unlimited revisions',
+      'Higher conversion rates (or we work for free)',
+      'Done-for-you & delivered in 14 days',
+    ],
   },
 ];

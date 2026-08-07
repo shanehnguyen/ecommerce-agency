@@ -19,6 +19,7 @@ import FAQ from '../components/FAQ.astro';
 import TheProblem from '../components/TheProblem.astro';
 import WhatIDo from '../components/WhatIDo.astro';
 import WhatGoesIn from '../components/WhatGoesIn.astro';
+import PortfolioMarquee from '../components/PortfolioMarquee.astro';
 import { site } from '../data/site.config';
 import { homeFaqs } from '../data/faqs';
 import { priceCards } from '../data/pricing';
@@ -116,7 +117,6 @@ const fourteenLabel = fourteenDayLabel();
        instead of the offer being buried below the full ingredients list. -->
   <section class="pricing" id="pricing">
     <div class="container pricing__head">
-      <p class="pricing__eyebrow mono">The Solution</p>
       <h2 class="pricing__heading">Two <span class="pricing__accent">paths</span>. Zero risk.</h2>
       <p class="pricing__sub">No matter the option, we guarantee we’ll beat your current conversion rate, at no added cost. We won’t settle until it does.</p>
     </div>
@@ -153,13 +153,14 @@ const fourteenLabel = fourteenDayLabel();
     </div>
   </section>
 
+  <PortfolioMarquee />
+
   <WhatGoesIn />
 
   <!-- FAQ (top 5 questions) -->
   <section class="faq-section">
     <div class="container">
       <div class="faq-section__head">
-        <p class="eyebrow-num mono eyebrow-num--center">FAQ</p>
         <h2 class="faq-section__heading stmt">Common Questions</h2>
       </div>
       <div class="faq-section__list"><FAQ items={topFaqs} /></div>

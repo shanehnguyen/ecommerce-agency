@@ -1,0 +1,65 @@
+---
+/* PortfolioMarquee — mobile-only. Desktop already shows all 6 portfolio
+   cards in PortfolioGrid's 2-column layout up top, so this stays hidden
+   there. On mobile, PortfolioGrid only shows the first 3 cards (see its
+   own comment) — this strip carries the other 3, placed right under the
+   pricing cards, as a slow auto-scrolling track instead of another static
+   grid to scroll through. One card fills the frame at a time; the track
+   is the card set duplicated once and animated -50% (same seamless-loop
+   technique as WhatGoesIn's ingredient ticker), so it drifts continuously
+   left with no visible seam or snap. */
+import PortfolioTile from './PortfolioTile.astro';
+import { portfolioCards } from '../data/portfolio';
+import { site } from '../data/site.config';
+
+const rest = portfolioCards.slice(3);
+---
+<section class="pfm">
+  <p class="pfm__label mono">Apply now. Only {site.scarcity.slotsOpen} spots left in {site.scarcity.month}.</p>
+  <div class="pfm__viewport" data-reveal>
+    <div class="pfm__track">
+      {rest.map((c) => <div class="pfm__item"><PortfolioTile card={c} /></div>)}
+      {rest.map((c) => <div class="pfm__item" aria-hidden="true"><PortfolioTile card={c} /></div>)}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* desktop already shows these 3 in PortfolioGrid — this strip is
+     mobile-only, matching PortfolioGrid's own 60em breakpoint.
+     Negative margin-top pulls the strip up into the pricing section's own
+     bottom padding (clamp(2.5rem, 7vh, 5rem)) so the label reads as part
+     of the cards above instead of floating in a double-padded gap. Safe
+     because this strip only ever renders directly under #pricing. */
+  .pfm { display: block; margin-top: clamp(-3.5rem, -5vh, -1.5rem); padding-block: 0 clamp(1.5rem, 4vh, 2.5rem); }
+  @media (min-width: 60em) { .pfm { display: none; } }
+
+  .pfm__label {
+    text-align: center; margin-bottom: var(--space-3);
+    font-size: var(--fs-small); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50);
+  }
+
+  .pfm__viewport { overflow: hidden; padding-block: var(--space-1); }
+  .pfm__track {
+    display: flex; gap: var(--space-3); width: max-content;
+    animation: pfm-scroll 26s linear infinite;
+  }
+  /* pause on touch/hover so a stat can actually be read on purpose */
+  .pfm__viewport:hover .pfm__track, .pfm__track:focus-within { animation-play-state: paused; }
+
+  /* one card fills the frame — a sliver of the next peeks in from the gap,
+     which is what reads as "sliding to the next one" rather than a hard cut */
+  .pfm__item { flex: 0 0 86vw; max-width: 28rem; }
+
+  @keyframes pfm-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(-50% - var(--space-3) / 2)); }
+  }
+
+  /* reduced motion: no auto-scroll — swipeable strip with snap instead */
+  @media (prefers-reduced-motion: reduce) {
+    .pfm__track { animation: none; }
+    .pfm__viewport { overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+    .pfm__item { scroll-snap-align: center; }
+  }
+</style>
