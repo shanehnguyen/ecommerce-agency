@@ -24,6 +24,55 @@ const rest = portfolioCards.slice(3);
   </div>
 </section>
 
+<script>
+  /* Auto-drift for the (now natively scrollable) strip. A float `pos` is
+     the source of truth — scrollLeft rounds to ints in some engines, and
+     adding a sub-pixel speed to a rounded value every frame would stall.
+     Touching pauses the drift; it resumes 2s after the finger lifts. The
+     card set is duplicated in the markup, so wrapping scrollLeft back by
+     one set-width lands on identical pixels — an invisible seam. */
+  const viewport = document.querySelector<HTMLElement>('.pfm__viewport');
+  const track = document.querySelector<HTMLElement>('.pfm__track');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (viewport && track && !reduce) {
+    const SPEED = 0.04; // px per ms ≈ the old 26s CSS loop
+    let paused = false;
+    let resumeTimer = 0;
+    let pos = 0;
+    let last = 0;
+
+    const period = () => {
+      const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+      return (track.scrollWidth + gap) / 2;
+    };
+
+    viewport.addEventListener('touchstart', () => { paused = true; clearTimeout(resumeTimer); }, { passive: true });
+    const scheduleResume = () => {
+      clearTimeout(resumeTimer);
+      resumeTimer = window.setTimeout(() => { paused = false; }, 2000);
+    };
+    viewport.addEventListener('touchend', scheduleResume, { passive: true });
+    viewport.addEventListener('touchcancel', scheduleResume, { passive: true });
+    // while the user (or their momentum) is scrolling, track the real
+    // position so the drift resumes from wherever they left it
+    viewport.addEventListener('scroll', () => { if (paused) pos = viewport.scrollLeft; }, { passive: true });
+
+    const step = (ts: number) => {
+      if (!last) last = ts;
+      const dt = Math.min(ts - last, 100); // clamp tab-switch gaps
+      last = ts;
+      if (!paused) {
+        const p = period();
+        pos += SPEED * dt;
+        if (p > 0 && pos >= p) pos -= p;
+        viewport.scrollLeft = pos;
+      }
+      requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+</script>
+
 <style>
   /* desktop already shows these 3 in PortfolioGrid — this strip is
      mobile-only, matching PortfolioGrid's own 60em breakpoint.
@@ -39,27 +88,25 @@ const rest = portfolioCards.slice(3);
     font-size: var(--fs-small); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50);
   }
 
-  .pfm__viewport { overflow: hidden; padding-block: var(--space-1); }
-  .pfm__track {
-    display: flex; gap: var(--space-3); width: max-content;
-    animation: pfm-scroll 26s linear infinite;
+  /* a REAL scroll container (not a CSS transform loop): the finger drags it
+     natively with momentum, and the script below drifts it while idle. The
+     scrollbar is hidden — the drift + the peeking next card signal
+     "this slides" without chrome. */
+  .pfm__viewport {
+    overflow-x: auto; padding-block: var(--space-1);
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
-  /* pause on touch/hover so a stat can actually be read on purpose */
-  .pfm__viewport:hover .pfm__track, .pfm__track:focus-within { animation-play-state: paused; }
+  .pfm__viewport::-webkit-scrollbar { display: none; }
+  .pfm__track { display: flex; gap: var(--space-3); width: max-content; }
 
   /* one card fills the frame — a sliver of the next peeks in from the gap,
      which is what reads as "sliding to the next one" rather than a hard cut */
   .pfm__item { flex: 0 0 86vw; max-width: 28rem; }
 
-  @keyframes pfm-scroll {
-    from { transform: translateX(0); }
-    to { transform: translateX(calc(-50% - var(--space-3) / 2)); }
-  }
-
-  /* reduced motion: no auto-scroll — swipeable strip with snap instead */
+  /* reduced motion: the script skips the auto-drift — swipe-only, with snap */
   @media (prefers-reduced-motion: reduce) {
-    .pfm__track { animation: none; }
-    .pfm__viewport { overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+    .pfm__viewport { scroll-snap-type: x mandatory; }
     .pfm__item { scroll-snap-align: center; }
   }
 </style>

@@ -120,3 +120,23 @@
   --z-sticky: 60;
   --z-overlay: 100;
 }
+
+/* ---------- Mobile type scale ----------
+   The fluid clamps above bottom out too large on phones (h1 at 40px,
+   body at 17px). One override here shrinks every token consumer at once;
+   desktop values are untouched since the clamps' ceilings still apply. */
+@media (max-width: 40em) {
+  :root {
+    --fs-hero:    2.25rem;   /* 36 */
+    --fs-display: 2.25rem;
+    --fs-h1:      2rem;      /* 32 */
+    --fs-h2:      1.5rem;    /* 24 */
+    --fs-h3:      1.25rem;   /* 20 */
+    --fs-h4:      1.125rem;  /* 18 */
+    --fs-lede:    1rem;      /* 16 */
+    --fs-bodyL:   1.0625rem; /* 17 */
+    --fs-body:    1rem;      /* 16 */
+    --fs-stat:    1.875rem;  /* 30 */
+    --fs-receipt: 2rem;      /* 32 */
+  }
+}

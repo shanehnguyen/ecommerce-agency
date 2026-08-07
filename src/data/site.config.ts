@@ -26,7 +26,7 @@ export const site = {
   phone: '(408) 908-8131',          // optional, leave blank to hide
 
   // ---- The single CTA (identical on every button, per the structure spec)
-  cta: { label: 'GET YOUR BUILD IN 14 DAYS', href: '/apply' },
+  cta: { label: 'GET YOUR FREE HOMEPAGE', href: '/apply' },
 
   // ---- Scarcity (LOAD-BEARING — must be true; update monthly) ----------
   scarcity: {
@@ -57,7 +57,7 @@ export const site = {
 export const pricing = {
   build: 4500,          // Full Store Build (the default product)
   buildLabel: '$4,500',
-  depositSplit: '50% to start, 50% on launch',
+  depositSplit: '$0 until you approve the design, then 50% to start the build, 50% on launch',
 } as const;
 
 // ---- ROI calculator defaults (from the offer doc's worked example) ----

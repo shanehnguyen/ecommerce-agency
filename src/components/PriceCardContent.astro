@@ -46,6 +46,7 @@ const child = animate ? '' : undefined; // '' renders a bare attribute; undefine
         <span>Your investment</span>
         <span class="pcard__invest-val"><span class="pcard__invest-num">{c.price}</span> <span class="pcard__invest-qualifier mono">{c.qualifier}</span></span>
       </p>
+      {c.riskFree && <p class="pcard__risk">{c.riskFree}</p>}
     </div>
   </>
 ) : c.featuresAsChips ? (

@@ -17,7 +17,7 @@ import Cta from '../components/Cta.astro';
 import ScarcityBar from '../components/ScarcityBar.astro';
 import FAQ from '../components/FAQ.astro';
 import TheProblem from '../components/TheProblem.astro';
-import WhatIDo from '../components/WhatIDo.astro';
+import TheDeal from '../components/TheDeal.astro';
 import WhatGoesIn from '../components/WhatGoesIn.astro';
 import PortfolioMarquee from '../components/PortfolioMarquee.astro';
 import PriceCardContent from '../components/PriceCardContent.astro';
@@ -46,7 +46,7 @@ const fourteenLabel = fourteenDayLabel();
       <h1 class="hero__h1"><span>Shopify stores that convert <span class="hero__h1-nb">1.5–2x</span> higher, in 14 days</span></h1>
     </div>
     <div class="container">
-      <p class="hero__sub">Done for you. If it doesn’t beat your current conversion rate, we keep working for free.</p>
+      <p class="hero__sub">Done for you. We design your new homepage free — you don’t pay a dollar until you approve it.</p>
     </div>
 
     <!-- 3. VSL — autoplay muted loop under a dark tint (keeps the unmute
@@ -126,6 +126,11 @@ const fourteenLabel = fourteenDayLabel();
     </div>
   </section>
 
+  <!-- the offer's spine: the 5-step sequence with the money state at each
+       step — directly after the cards so "what does it cost" is answered
+       by "when (and whether) you actually pay" -->
+  <TheDeal />
+
   <PortfolioMarquee />
 
   <!-- mid-page CTA — after the offer, catching anyone who scrolled past
@@ -135,8 +140,6 @@ const fourteenLabel = fourteenDayLabel();
       <Cta event="Problem" pill />
     </div>
   </section>
-
-  <WhatIDo />
 
   <WhatGoesIn />
 
@@ -157,7 +160,7 @@ const fourteenLabel = fourteenDayLabel();
   <section class="closing section--dark">
     <div class="container closing__inner">
       <h2 class="closing__h stmt">
-        Your new store, live in <span class="closing__h-days"><span data-count-to="14">14</span> days</span>.
+        See your homepage free. Live in <span class="closing__h-days"><span data-count-to="14">14</span> days</span>.
       </h2>
       <div class="countdown-track" data-reveal aria-hidden="true">
         <span class="countdown-track__point">
@@ -170,7 +173,7 @@ const fourteenLabel = fourteenDayLabel();
           <span class="mono">{fourteenLabel}</span>
         </span>
       </div>
-      <p>Book today, and it’s live by {fourteenLabel}. Guaranteed to convert higher than the site you have now.</p>
+      <p>Book today and you’ll see your new homepage design free — you pay nothing until you approve it. And it’s live by {fourteenLabel}: fourteen days start to finish, design included, guaranteed to convert higher than the site you have now.</p>
       <p>Tap the button. Fill out the form. Pick a time.</p>
       <p class="closing__alt">Prefer email? <a href={`mailto:${site.email}`}>{site.email}</a></p>
       <div class="closing__cta">
@@ -358,7 +361,7 @@ const fourteenLabel = fourteenDayLabel();
      balance-wrapped: ~3 even lines on mobile, 2 on desktop — no nowrap,
      since "Shopify stores that convert 1.5–2x higher" is too long to pin
      to a single line at phone widths. */
-  .hero__h1 { max-width: 34ch; margin-inline: auto; font-size: clamp(2rem, 4.4vw, 3.75rem); }
+  .hero__h1 { max-width: 34ch; margin-inline: auto; font-size: clamp(1.625rem, 4.4vw, 3.75rem); }
   .hero__h1 > span { display: block; text-wrap: balance; }
   /* the multiplier is the claim — never let "1.5–2x" split across lines */
   .hero__h1-nb { white-space: nowrap; }
@@ -454,7 +457,7 @@ const fourteenLabel = fourteenDayLabel();
   .pricing__head { text-align: center; margin-bottom: var(--space-12); }
   .pricing__eyebrow { display: flex; align-items: center; justify-content: center; gap: var(--space-4); color: var(--ink-50); }
   .pricing__eyebrow::before, .pricing__eyebrow::after { content: ""; width: 2.5rem; height: var(--rule-width); background: var(--line); }
-  .pricing__heading { margin-top: var(--space-4); font-size: clamp(2.25rem, 5.5vw, 3.75rem); }
+  .pricing__heading { margin-top: var(--space-4); font-size: clamp(1.625rem, 5.5vw, 3.75rem); }
   .pricing__accent { color: var(--accent-deep); }
   .pricing__sub { margin-top: var(--space-4); font-size: var(--fs-lede); color: var(--ink-soft); max-width: 42ch; margin-inline: auto; }
   .pricing__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); max-width: 64rem; margin-inline: auto; }
@@ -473,7 +476,7 @@ const fourteenLabel = fourteenDayLabel();
   /* ---------- FAQ ---------- */
   .faq-section { padding-block: clamp(2.5rem, 7vh, 5rem); }
   .faq-section__head { text-align: center; }
-  .faq-section__heading { margin-top: var(--space-4); margin-inline: auto; font-size: clamp(2rem, 5vw, 3.25rem); }
+  .faq-section__heading { margin-top: var(--space-4); margin-inline: auto; font-size: clamp(1.5rem, 5vw, 3.25rem); }
   .faq-section__list { margin-top: var(--space-8); }
   .faq-section__more { margin-top: var(--space-8); text-align: center; font-size: 1.5rem; color: var(--ink-50); animation: faq-more-bounce 1800ms ease-in-out infinite; }
   @keyframes faq-more-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
@@ -482,7 +485,7 @@ const fourteenLabel = fourteenDayLabel();
   /* ---------- 11. FINAL CTA (dark) ---------- */
   .closing { padding-block: clamp(3rem, 10vh, 6rem); }
   .closing__inner { text-align: center; }
-  .closing__h { font-size: clamp(2rem, 5.5vw, 4rem); max-width: 26ch; margin-inline: auto; }
+  .closing__h { font-size: clamp(1.625rem, 5.5vw, 4rem); max-width: 26ch; margin-inline: auto; }
 
   /* the page's thesis statement, made the loudest element on the page:
      "14 days" runs bigger than the rest of the headline, in brass, with a

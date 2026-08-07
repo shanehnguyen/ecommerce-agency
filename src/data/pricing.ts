@@ -32,6 +32,9 @@ export type PriceCard = {
   /** One provable market anchor shown above the price, e.g. what agencies
    * charge for the same scope (verifiable, unlike a made-up total). */
   anchor?: string;
+  /** Risk-reversal line under the price: the see-it-before-you-pay promise.
+   * Mechanics live in the FAQ ("What's the free homepage design?"). */
+  riskFree?: string;
   /** When true, renders as wrapped chips instead of a checklist, with
    * features[0] as a lead-in caption. Neither card uses this currently. */
   featuresAsChips?: boolean;
@@ -62,10 +65,11 @@ export const priceCards: PriceCard[] = [
       'Tuned to load in under 2 seconds',
     ],
     anchor: 'Agencies charge $15,000+ and still do less.',
+    riskFree: 'Your new homepage design, free — you pay $0 until you approve it.',
   },
   {
     eyebrow: 'Option 2 · Prove it fast',
-    name: 'Landing Page',
+    name: 'The 7-Day Campaign Page',
     description: 'One page, built around a single offer or campaign, for testing fast or running paid traffic.',
     price: '$2,000', qualifier: 'one-time',
     cta: 'Build my landing page', event: 'Pricing:Landing',
@@ -75,5 +79,6 @@ export const priceCards: PriceCard[] = [
       'Every word written to make them buy',
       'Designed, built, and live — fast',
     ],
+    riskFree: 'You see the page design free — pay $0 until you approve it.',
   },
 ];

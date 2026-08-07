@@ -135,6 +135,9 @@
 .pcard__invest-num { font-family: var(--font-display); font-weight: var(--fw-display); font-size: clamp(1.75rem, 3vw, 2.25rem); line-height: 1; color: var(--accent-deep); }
 .pcard__invest-val { display: inline-flex; align-items: baseline; gap: var(--space-2); }
 .pcard__invest-qualifier { font-size: var(--fs-small); font-weight: var(--fw-body-regular); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50); }
+/* see-it-before-you-pay line: the card's risk reversal, set apart from the
+   price row with the accent so it reads as a promise, not a footnote */
+.pcard__risk { margin-top: var(--space-2); padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); background: color-mix(in srgb, var(--accent) 10%, transparent); font-size: var(--fs-body-sm, var(--fs-caption)); font-weight: var(--fw-body-semi); color: var(--accent-deep); }
 
 /* mobile: compress the card so it doesn't run taller than a viewport */
 @media (max-width: 40em) {
@@ -148,6 +151,7 @@
   .pcard__math { margin: var(--space-3) 0 var(--space-4); padding-top: var(--space-3); gap: var(--space-1); }
   .pcard__anchor { font-size: var(--fs-body-sm, var(--fs-caption)); }
   .pcard__invest-num { font-size: 1.5rem; }
+  .pcard__risk { font-size: var(--fs-caption); padding: var(--space-1) var(--space-2); }
 }
 /* selectable variant: the whole card is a <button>, picked state matches
    the site's other selectable cards (.bk-card.is-on) */

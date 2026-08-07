@@ -11,6 +11,14 @@ export type Faq = { q: string; a: string | string[] };
 
 export const homeFaqs: Faq[] = [
   {
+    q: 'How does the free homepage design work?',
+    a: [
+      'Fill out the form, book the call. If your store is a fit, I design your new homepage first — free, before you pay anything.',
+      'You only pay if you approve the design and want it built. If it isn’t a clear upgrade on what you have, you walk away owing $0.',
+      'One free design per store, and I can only carry a few at a time — that’s what the monthly slots are.',
+    ],
+  },
+  {
     q: 'How does the guarantee work?',
     a: [
       'Live in 14 days or you don’t pay. That’s the delivery guarantee.',
@@ -36,7 +44,7 @@ export const homeFaqs: Faq[] = [
     q: 'How fast can you launch?',
     a: [
       'A single landing page: 7 days.',
-      'A full store build: 14 days, or you don’t pay.',
+      'A full store build: 14 days start to finish, or you don’t pay. The free design days count inside that window, not on top of it.',
       'Fast doesn’t mean rushed — every build passes the same checks it would on a 12-week timeline. We just don’t waste any of them.',
     ],
   },

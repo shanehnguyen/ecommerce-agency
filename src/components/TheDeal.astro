@@ -1,0 +1,56 @@
+---
+/* TheDeal — the offer's spine, stated once, in order. Five numbered steps
+   with the money state at each one, so the free-design hook, the deposit,
+   and both guarantees read as ONE sequence instead of fragments scattered
+   across hero/pricing/FAQ. Sits directly after the pricing cards: the
+   cards say what it costs, this says exactly when (and whether) you pay.
+   Replaces the old WhatIDo section, whose 4 items are all covered by the
+   ingredients grid below. */
+const steps = [
+  { n: 'Day 0', label: 'Short form, then a quick call', money: 'Free' },
+  { n: 'Day 0–5', label: 'I design your new homepage', money: '$0' },
+  { n: 'Day 5', label: 'You approve it — build starts', money: '50%' },
+  { n: 'Day 5–14', label: 'Full build, then launch', money: 'Guaranteed' },
+  { n: 'Day 14+', label: 'We work until it converts like crazy', money: 'Free' },
+];
+---
+<section class="deal" id="deal">
+  <div class="container deal__head">
+    <h2 class="deal__heading">Here’s the <span class="deal__accent">deal</span>.</h2>
+    <p class="deal__sub">Here’s what our entire timeline looks like.</p>
+  </div>
+  <div class="container">
+    <ol class="deal__list">
+      {steps.map((s, i) => (
+        <li class="deal__row" data-reveal style={`transition-delay:${i * 60}ms`}>
+          <span class="deal__n mono">{s.n}</span>
+          <span class="deal__label">{s.label}</span>
+          <span class="deal__money mono">{s.money}</span>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .deal { padding-block: clamp(2.5rem, 7vh, 5rem); }
+  .deal__head { text-align: center; }
+  .deal__heading { font-size: clamp(1.5rem, 5vw, 3.25rem); }
+  .deal__accent { color: var(--accent-deep); }
+  .deal__sub { margin: var(--space-4) auto 0; max-width: 42ch; font-family: var(--font-serif); font-size: var(--fs-lede); color: var(--ink-soft); }
+
+  .deal__list { list-style: none; margin: var(--space-8) auto 0; padding: 0; max-width: 44rem; border-top: var(--rule-width) solid var(--line); }
+  .deal__row {
+    display: grid; grid-template-columns: auto 1fr auto; align-items: baseline; gap: var(--space-4);
+    padding: var(--space-4) var(--space-2); border-bottom: var(--rule-width) solid var(--line);
+  }
+  .deal__n { font-size: var(--fs-caption); font-weight: var(--fw-body-semi); color: var(--accent-deep); }
+  .deal__label { font-family: var(--font-serif); font-size: var(--fs-bodyL); line-height: 1.4; color: var(--ink); }
+  .deal__money { justify-self: end; text-align: right; font-size: var(--fs-caption); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--accent-deep); }
+
+  @media (max-width: 40em) {
+    .deal__row { gap: var(--space-3); padding-block: var(--space-3); }
+    .deal__label { font-size: var(--fs-body); }
+    .deal__money { font-size: var(--fs-small); }
+  }
+</style>

@@ -23,7 +23,7 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
 ---
 <BareLayout
   title="Apply: Get your build in 14 days"
-  description="A two-minute application. If you're a fit, I'll send you a teardown of your current site before we even speak."
+  description="A two-minute application. If you're a fit, I design your new homepage free — you don't pay a dollar until you approve it."
   noindex={true}
 >
   <div data-book-flow>
@@ -553,10 +553,21 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
 
   /* Q1 "which offer" — the EXACT same full sales cards as the homepage
      pricing section (PriceCardContent + shared .pcard styles), rendered as
-     selectable buttons. Featured card first; stacked single-column, and
-     scrolling past them is fine. Only the button-ness is styled here —
-     everything inside the card comes from components.css. */
+     selectable buttons. Featured card first; stacked single-column on
+     mobile, side by side on desktop (same 44em breakpoint as the homepage
+     pricing grid). Only the button-ness is styled here — everything inside
+     the card comes from components.css. */
   .bk-pchoice { margin: var(--space-5) auto 0; display: grid; grid-template-columns: 1fr; gap: var(--space-5); max-width: 34rem; text-align: left; }
+  /* Desktop: the two cards sit side by side, breaking out of the 55rem
+     narrow container (same centering trick as .bk-cal__widget) so each
+     card gets homepage-pricing width instead of being squeezed. */
+  @media (min-width: 44em) {
+    .bk-pchoice {
+      grid-template-columns: 1fr 1fr; gap: var(--space-6);
+      position: relative; left: 50%; transform: translateX(-50%);
+      width: min(92vw, 64rem); max-width: none;
+    }
+  }
   .bk-pcard { cursor: pointer; font: inherit; appearance: none; -webkit-appearance: none; transition: border-color 120ms, box-shadow 120ms, transform 120ms; }
   .bk-pcard:hover { border-color: var(--accent-deep); transform: translateY(-2px); }
   .bk-pcard.is-on { border-color: var(--accent-deep); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 40%, transparent); }
