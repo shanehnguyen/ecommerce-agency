@@ -223,25 +223,34 @@ const fourteenLabel = fourteenDayLabel();
       });
     }
 
-    // ---- Retention: beacon the furthest second actually watched to
-    // /api/vsl, which feeds the retention chart on /pulse. It autoplays
-    // muted, so raw playback time alone can't tell you whether anyone's
-    // actually looking — so playback is paused (and a beacon fires) the
-    // moment the tab is hidden or the player scrolls out of view, and only
-    // resumes once it's back in view. A backgrounded/ignored autoplay can't
-    // rack up phantom seconds; "clicking off" genuinely counts as leaving.
+    // ---- Retention: beacon the furthest second watched WHILE UNMUTED to
+    // /api/vsl, which feeds the retention chart on /pulse. Tracking is
+    // opt-in by behavior: nothing beacons until the visitor unmutes (the
+    // muted autoplay is wallpaper, not a view), the watermark only advances
+    // while sound is on, and each browser is counted ONCE ever (localStorage
+    // flag set on first successful beacon) so refreshes and return visits
+    // never inflate the curve. Playback still pauses when the tab is hidden
+    // or the player scrolls away, so idle tabs can't rack up seconds.
     // Each session only ever reports its watermark — the server tops up the
     // histogram by the delta, so a later beacon never double-counts.
     (function () {
+      var TRACKED_KEY = 'ff_vsl_tracked_v1';
+      try { if (localStorage.getItem(TRACKED_KEY) === '1') return; } catch (e) { /* private mode: track */ }
+
       var sessionId = 'v_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
       var maxSecond = 0;
       var lastSent = 0;
       var autoPaused = false;
       var inView = true;
+      var engaged = false; // true after the first unmute — nothing counts before it
+
+      media.addEventListener('volumechange', function () { if (!media.muted) engaged = true; });
 
       function beacon(done) {
+        if (!engaged) return;
         if (maxSecond <= lastSent && !done) return;
         lastSent = maxSecond;
+        try { localStorage.setItem(TRACKED_KEY, '1'); } catch (e) { /* ignore */ }
         var payload = JSON.stringify({ id: sessionId, second: maxSecond, duration: Math.round(media.duration) || 0 });
         try {
           if (navigator.sendBeacon) {
@@ -253,6 +262,7 @@ const fourteenLabel = fourteenDayLabel();
       }
 
       media.addEventListener('timeupdate', function () {
+        if (media.muted) return; // muted playback never advances the watermark
         var sec = Math.floor(media.currentTime);
         if (sec > maxSecond) maxSecond = sec;
       });

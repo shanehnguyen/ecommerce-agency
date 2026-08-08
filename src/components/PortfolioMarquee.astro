@@ -15,7 +15,7 @@ import { site } from '../data/site.config';
 const rest = portfolioCards.slice(3);
 ---
 <section class="pfm">
-  <p class="pfm__label mono">Apply now. Only {site.scarcity.slotsOpen} spots left in {site.scarcity.month}.</p>
+  <p class="pfm__label mono">Apply now. I only take {site.scarcity.slotsOpen} builds a month.</p>
   <div class="pfm__viewport" data-reveal>
     <div class="pfm__track">
       {rest.map((c) => <div class="pfm__item"><PortfolioTile card={c} /></div>)}

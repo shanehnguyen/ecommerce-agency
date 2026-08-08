@@ -28,11 +28,11 @@ export const site = {
   // ---- The single CTA (identical on every button, per the structure spec)
   cta: { label: 'GET YOUR FREE HOMEPAGE', href: '/apply' },
 
-  // ---- Scarcity (LOAD-BEARING — must be true; update monthly) ----------
+  // ---- Scarcity — evergreen copy ("I only take N builds a month"), so
+  // nothing goes stale. slotsOpen is the TRUE capacity cap; only change it
+  // if actual capacity changes.
   scarcity: {
     slotsOpen: 3,
-    month: 'August',                 // TODO update monthly
-    nextAvailable: 'August 4',       // TODO named next-available start date
   },
 
   // ---- Booking / form plumbing ---------------------------------------
