@@ -2,6 +2,8 @@
 
 Last updated: 2026-08-08. Ads are live at $100/day on Meta.
 
+Companion docs: **CALL-SYSTEM.md** (the 3-call structure: discovery → design reveal/close → kickoff) · **FREE-DESIGN-ONBOARDING.md** (Day 0–5 pipeline that produces the free design).
+
 ---
 
 ## 1. The Offer (one sentence)

@@ -12,12 +12,7 @@
    then contact details → calendar. Contact details go last since that's
    the step that actually submits. */
 import BareLayout from '../layouts/BareLayout.astro';
-import PriceCardContent from '../components/PriceCardContent.astro';
 import { site } from '../data/site.config';
-import { priceCards } from '../data/pricing';
-
-// Featured offer (The 14-Day Conversion Build) listed first on this page.
-const applyCards = [...priceCards].sort((a, b) => Number(b.featured ?? false) - Number(a.featured ?? false));
 
 const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k', '$100k–$200k', '$200k+'];
 ---
@@ -36,25 +31,11 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
 
         <form class="bk-form" data-book-form novalidate>
 
-          <!-- Q1 — WHICH OFFER -->
+          <!-- Q1 — REVENUE (no gate — every band moves the form forward).
+               The old "which option" question was killed: /pulse showed
+               visitors dying there. Product choice is a call question. -->
           <fieldset class="bk-step" data-step>
-            <p class="bk-count">1/3</p>
-            <h2 class="bk-q">Which option are you interested in?</h2>
-            <div class="bk-field" data-field="interest">
-              <div class="bk-pchoice" data-name="interest" data-radio>
-                {applyCards.map((c) => (
-                  <button type="button" class:list={['bk-pcard', 'pcard', { 'pcard--featured': c.featured }]} data-value={c.name}>
-                    <PriceCardContent card={c} />
-                  </button>
-                ))}
-              </div>
-            </div>
-          </fieldset>
-
-          <!-- Q2 — REVENUE (no gate — every band moves the form forward) -->
-          <fieldset class="bk-step" data-step hidden>
-            <button type="button" class="bk-back" data-back><span aria-hidden="true">←</span> Back</button>
-            <p class="bk-count">2/3</p>
+            <p class="bk-count">1/2</p>
             <h2 class="bk-q">How much monthly revenue does your ecommerce business do?</h2>
             <div class="bk-field" data-field="revenue">
               <div class="bk-cards bk-cards--row" data-name="revenue" data-radio>
@@ -63,10 +44,10 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
             </div>
           </fieldset>
 
-          <!-- Q3 — NAME + EMAIL + PHONE → submit -->
+          <!-- Q2 — NAME + EMAIL + PHONE → submit -->
           <fieldset class="bk-step" data-step hidden>
             <button type="button" class="bk-back" data-back><span aria-hidden="true">←</span> Back</button>
-            <p class="bk-count">3/3</p>
+            <p class="bk-count">2/2</p>
             <h2 class="bk-q">Last thing: let’s lock this in and build your personalized strategy.</h2>
             <div class="bk-fields">
               <div class="bk-field" data-field="fullName">
@@ -251,6 +232,7 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
     //      forward; the beacon carries whatever they've filled in so far. ----
     const nowMs = () => Date.now();
     const PULSE = { id: pulseId(), stage: 'landed', landedAt: nowMs(), stageTimes: {} as Record<string, number>, ...pulseSource() };
+    // 'offer' kept in the ranking for old stored journeys; the form no longer has that step.
     const PSTAGES = ['landed', 'offer', 'revenue', 'details', 'calendar', 'booked'];
     const prank = (s: string) => PSTAGES.indexOf(s);
     PULSE.stageTimes.landed = PULSE.landedAt; // stamp the landing as the first stage time
@@ -259,7 +241,6 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
       return {
         id: PULSE.id, stage: PULSE.stage,
         revenue: answers.revenue || '',
-        interest: answers.interest || '',
         fullName: answers.fullName || '',
         email: answers.email || '',
         phone: answers.phone || '',
@@ -281,13 +262,12 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
       }
       if (up || final) pulseSend(pulsePayload(final), final);
     };
-    // Furthest step → stage. Q1 interest (offer) · Q2 revenue · Q3 details → calendar → booked.
+    // Furthest step → stage. Q1 revenue · Q2 details → calendar → booked.
     const stageForCurrent = () =>
-      current >= 2 ? 'details' : current >= 1 ? 'revenue'
-      : (answers.interest ? 'offer' : 'landed');
+      current >= 1 ? 'details' : (answers.revenue ? 'revenue' : 'landed');
 
-    // Fire the "started applying" signal once, the moment they pick an offer —
-    // marks top-of-funnel intent even if they never finish.
+    // Fire the "started applying" signal once, the moment they pick a revenue
+    // band — marks top-of-funnel intent even if they never finish.
     const STARTED_KEY = 'ff_apply_started_v1';
     let startedFired = false;
     try { if (sessionStorage.getItem(STARTED_KEY)) startedFired = true; } catch { /* ignore */ }
@@ -307,8 +287,8 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
           answers[group.dataset.name!] = card.dataset.value!;
           clearErr(group.dataset.name!);
           persist();
-          setStage(stageForCurrent()); // picking an offer flips landed → offer
-          if (group.dataset.name === 'interest') fireStarted();
+          setStage(stageForCurrent()); // picking a band flips landed → revenue
+          if (group.dataset.name === 'revenue') fireStarted();
           maybeAutoAdvance(card);
         });
       });
@@ -347,12 +327,11 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
       fd.append('access_key', web3Key);
       fd.append('from_name', site.brand);
       if (answers.email) fd.append('replyto', answers.email);
-      fd.append('subject', `🛒 Build application: ${answers.fullName || 'new lead'} · ${answers.revenue} · ${answers.interest}`);
+      fd.append('subject', `🛒 Build application: ${answers.fullName || 'new lead'} · ${answers.revenue}`);
       fd.append('Name', answers.fullName || '');
       fd.append('Email', answers.email || '');
       fd.append('Phone', answers.phone || '');
       fd.append('Monthly revenue', answers.revenue || '');
-      fd.append('Interested in', answers.interest || '');
       if (window.location.search) fd.append('Query params', window.location.search);
       if (document.referrer) fd.append('Referrer', document.referrer);
       fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd }).catch(() => { /* best-effort */ });
@@ -417,7 +396,6 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
       collectAll();
       const customAnswers: Record<string, string> = {};
       if (answers.revenue) customAnswers.a1 = answers.revenue;
-      if (answers.interest) customAnswers.a2 = answers.interest;
       return {
         name: answers.fullName || '',
         email: answers.email || '',
@@ -551,30 +529,8 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
   .bk-card:hover { border-color: var(--ink-50); }
   .bk-card.is-on { border-color: var(--ink); background: color-mix(in srgb, var(--accent) 16%, #fff); }
 
-  /* Q1 "which offer" — the EXACT same full sales cards as the homepage
-     pricing section (PriceCardContent + shared .pcard styles), rendered as
-     selectable buttons. Featured card first; stacked single-column on
-     mobile, side by side on desktop (same 44em breakpoint as the homepage
-     pricing grid). Only the button-ness is styled here — everything inside
-     the card comes from components.css. */
-  .bk-pchoice { margin: var(--space-5) auto 0; display: grid; grid-template-columns: 1fr; gap: var(--space-5); max-width: 34rem; text-align: left; }
-  /* Desktop: the two cards sit side by side, breaking out of the 55rem
-     narrow container (same centering trick as .bk-cal__widget) so each
-     card gets homepage-pricing width instead of being squeezed. */
-  @media (min-width: 44em) {
-    .bk-pchoice {
-      grid-template-columns: 1fr 1fr; gap: var(--space-6);
-      position: relative; left: 50%; transform: translateX(-50%);
-      width: min(92vw, 64rem); max-width: none;
-    }
-  }
-  .bk-pcard { cursor: pointer; font: inherit; appearance: none; -webkit-appearance: none; transition: border-color 120ms, box-shadow 120ms, transform 120ms; }
-  .bk-pcard:hover { border-color: var(--accent-deep); transform: translateY(-2px); }
-  .bk-pcard.is-on { border-color: var(--accent-deep); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 40%, transparent); }
-  /* featured card already glows via .pcard--featured — the ring still marks selection */
-
   /* validation */
-  .bk-field--err .bk-input, .bk-field--err .bk-card, .bk-field--err .bk-pcard { border-color: var(--warn); }
+  .bk-field--err .bk-input, .bk-field--err .bk-card { border-color: var(--warn); }
   .bk-err { margin-top: var(--space-2); font-size: var(--fs-body-sm, var(--fs-caption)); font-weight: var(--fw-body-semi); color: var(--warn); }
 
   .bk-nav { margin-top: var(--space-6); display: flex; align-items: center; justify-content: center; gap: var(--space-4); }
