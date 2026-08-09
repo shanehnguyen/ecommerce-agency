@@ -1,4 +1,5 @@
 import { Redis } from '@upstash/redis';
+import { createHash } from 'node:crypto';
 
 /* =====================================================================
    /api/pulse — booking-funnel telemetry + drop-off alerts.
@@ -157,6 +158,8 @@ async function ingest(req, res) {
     stage,
     revenue: pick('revenue', 40),
     interest: pick('interest', 80),
+    fbp: pick('fbp', 120),
+    fbc: pick('fbc', 300),
     fullName: pick('fullName', 160),
     email: pick('email', 200),
     phone: pick('phone', 60),
@@ -188,6 +191,10 @@ async function ingest(req, res) {
   // Partial-lead capture: once we have a name, dedupe-write a lead record keyed
   // by lead, with a status field, upgraded partial → booked.
   await upsertLead(redis, journey, now);
+
+  // Server-side Meta events (Conversions API) — fires once per journey per
+  // event, deduped against the browser pixel via matching event_id.
+  await maybeCapi(redis, journey);
 
   // Email the drop-offs: they're leaving (final) and never COMPLETED the form
   // (never reached the calendar). The lead notification fires on form completion,
@@ -248,6 +255,86 @@ async function maybeEmail(redis, j) {
 function fmtDwell(ms) {
   const s = Math.max(0, Math.round(ms / 1000));
   return s < 60 ? `${s}s` : `${Math.round(s / 60)} min`;
+}
+
+// ---------------------------------------------------------------- Meta CAPI
+// Server-side Conversions API: re-sends the pixel's Lead/Schedule events from
+// the server so ad blockers and Safari/iOS cookie loss can't hide conversions
+// from Meta's optimizer. Dedupes with the browser pixel via the SAME event_id
+// (`lead_<journeyId>` / `sched_<journeyId>` — set in apply.astro's fbq calls),
+// and an NX lock makes each event fire at most once per journey. Identifiers
+// are SHA-256 hashed as Meta requires; no plaintext PII leaves the server.
+const META_PIXEL_ID = process.env.META_PIXEL_ID || '1460315575868963';
+const META_CAPI_TOKEN = process.env.META_CAPI_TOKEN || '';
+const CAPI_URL = `https://graph.facebook.com/v23.0/${META_PIXEL_ID}/events`;
+
+const sha256 = (v) => createHash('sha256').update(v).digest('hex');
+const hashEmail = (e) => (e ? [sha256(e.trim().toLowerCase())] : undefined);
+const hashPhone = (p) => {
+  if (!p) return undefined;
+  let d = String(p).replace(/\D/g, '');
+  if (d.length === 10) d = '1' + d; // bare US number → E.164-ish
+  return d.length >= 11 ? [sha256(d)] : undefined;
+};
+const hashName = (n) => (n ? [sha256(n.trim().toLowerCase())] : undefined);
+
+function capiUserData(j) {
+  const parts = (j.fullName || '').trim().split(/\s+/).filter(Boolean);
+  // _fbc cookie wins; else rebuild it from the fbclid per Meta's documented format
+  const fbc = j.fbc || (j.fbclid ? `fb.1.${Number(j.landedAt) || Date.now()}.${j.fbclid}` : '');
+  const u = {
+    em: hashEmail(j.email),
+    ph: hashPhone(j.phone),
+    fn: hashName(parts[0]),
+    ln: parts.length > 1 ? hashName(parts.slice(1).join(' ')) : undefined,
+    client_ip_address: j.ip && j.ip !== 'unknown' ? j.ip : undefined,
+    client_user_agent: j.ua || undefined,
+    fbc: fbc || undefined,
+    fbp: j.fbp || undefined,
+  };
+  Object.keys(u).forEach((k) => u[k] === undefined && delete u[k]);
+  return u;
+}
+
+async function maybeCapi(redis, j) {
+  if (!META_CAPI_TOKEN || !redis) return; // not configured → no-op
+  if (!j.email && !j.phone) return; // no identifiers yet → nothing Meta could match
+
+  const events = [];
+  const queue = async (name, idPrefix) => {
+    try {
+      const won = await redis.set(`capi:${idPrefix}:${j.id}`, 1, { nx: true, ex: JOURNEY_TTL_S });
+      if (!won) return; // this event already sent for this journey
+    } catch { return; }
+    events.push({
+      event_name: name,
+      event_time: Math.floor(Date.now() / 1000),
+      event_id: `${idPrefix}_${j.id}`, // matches the browser pixel's eventID
+      action_source: 'website',
+      event_source_url: 'https://www.flipfixdigital.com/apply',
+      user_data: capiUserData(j),
+    });
+  };
+
+  // Lead = completed the form (reached the calendar) — same moment the pixel fires.
+  if (stageIndex(j.stage) >= stageIndex('calendar')) await queue('Lead', 'lead');
+  // Schedule = booked a Calendly time.
+  if (stageIndex(j.stage) >= stageIndex('booked')) await queue('Schedule', 'sched');
+  if (!events.length) return;
+
+  try {
+    const res = await fetch(CAPI_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data: events, access_token: META_CAPI_TOKEN }),
+    });
+    if (!res.ok) {
+      const detail = await res.text().catch(() => '');
+      console.warn('capi send failed:', res.status, detail.slice(0, 300));
+    }
+  } catch (err) {
+    console.warn('capi send failed:', err.message);
+  }
 }
 
 // Dedupe leads in Redis keyed by email (falling back to name if no email yet).

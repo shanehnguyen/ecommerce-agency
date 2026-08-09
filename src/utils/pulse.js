@@ -18,6 +18,15 @@ export function pulseId() {
   }
 }
 
+// Meta's browser cookies (_fbp = browser id, _fbc = click id) — passed to the
+// server so Conversions API events carry the same match keys as the pixel.
+const metaCookie = (name) => {
+  try {
+    const m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+    return m ? decodeURIComponent(m[1]).slice(0, 200) : '';
+  } catch { return ''; }
+};
+
 // Where they came from. We keep BOTH a rolled-up `source` (the ?from tag, else
 // joined UTMs) for the old summary AND every UTM / click-id broken out into its
 // own field, so the dashboard can sort & filter by utm_source, utm_campaign, etc.
@@ -25,7 +34,7 @@ export function pulseSource() {
   const empty = {
     source: '', referrer: '', query: '',
     utmSource: '', utmMedium: '', utmCampaign: '', utmContent: '', utmTerm: '',
-    gclid: '', fbclid: '',
+    gclid: '', fbclid: '', fbp: '', fbc: '',
   };
   try {
     const p = new URLSearchParams(location.search);
@@ -49,6 +58,7 @@ export function pulseSource() {
       query: location.search || '',
       utmSource, utmMedium, utmCampaign, utmContent, utmTerm,
       gclid: g('gclid'), fbclid: g('fbclid'),
+      fbp: metaCookie('_fbp'), fbc: metaCookie('_fbc'),
     };
   } catch {
     return empty;

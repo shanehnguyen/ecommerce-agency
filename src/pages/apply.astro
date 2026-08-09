@@ -247,6 +247,7 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
         source: PULSE.source, referrer: PULSE.referrer, query: PULSE.query,
         utmSource: PULSE.utmSource, utmMedium: PULSE.utmMedium, utmCampaign: PULSE.utmCampaign,
         utmContent: PULSE.utmContent, utmTerm: PULSE.utmTerm, gclid: PULSE.gclid, fbclid: PULSE.fbclid,
+        fbp: PULSE.fbp, fbc: PULSE.fbc,
         stageTimes: PULSE.stageTimes,
         landedAt: PULSE.landedAt, final: !!final,
       };
@@ -347,7 +348,8 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
         leadFired = true;
         sendLead();
         (window as any).kwTrack?.('LeadQualified', { via: 'apply' });
-        (window as any).fbq?.('track', 'Lead');
+        // eventID matches the server-side Conversions API event so Meta dedupes
+        (window as any).fbq?.('track', 'Lead', {}, { eventID: 'lead_' + PULSE.id });
       }
       setStage('calendar');
       showCalendar();
@@ -466,7 +468,7 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
       }
       if (data?.event === 'calendly.event_scheduled') {
         (window as any).kwTrack?.('CallBooked', { via: 'apply' });
-        (window as any).fbq?.('track', 'Schedule');
+        (window as any).fbq?.('track', 'Schedule', {}, { eventID: 'sched_' + PULSE.id });
         setStage('booked', true);
         try { sessionStorage.removeItem(STORE); } catch { /* ignore */ }
         if (flow) flow.hidden = true;
