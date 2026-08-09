@@ -47,7 +47,10 @@ export const site = {
 
   // ---- Analytics — wired in Analytics.astro, all PUBLIC client ids -----
   analytics: {
-    metaPixelId: '1460315575868963', // TODO your Meta Pixel id (or blank to disable)
+    // "Shane HN | Web Development" — the dataset the ad campaign optimizes on.
+    // MUST match the campaign's pixel AND api/pulse.js's META_PIXEL_ID default,
+    // or the campaign goes blind to the site's events.
+    metaPixelId: '726459326914614',
     ga4Id: '',                        // optional — blank disables GA4
     clarityId: 'xslhs1jscu',          // Microsoft Clarity id
   },

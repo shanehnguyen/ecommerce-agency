@@ -277,6 +277,9 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
       startedFired = true;
       try { sessionStorage.setItem(STARTED_KEY, '1'); } catch { /* ignore */ }
       (window as any).kwTrack?.('ApplyStarted');
+      // Also send to Meta as a custom event — high-frequency optimization
+      // signal while Lead volume is still too thin for the algorithm.
+      (window as any).fbq?.('trackCustom', 'ApplyStarted');
     };
 
     // single-choice cards (.bk-card = the small option tiles, .bk-pcard = Q1's full pricing cards)

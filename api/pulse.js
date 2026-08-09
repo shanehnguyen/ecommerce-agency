@@ -264,8 +264,13 @@ function fmtDwell(ms) {
 // (`lead_<journeyId>` / `sched_<journeyId>` — set in apply.astro's fbq calls),
 // and an NX lock makes each event fire at most once per journey. Identifiers
 // are SHA-256 hashed as Meta requires; no plaintext PII leaves the server.
-const META_PIXEL_ID = process.env.META_PIXEL_ID || '1460315575868963';
+// "Shane HN | Web Development" — must match site.config's metaPixelId and the
+// dataset the ad campaign uses, and the token must be generated FROM that dataset.
+const META_PIXEL_ID = process.env.META_PIXEL_ID || '726459326914614';
 const META_CAPI_TOKEN = process.env.META_CAPI_TOKEN || '';
+// Optional: set META_TEST_EVENT_CODE (from Events Manager → Test Events) to make
+// server events appear in the Test Events tab for verification, then remove it.
+const META_TEST_CODE = process.env.META_TEST_EVENT_CODE || '';
 const CAPI_URL = `https://graph.facebook.com/v23.0/${META_PIXEL_ID}/events`;
 
 const sha256 = (v) => createHash('sha256').update(v).digest('hex');
@@ -326,7 +331,7 @@ async function maybeCapi(redis, j) {
     const res = await fetch(CAPI_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ data: events, access_token: META_CAPI_TOKEN }),
+      body: JSON.stringify({ data: events, access_token: META_CAPI_TOKEN, ...(META_TEST_CODE ? { test_event_code: META_TEST_CODE } : {}) }),
     });
     if (!res.ok) {
       const detail = await res.text().catch(() => '');
