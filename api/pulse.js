@@ -264,9 +264,9 @@ function fmtDwell(ms) {
 // (`lead_<journeyId>` / `sched_<journeyId>` — set in apply.astro's fbq calls),
 // and an NX lock makes each event fire at most once per journey. Identifiers
 // are SHA-256 hashed as Meta requires; no plaintext PII leaves the server.
-// "Shane HN | Web Development" — must match site.config's metaPixelId and the
-// dataset the ad campaign uses, and the token must be generated FROM that dataset.
-const META_PIXEL_ID = process.env.META_PIXEL_ID || '726459326914614';
+// Must match site.config's metaPixelId and the dataset the ad campaign uses,
+// and the token must be generated FROM that same dataset.
+const META_PIXEL_ID = process.env.META_PIXEL_ID || '1460315575868963';
 const META_CAPI_TOKEN = process.env.META_CAPI_TOKEN || '';
 // Optional: set META_TEST_EVENT_CODE (from Events Manager → Test Events) to make
 // server events appear in the Test Events tab for verification, then remove it.
