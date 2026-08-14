@@ -1,0 +1,123 @@
+NO-BOOK RESCUE CALL SCRIPT
+Goal: calendar invite accepted while still on the phone.
+This is a 3-minute booking call, NOT a sales call. The free
+design is the pitch. They already applied. Don't sell.
+=============================================================
+
+BEFORE YOU DIAL
+=============================================================
+[ ] Text already sent earlier (so your number rings familiar)
+[ ] Their name: ______________
+[ ] Store name if you know it: ______________
+[ ] Two slots to offer: ____________ and ____________
+[ ] Between 8am and 9pm THEIR time
+
+
+THE CALL
+=============================================================
+
+THEY ANSWER:
+
+YOU: "Hey [name], it's Shane - you applied for the free
+homepage design earlier. Figured it was faster to call than
+keep texting. Got two minutes?"
+
+(If they sound confused / "who?"):
+YOU: "Shane - the free Shopify homepage design, you filled
+out the application on your phone earlier today. Ringing a
+bell?"
+
+THEY SAY SURE:
+
+YOU: "So what's the store - what are you selling?"
+
+*** SHUT UP AND LISTEN FOR 60 SECONDS. ***
+React to ONE specific thing they say:
+"Oh nice - [specific]. That's a good lane."
+
+THEN BOOK - say this right after they finish:
+
+YOU: "Cool. Next step's easy - a 30 minute call where I dig
+into everything and you walk away with the free homepage
+design. I've got [SLOT 1] or [SLOT 2] - which works?"
+
+THEY PICK ONE:
+
+YOU: "Perfect - sending the invite right now, hang on...
+[SEND IT WHILE ON THE PHONE]
+...should be in your email. See it?"
+
+Wait for the yes. THEN:
+
+YOU: "Locked. Between now and then shoot me the store link
+so I can dig in before we talk. Talk [day]."
+
+Hang up. Done. Do not keep chatting.
+
+
+BRANCHES
+=============================================================
+
+"I'M SLAMMED RIGHT NOW":
+YOU: "Totally - twenty seconds then: I design your homepage
+free, you look at it, if you love it we talk about the full
+store, if not we're square. When's better - tonight or
+tomorrow?"
+(Still a WHICH time question, never a WHETHER question.)
+
+"ACTUALLY NOW WORKS":
+Grab the intro call sheet and run it right there. A live
+lead beats a scheduled one. If you truly can't, book the
+nearest slot: "Let's lock tomorrow so I can dig into your
+store first - that's where the good stuff comes from."
+
+"HOW MUCH DOES IT COST?":
+YOU: "The homepage design is actually free - no card,
+nothing. If you love it and want the full store built,
+that's when we'd talk numbers, and I'll give you the exact
+price on the call. If you don't love it, you owe me nothing.
+So - [SLOT 1] or [SLOT 2]?"
+(Answer, reassure, re-ask. Don't quote the build price on
+this call - price goes with the walkthrough.)
+
+"I'LL BOOK ON THE CALENDAR LATER":
+YOU: "The link works, but honestly it's faster if I just do
+it now while I've got you - [SLOT 1] or [SLOT 2]?"
+(If they still resist, don't push twice:) "All good - I'll
+text you the link right after this. Grab whatever works."
+Then day-4 takeaway text if they never book.
+
+"NOT INTERESTED ANYMORE":
+YOU: "No stress. Out of curiosity, what changed?"
+(Whatever they say is free market research - write it down.)
+"Fair enough. If the store site ever moves back up the list,
+you know where I am. Good luck with it."
+Mark dead. Do not add to any more sequences.
+
+NO ANSWER:
+Do not leave a long voicemail. Missed call + your earlier
+text IS the message. If you leave anything, 5 seconds:
+"It's Shane about the homepage design - text me back when
+you're free."
+One more call attempt day 2 or 3 at a DIFFERENT time of day.
+Then day-4 takeaway text. Then done.
+
+
+AFTER THE CALL - LOG IT
+=============================================================
+Name: ______________
+Result:  BOOKED / RAN IT LIVE / NO ANSWER / LATER / DEAD
+Booked for: ____________
+Store link received: Y / N
+Notes / their words: ______________________________________
+
+
+RULES
+=============================================================
+1. Two minutes of you talking, max. Every extra minute of
+   explaining gives them room to find a maybe.
+2. Never ask IF they want to book. Ask WHICH time.
+3. Invite sent and confirmed before you hang up, or it
+   didn't happen.
+4. Two call attempts total across the sequence. More = spam.
+5. "Stop calling" = final. Mark it, move on.

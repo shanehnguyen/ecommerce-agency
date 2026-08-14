@@ -26,7 +26,7 @@ import Cta from './Cta.astro';
   const root = document.querySelector<HTMLElement>('[data-scarcity-bar]');
   if (root) {
     const STORE = 'ff_scarcity_bar_v1';
-    const TARGET_SELECTOR = '#faq';
+    const TARGET_SELECTOR = '#deal';
     let shown = false;
     try { shown = sessionStorage.getItem(STORE) === '1'; } catch { /* ignore */ }
 

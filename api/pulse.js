@@ -323,6 +323,11 @@ async function maybeCapi(redis, j) {
 
   // Lead = completed the form (reached the calendar) — same moment the pixel fires.
   if (stageIndex(j.stage) >= stageIndex('calendar')) await queue('Lead', 'lead');
+  // QualifiedLead = completed the form AND revenue band $10k+ (mirrors the
+  // browser's custom event; the future optimization target for buyer-quality).
+  if (stageIndex(j.stage) >= stageIndex('calendar') && j.revenue && !/^(Pre-revenue|Under \$10k)$/.test(j.revenue)) {
+    await queue('QualifiedLead', 'qlead');
+  }
   // Schedule = booked a Calendly time.
   if (stageIndex(j.stage) >= stageIndex('booked')) await queue('Schedule', 'sched');
   if (!events.length) return;

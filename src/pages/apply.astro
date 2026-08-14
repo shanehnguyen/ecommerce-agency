@@ -14,7 +14,7 @@
 import BareLayout from '../layouts/BareLayout.astro';
 import { site } from '../data/site.config';
 
-const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k', '$100k–$200k', '$200k+'];
+const revenueBands = ['Pre-revenue', 'Under $10k', '$10k–$30k', '$30k–$60k', '$60k–$100k', '$100k+'];
 ---
 <BareLayout
   title="Apply: Get your build in 14 days"
@@ -26,7 +26,8 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
       <div class="container container--narrow">
 
         <header class="bk-intro">
-          <h1 class="bk-intro__h1">Let’s see if we’re a good fit.</h1>
+          <h1 class="bk-intro__h1">Claim your free homepage design.</h1>
+          <p class="bk-intro__sub">Two questions, two minutes. If your store’s a fit, you see your new homepage in about 5 days — free, and you pay $0 until you approve it.</p>
         </header>
 
         <form class="bk-form" data-book-form novalidate>
@@ -351,8 +352,20 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
         leadFired = true;
         sendLead();
         (window as any).kwTrack?.('LeadQualified', { via: 'apply' });
+        // B1 — Advanced Matching: re-init the pixel with identifiers (Meta hashes
+        // them browser-side) so events match real people. Raises EMQ.
+        try {
+          const em = (answers.email || '').trim().toLowerCase();
+          const ph = (answers.phone || '').replace(/\D/g, '');
+          if (em || ph) (window as any).fbq?.('init', site.analytics.metaPixelId, { ...(em ? { em } : {}), ...(ph ? { ph } : {}) });
+        } catch { /* matching is best-effort */ }
         // eventID matches the server-side Conversions API event so Meta dedupes
         (window as any).fbq?.('track', 'Lead', {}, { eventID: 'lead_' + PULSE.id });
+        // B2 — quality signal: only $10k+ stores. Once it has volume, optimize
+        // the ad set for QualifiedLead so Meta hunts buyers, not form-fillers.
+        if (!/^(Pre-revenue|Under \$10k)$/.test(answers.revenue || '')) {
+          (window as any).fbq?.('trackCustom', 'QualifiedLead', {}, { eventID: 'qlead_' + PULSE.id });
+        }
       }
       setStage('calendar');
       showCalendar();
@@ -504,6 +517,7 @@ const revenueBands = ['Pre-revenue', 'Under $20k', '$20k–$50k', '$50k–$100k'
 
   .bk-intro { text-align: center; max-width: 52rem; margin-inline: auto; }
   .bk-intro__h1 { font-size: var(--fs-h2); text-wrap: balance; }
+  .bk-intro__sub { margin: var(--space-4) auto 0; max-width: 46ch; font-family: var(--font-serif); font-size: var(--fs-lede); line-height: 1.55; color: var(--ink-soft); }
 
   .bk-form { margin-top: var(--space-8); text-align: center; }
   .bk-step { border: 0; padding: 0; margin: 0; animation: bk-in 320ms cubic-bezier(.2,.7,.2,1); }
