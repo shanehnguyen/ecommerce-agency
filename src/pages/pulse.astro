@@ -2,8 +2,8 @@
 /* /pulse - PRIVATE booking-funnel dashboard. Token-gated (PULSE_TOKEN, checked
    server-side in /api/pulse). Shows the funnel with drop-off at each step, a
    per-source rollup, and a wide, scrollable, sortable, filterable TABLE of every
-   visitor - a column per question (with the time to reach each step) plus every
-   UTM / click-id from the URL. This is the source of truth for booking data.
+   visitor - a column per question (with the time to reach each step) plus the
+   Meta campaign / adset / ad (ids from the URL, resolved to names). This is the source of truth for booking data.
    noindex; not linked anywhere. */
 import BareLayout from '../layouts/BareLayout.astro';
 ---
@@ -21,7 +21,6 @@ import BareLayout from '../layouts/BareLayout.astro';
           <span data-pl-redis class="pl-redis" hidden></span>
           <span data-pl-updated class="pl-updated"></span>
           <button type="button" class="pl-btn" data-pl-refresh>Refresh</button>
-          <button type="button" class="pl-btn pl-btn--ghost" data-pl-purge hidden>Purge 3d+</button>
           <button type="button" class="pl-btn pl-btn--ghost" data-pl-signout hidden>Sign out</button>
         </div>
       </header>
@@ -58,6 +57,21 @@ import BareLayout from '../layouts/BareLayout.astro';
           <div class="pl-sources" data-pl-sources></div>
         </div>
 
+        <!-- Meta ads breakdown: campaign → adset → ad, visitors → booked -->
+        <div class="pl-card">
+          <div class="pl-tbar">
+            <h2 class="pl-h2">By ad <span class="pl-dim">· visitors → booked · follows the table filters</span></h2>
+            <div class="pl-tbar__controls">
+              <select class="pl-filter" data-pl-adgroup>
+                <option value="ad">Group by ad</option>
+                <option value="adset">Group by adset</option>
+                <option value="campaign">Group by campaign</option>
+              </select>
+            </div>
+          </div>
+          <div class="pl-sources" data-pl-ads></div>
+        </div>
+
         <!-- visitors table -->
         <div class="pl-card">
           <div class="pl-tbar">
@@ -71,9 +85,10 @@ import BareLayout from '../layouts/BareLayout.astro';
                 <option value="yes">Ads (Facebook/Instagram)</option>
                 <option value="no">Not ads</option>
               </select>
-              <select class="pl-filter" data-pl-filter="utmSource"><option value="">All utm_source</option></select>
-              <select class="pl-filter" data-pl-filter="utmMedium"><option value="">All utm_medium</option></select>
-              <select class="pl-filter" data-pl-filter="utmCampaign"><option value="">All utm_campaign</option></select>
+              <select class="pl-filter" data-pl-filter="utmSource"><option value="">All platforms</option></select>
+              <select class="pl-filter" data-pl-filter="campaign"><option value="">All campaigns</option></select>
+              <select class="pl-filter" data-pl-filter="adset"><option value="">All adsets</option></select>
+              <select class="pl-filter" data-pl-filter="ad"><option value="">All ads</option></select>
               <button type="button" class="pl-btn pl-btn--ghost" data-pl-clear>Clear</button>
               <button type="button" class="pl-btn" data-pl-export>Export CSV</button>
             </div>
@@ -109,7 +124,6 @@ import BareLayout from '../layouts/BareLayout.astro';
   const countEl = $('[data-pl-count]');
   const windowEl = $('[data-pl-window]');
   const signout = $('[data-pl-signout]') as HTMLButtonElement;
-  const purgeBtn = $('[data-pl-purge]') as HTMLButtonElement;
 
   const REDIS_STATE: Record<string, { label: string; cls: string }> = {
     connected: { label: '● database connected', cls: 'is-ok' },
@@ -195,6 +209,21 @@ import BareLayout from '../layouts/BareLayout.astro';
     return (mobile ? 'Mobile' : 'Desktop') + (b ? ' · ' + b : '');
   }
 
+  // ---- Meta ad entities. Ad URLs pass utm_campaign={{campaign.id}},
+  // utm_term={{adset.id}}, utm_content={{ad.id}}; this maps ids → the names
+  // you see in Ads Manager. Unknown ids show as the raw id. ----
+  const ENTITY_NAMES: Record<string, string> = {
+    '120248004818180252': 'Ecom Lead Campaign',
+    '120248534129220252': 'Adset2-Variable',
+    '120248004818170252': 'Adset1-Control',
+    '120248534237360252': 'ecomadset3-if-raised-adspend',
+    '120248534284670252': 'ecomadset3-ads-not-problem',
+    '120248534129210252': 'ecomadset3-using-template-2',
+    '120248534273500252': 'ecomadset3-sick-of-freelancers',
+    '120248364918670252': 'ecom-adset2-shopify-templates',
+  };
+  const entityName = (id: string) => (id && ENTITY_NAMES[id]) || id || '';
+
   // ---- normalise a stored journey into a flat row with derived timings ----
   function toRow(j: any): any {
     const st = (j.stageTimes && typeof j.stageTimes === 'object') ? j.stageTimes : {};
@@ -208,7 +237,6 @@ import BareLayout from '../layouts/BareLayout.astro';
       stage: j.stage || 'landed',
       stageRank: stageRankOf(j.stage || 'landed'),
       revenue: j.revenue || '',
-      interest: j.interest || '',
       email: j.email || '',
       phone: j.phone || '',
       tRevenue: elapsed('revenue'), tOffer: elapsed('offer'), tDetails: elapsed('details'),
@@ -218,6 +246,9 @@ import BareLayout from '../layouts/BareLayout.astro';
       ads: isAdSource(j.utmSource) ? 'yes' : 'no',
       utmSource: j.utmSource || '', utmMedium: j.utmMedium || '', utmCampaign: j.utmCampaign || '',
       utmContent: j.utmContent || '', utmTerm: j.utmTerm || '',
+      campaign: entityName(j.utmCampaign || ''),
+      adset: entityName(j.utmTerm || ''),
+      ad: entityName(j.utmContent || ''),
       from: j.source || '',
       paid: j.gclid ? 'Google' : (j.fbclid ? 'Meta' : ''),
       referrer: refHost(j.referrer || ''),
@@ -239,10 +270,9 @@ import BareLayout from '../layouts/BareLayout.astro';
     { key: 'name',        label: 'Name',          type: 'text',    cls: 'col-biz', get: (r: any) => r.name.toLowerCase(),     cell: nameCell },
     { key: 'reached',     label: 'Reached',       type: 'num',                     get: (r: any) => r.stageRank,               cell: badgeCell },
     { key: 'when',        label: 'Landed',        type: 'num',                     get: (r: any) => r.when,                    cell: whenCell },
-    { key: 'interest',    label: 'Interested in · Q1', type: 'text',                get: (r: any) => r.interest.toLowerCase(),  cell: (r: any) => txt(r.interest) },
-    { key: 'revenue',     label: 'Revenue · Q2',  type: 'text',                    get: (r: any) => r.revenue.toLowerCase(),   cell: (r: any) => txt(r.revenue) },
-    { key: 'email',       label: 'Email · Q3',    type: 'text',                    get: (r: any) => r.email.toLowerCase(),     cell: (r: any) => txt(r.email) },
-    { key: 'phone',       label: 'Phone · Q3',    type: 'text',                    get: (r: any) => r.phone.toLowerCase(),     cell: (r: any) => txt(r.phone) },
+    { key: 'revenue',     label: 'Revenue · Q1',  type: 'text',                    get: (r: any) => r.revenue.toLowerCase(),   cell: (r: any) => txt(r.revenue) },
+    { key: 'email',       label: 'Email · Q2',    type: 'text',                    get: (r: any) => r.email.toLowerCase(),     cell: (r: any) => txt(r.email) },
+    { key: 'phone',       label: 'Phone · Q2',    type: 'text',                    get: (r: any) => r.phone.toLowerCase(),     cell: (r: any) => txt(r.phone) },
     { key: 'tOffer',      label: '→ Offer',       type: 'numNull',                 get: (r: any) => r.tOffer,                  cell: (r: any) => elapsedCell(r.tOffer) },
     { key: 'tRevenue',    label: '→ Revenue',     type: 'numNull',                 get: (r: any) => r.tRevenue,                cell: (r: any) => elapsedCell(r.tRevenue) },
     { key: 'tDetails',    label: '→ Details',     type: 'numNull',                 get: (r: any) => r.tDetails,                cell: (r: any) => elapsedCell(r.tDetails) },
@@ -251,11 +281,10 @@ import BareLayout from '../layouts/BareLayout.astro';
     { key: 'dwell',       label: 'On page',       type: 'num',                     get: (r: any) => r.dwell,                   cell: (r: any) => txt(fmtElapsed(r.dwell)) },
     { key: 'entry',       label: 'Entry',         type: 'text',                    get: (r: any) => r.entryLabel.toLowerCase(),cell: entryCell },
     { key: 'ads',         label: 'Ads (FB/IG)',   type: 'text',                    get: (r: any) => r.ads,                     cell: (r: any) => r.ads === 'yes' ? '<span class="pl-entry--ad">Yes</span>' : '<span class="pl-dash">-</span>' },
-    { key: 'utmSource',   label: 'utm_source',    type: 'text',                    get: (r: any) => r.utmSource.toLowerCase(), cell: (r: any) => txt(r.utmSource) },
-    { key: 'utmMedium',   label: 'utm_medium',    type: 'text',                    get: (r: any) => r.utmMedium.toLowerCase(), cell: (r: any) => txt(r.utmMedium) },
-    { key: 'utmCampaign', label: 'utm_campaign',  type: 'text',                    get: (r: any) => r.utmCampaign.toLowerCase(),cell: (r: any) => txt(r.utmCampaign) },
-    { key: 'utmContent',  label: 'utm_content',   type: 'text',                    get: (r: any) => r.utmContent.toLowerCase(),cell: (r: any) => txt(r.utmContent) },
-    { key: 'utmTerm',     label: 'utm_term',      type: 'text',                    get: (r: any) => r.utmTerm.toLowerCase(),   cell: (r: any) => txt(r.utmTerm) },
+    { key: 'utmSource',   label: 'Platform',      type: 'text',                    get: (r: any) => r.utmSource.toLowerCase(), cell: (r: any) => txt(r.utmSource) },
+    { key: 'campaign',    label: 'Campaign',      type: 'text',                    get: (r: any) => r.campaign.toLowerCase(),  cell: (r: any) => txt(r.campaign) },
+    { key: 'adset',       label: 'Adset',         type: 'text',                    get: (r: any) => r.adset.toLowerCase(),     cell: (r: any) => txt(r.adset) },
+    { key: 'ad',          label: 'Ad',            type: 'text',                    get: (r: any) => r.ad.toLowerCase(),        cell: (r: any) => txt(r.ad) },
     { key: 'from',        label: 'from',          type: 'text',                    get: (r: any) => r.from.toLowerCase(),      cell: (r: any) => txt(r.from) },
     { key: 'paid',        label: 'Paid click',    type: 'text',                    get: (r: any) => r.paid.toLowerCase(),      cell: (r: any) => txt(r.paid) },
     { key: 'referrer',    label: 'Referrer',      type: 'text',                    get: (r: any) => r.referrer.toLowerCase(),  cell: (r: any) => txt(r.referrer) },
@@ -288,7 +317,7 @@ import BareLayout from '../layouts/BareLayout.astro';
   function token(): string { try { return localStorage.getItem(TOKEN_KEY) || ''; } catch { return ''; } }
   function setToken(t: string) { try { if (t) localStorage.setItem(TOKEN_KEY, t); else localStorage.removeItem(TOKEN_KEY); } catch {} }
   function showGate(msg?: string) {
-    gate.hidden = false; body.hidden = true; signout.hidden = true; purgeBtn.hidden = true;
+    gate.hidden = false; body.hidden = true; signout.hidden = true;
     if (msg) { gateErr.textContent = msg; gateErr.hidden = false; }
   }
 
@@ -307,8 +336,9 @@ import BareLayout from '../layouts/BareLayout.astro';
     return rows.filter((r) => {
       for (const k in fs) { if (String(r[k] || '') !== fs[k]) return false; }
       if (q) {
-        const hay = [r.name, r.revenue, r.interest, r.email, r.phone, r.utmSource, r.utmMedium,
-          r.utmCampaign, r.utmContent, r.utmTerm, r.from, r.paid, r.referrer, r.device, r.ip,
+        const hay = [r.name, r.revenue, r.email, r.phone, r.utmSource, r.utmMedium,
+          r.utmCampaign, r.utmContent, r.utmTerm, r.campaign, r.adset, r.ad,
+          r.from, r.paid, r.referrer, r.device, r.ip,
           r.entryLabel, r.j.query, r.j.id].join(' ').toLowerCase();
         if (!hay.includes(q)) return false;
       }
@@ -329,7 +359,7 @@ import BareLayout from '../layouts/BareLayout.astro';
   function populateFilters(rows: any[]) {
     fillSelect('stage', STAGE_ORDER.map((s) => [s, stageLabel(s)]));
     fillSelect('entryKind', distinct(rows.map((r) => r.entryKind)).map((v) => [v, ENTRY_LABEL[v] || v]));
-    ['utmSource', 'utmMedium', 'utmCampaign'].forEach((k) =>
+    ['utmSource', 'campaign', 'adset', 'ad'].forEach((k) =>
       fillSelect(k, distinct(rows.map((r) => r[k])).map((v) => [v, v])));
   }
 
@@ -389,6 +419,7 @@ import BareLayout from '../layouts/BareLayout.astro';
     const filtered = filterRows(ALL_ROWS);
     renderTiles(filtered);
     renderTable(filtered);
+    renderAds(filtered);
     countEl.textContent = `· ${filtered.length} of ${ALL_ROWS.length}`;
   }
 
@@ -400,6 +431,40 @@ import BareLayout from '../layouts/BareLayout.astro';
         `<tr><td>${esc(s.source)}</td><td>${s.total}</td><td>${s.booked}</td><td class="${s.booked ? 'is-good' : ''}">${s.rate}%</td></tr>`
       ).join('') + '</tbody></table>';
   }
+
+  // Ad-level rollup (client-side, honours the current table filters). Group
+  // by ad / adset / campaign; rows carry the parent names so an ad is never
+  // ambiguous across adsets.
+  const adsEl = $('[data-pl-ads]');
+  const adGroupSel = document.querySelector<HTMLSelectElement>('[data-pl-adgroup]')!;
+  function renderAds(rows: any[]) {
+    const by = adGroupSel.value || 'ad';
+    const adRows = rows.filter((r) => r.campaign || r.adset || r.ad);
+    if (!adRows.length) { adsEl.innerHTML = '<p class="pl-empty">No ad traffic yet.</p>'; return; }
+    const keyOf = (r: any) => by === 'campaign' ? [r.campaign] : by === 'adset' ? [r.campaign, r.adset] : [r.campaign, r.adset, r.ad];
+    const map = new Map<string, any>();
+    adRows.forEach((r) => {
+      const parts = keyOf(r); const k = parts.join('|');
+      const e = map.get(k) || { parts, total: 0, started: 0, details: 0, booked: 0 };
+      e.total++;
+      if (r.stageRank >= 1) e.started++;
+      if (r.stageRank >= 3) e.details++;
+      if (r.stage === 'booked') e.booked++;
+      map.set(k, e);
+    });
+    const list = [...map.values()].sort((a, b) => b.booked - a.booked || b.details - a.details || b.total - a.total);
+    const heads = by === 'campaign' ? ['Campaign'] : by === 'adset' ? ['Campaign', 'Adset'] : ['Campaign', 'Adset', 'Ad'];
+    const pct = (n: number, d: number) => d ? Math.round((n / d) * 100) + '%' : '0%';
+    adsEl.innerHTML =
+      '<table class="pl-src pl-src--ads"><thead><tr>' + heads.map((h) => '<th class="is-name">' + h + '</th>').join('') +
+      '<th>Visitors</th><th>Started</th><th>Details</th><th>Booked</th><th>Rate</th></tr></thead><tbody>' +
+      list.map((e) =>
+        '<tr>' + e.parts.map((p: string) => '<td class="is-name">' + (p ? esc(p) : '<span class="pl-dash">-</span>') + '</td>').join('') +
+        '<td>' + e.total + '</td><td>' + e.started + '</td><td>' + e.details + '</td><td>' + e.booked +
+        '</td><td class="' + (e.booked ? 'is-good' : '') + '">' + pct(e.booked, e.total) + '</td></tr>'
+      ).join('') + '</tbody></table>';
+  }
+  adGroupSel.addEventListener('change', () => renderAds(filterRows(ALL_ROWS)));
 
   function renderFunnel(funnel: any[]) {
     const top = funnel.length ? funnel[0].count : 0;
@@ -472,12 +537,12 @@ import BareLayout from '../layouts/BareLayout.astro';
     const cols: [string, (r: any) => any][] = [
       ['Name', (r) => r.name], ['Reached', (r) => stageLabel(r.stage)],
       ['Landed', (r) => r.when ? new Date(r.when).toISOString() : ''],
-      ['Interested in', (r) => r.interest], ['Revenue', (r) => r.revenue], ['Email', (r) => r.email], ['Phone', (r) => r.phone],
+      ['Revenue', (r) => r.revenue], ['Email', (r) => r.email], ['Phone', (r) => r.phone],
       ['t_to_offer_s', (r) => secs(r.tOffer)], ['t_to_revenue_s', (r) => secs(r.tRevenue)], ['t_to_details_s', (r) => secs(r.tDetails)],
       ['t_to_calendar_s', (r) => secs(r.tCal)], ['t_to_booked_s', (r) => secs(r.tBooked)], ['on_page_s', (r) => secs(r.dwell)],
       ['Entry', (r) => r.entryLabel], ['Ads (FB/IG)', (r) => r.ads === 'yes' ? 'Yes' : 'No'],
-      ['utm_source', (r) => r.utmSource], ['utm_medium', (r) => r.utmMedium], ['utm_campaign', (r) => r.utmCampaign],
-      ['utm_content', (r) => r.utmContent], ['utm_term', (r) => r.utmTerm],
+      ['Platform', (r) => r.utmSource], ['Campaign', (r) => r.campaign], ['Adset', (r) => r.adset], ['Ad', (r) => r.ad],
+      ['campaign_id', (r) => r.utmCampaign], ['adset_id', (r) => r.utmTerm], ['ad_id', (r) => r.utmContent],
       ['from', (r) => r.from], ['Paid', (r) => r.paid], ['Referrer', (r) => r.j.referrer || ''],
       ['Device', (r) => r.device], ['IP', (r) => r.ip], ['Query', (r) => r.j.query || ''], ['Journey id', (r) => r.j.id || ''],
     ];
@@ -513,14 +578,14 @@ import BareLayout from '../layouts/BareLayout.astro';
     if (!r.ok) { note.textContent = `Server error (${r.status}).`; note.hidden = false; return; }
 
     const data = await r.json();
-    note.hidden = true; gate.hidden = true; body.hidden = false; signout.hidden = false; purgeBtn.hidden = false;
+    note.hidden = true; gate.hidden = true; body.hidden = false; signout.hidden = false;
     const journeys = Array.isArray(data.journeys) ? data.journeys : [];
     ALL_ROWS = journeys.map(toRow);
     renderFunnel(Array.isArray(data.funnel) ? data.funnel : []);
     renderVsl(data.vslRetention || { starts: 0, seconds: [], duration: 0 });
     renderSources(Array.isArray(data.sources) ? data.sources : []);
     applyAndRender();
-    windowEl.textContent = '· last 7 days';
+    windowEl.textContent = '· all time';
     updatedEl.textContent = `Updated ${new Date().toLocaleTimeString()}`;
 
     const rs = REDIS_STATE[data.redisStatus as string];
@@ -572,25 +637,6 @@ import BareLayout from '../layouts/BareLayout.astro';
   });
   $('[data-pl-refresh]').addEventListener('click', () => load());
   signout.addEventListener('click', () => { setToken(''); showGate(); });
-
-  // Deletes visitor journeys older than 3 days (leaves lead records alone -
-  // see the endpoint comment). Irreversible, so confirm before firing.
-  purgeBtn.addEventListener('click', async () => {
-    const days = 3;
-    if (!window.confirm(`Permanently delete every visitor journey older than ${days} days? This can't be undone.`)) return;
-    purgeBtn.disabled = true;
-    try {
-      const r = await fetch(`/api/pulse?token=${encodeURIComponent(token())}&days=${days}`, { method: 'DELETE' });
-      const data = await r.json();
-      if (!r.ok || !data.ok) { window.alert(`Purge failed: ${data.error || r.status}`); return; }
-      window.alert(`Removed ${data.removed} journey${data.removed === 1 ? '' : 's'} older than ${days} days.`);
-      load();
-    } catch {
-      window.alert('Could not reach the server.');
-    } finally {
-      purgeBtn.disabled = false;
-    }
-  });
 
   const urlToken = new URLSearchParams(location.search).get('token');
   if (urlToken) { setToken(urlToken); history.replaceState(null, '', location.pathname); }
@@ -658,6 +704,8 @@ import BareLayout from '../layouts/BareLayout.astro';
   .pl-src th, .pl-src td { text-align: right; padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--line); }
   .pl-src th:first-child, .pl-src td:first-child { text-align: left; }
   .pl-src thead th { font-size: var(--fs-caption); text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-50); font-weight: var(--fw-body-semi); }
+  .pl-src--ads th, .pl-src--ads td { text-align: right; }
+  .pl-src--ads th.is-name, .pl-src--ads td.is-name { text-align: left; }
   .pl-src td.is-good { color: #3F7F4F; font-weight: var(--fw-body-semi); }
 
   /* visitors toolbar */

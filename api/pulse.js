@@ -8,7 +8,7 @@ import { createHash } from 'node:crypto';
    funnel (landed → offer → revenue → details → calendar → booked). This
    endpoint:
 
-     • upserts the journey in Redis (7-day TTL) and indexes it, so /pulse
+     • upserts the journey in Redis (kept forever) and indexes it, so /pulse
        (the private dashboard) can show who came through and exactly where
        each person dropped off.
 
@@ -33,9 +33,11 @@ const WEB3FORMS_KEY = process.env.WEB3FORMS_BOOKING_KEY || '874d9b71-c185-4a8c-9
 // visitor list — which holds names/emails/phones — is never wide open).
 const DASHBOARD_TOKEN = process.env.PULSE_TOKEN || '';
 
-const JOURNEY_TTL_S = 60 * 60 * 24 * 7; // keep each journey 7 days
+// Journeys and the index are kept FOREVER - no TTL, no trimming, no purge.
+// The dashboard is the long-term record of every visitor; nothing here may
+// silently drop rows. (Dedupe markers below still expire - they're not data.)
+const DEDUPE_TTL_S = 60 * 60 * 24 * 90; // emailed / CAPI-sent markers only
 const RECENT_KEY = 'pulse:recent';
-const RECENT_KEEP = 500; // cap the index so it can't grow without bound
 const WRITE_RATE_MAX = 120; // per-IP beacons per window (flood guard)
 const WRITE_RATE_WINDOW_S = 60;
 // Skip the email for sub-1.5s visits that left no trace — that's prefetch and
@@ -181,9 +183,8 @@ async function ingest(req, res) {
   };
 
   try {
-    await redis.set(key, journey, { ex: JOURNEY_TTL_S });
+    await redis.set(key, journey); // no expiry - kept forever
     await redis.zadd(RECENT_KEY, { score: now, member: b.id });
-    await redis.zremrangebyrank(RECENT_KEY, 0, -(RECENT_KEEP + 1)); // trim oldest
   } catch (err) {
     console.warn('pulse store failed:', err.message);
   }
@@ -216,7 +217,7 @@ async function maybeEmail(redis, j) {
   if (dwell < MIN_DWELL_FOR_EMAIL_MS && !engaged) return; // prefetch/bot bounce
 
   try {
-    const won = await redis.set(`pulse:emailed:${j.id}`, 1, { nx: true, ex: JOURNEY_TTL_S });
+    const won = await redis.set(`pulse:emailed:${j.id}`, 1, { nx: true, ex: DEDUPE_TTL_S });
     if (!won) return; // already emailed this visitor
   } catch {
     return;
@@ -308,7 +309,7 @@ async function maybeCapi(redis, j) {
   const events = [];
   const queue = async (name, idPrefix) => {
     try {
-      const won = await redis.set(`capi:${idPrefix}:${j.id}`, 1, { nx: true, ex: JOURNEY_TTL_S });
+      const won = await redis.set(`capi:${idPrefix}:${j.id}`, 1, { nx: true, ex: DEDUPE_TTL_S });
       if (!won) return; // this event already sent for this journey
     } catch { return; }
     events.push({
@@ -351,7 +352,6 @@ async function maybeCapi(redis, j) {
 // ONE record per lead: status 'partial' once we have an identifier, upgraded to
 // 'booked' when Calendly completes, never downgraded. Internal follow-up data only.
 const LEADS_KEY = 'pulse:leads';
-const LEAD_TTL_S = 60 * 60 * 24 * 90; // keep booking leads 90 days
 export async function upsertLead(redis, j, now) {
   const idRaw = j.email || j.fullName;
   if (!redis || !idRaw) return; // no identifier yet → nothing to key on
@@ -382,7 +382,7 @@ export async function upsertLead(redis, j, now) {
   };
 
   try {
-    await redis.set(key, record, { ex: LEAD_TTL_S });
+    await redis.set(key, record); // no expiry - kept forever
     await redis.zadd(LEADS_KEY, { score: now, member: leadKey });
   } catch (err) {
     console.warn('pulse lead upsert failed:', err.message);
@@ -408,7 +408,7 @@ async function dashboard(req, res) {
   let ids = [];
   let redisStatus = 'connected';
   try {
-    ids = await redis.zrange(RECENT_KEY, 0, 199, { rev: true }); // newest first
+    ids = await redis.zrange(RECENT_KEY, 0, -1, { rev: true }); // ALL, newest first
   } catch (err) {
     console.warn('pulse zrange failed:', err.message);
     redisStatus = 'unreachable'; // DB is dead / creds wrong — surfaced on the dashboard
@@ -418,8 +418,11 @@ async function dashboard(req, res) {
   let journeys = [];
   if (ids.length) {
     try {
-      const rows = await redis.mget(...ids.map((id) => `pulse:j:${id}`));
-      journeys = (rows || []).filter((r) => r && typeof r === 'object');
+      const CHUNK = 500; // mget in chunks so a long history never blows a request
+      for (let i = 0; i < ids.length; i += CHUNK) {
+        const rows = await redis.mget(...ids.slice(i, i + CHUNK).map((id) => `pulse:j:${id}`));
+        for (const r of rows || []) if (r && typeof r === 'object') journeys.push(r);
+      }
     } catch (err) {
       console.warn('pulse mget failed:', err.message);
     }
@@ -494,53 +497,10 @@ function buildFunnel(journeys) {
   }));
 }
 
-// -------------------------------------------------------------- purge (DELETE)
-// Deletes visitor journeys that landed on/before a cutoff (default 3 days
-// ago) — the raw tracking rows the dashboard table shows. Leaves the separate
-// lead records (pulse:lead:*, upsertLead above) alone: those are real
-// applicants' contact info for follow-up, not tracking noise, so they keep
-// their own 90-day TTL regardless of this purge.
-async function purge(req, res) {
-  if (!DASHBOARD_TOKEN) {
-    return res.status(503).json({ ok: false, error: 'Dashboard is off. Set a PULSE_TOKEN env var to turn it on.' });
-  }
-  const token = (req.query && (req.query.token || req.query.t)) || '';
-  if (token !== DASHBOARD_TOKEN) {
-    return res.status(401).json({ ok: false, error: 'Bad or missing token.' });
-  }
-
-  const redis = getRedis();
-  if (!redis) return res.status(200).json({ ok: true, removed: 0 });
-
-  const days = Math.max(1, Number(req.query.days) || 3);
-  const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
-
-  let staleIds = [];
-  try {
-    staleIds = await redis.zrange(RECENT_KEY, 0, cutoff, { byScore: true });
-  } catch (err) {
-    console.warn('pulse purge zrange failed:', err.message);
-    return res.status(500).json({ ok: false, error: 'Could not read old entries.' });
-  }
-  staleIds = Array.isArray(staleIds) ? staleIds : [];
-  if (!staleIds.length) return res.status(200).json({ ok: true, removed: 0 });
-
-  try {
-    await redis.del(...staleIds.map((id) => `pulse:j:${id}`));
-    await redis.zremrangebyscore(RECENT_KEY, 0, cutoff);
-  } catch (err) {
-    console.warn('pulse purge delete failed:', err.message);
-    return res.status(500).json({ ok: false, error: 'Delete failed partway through.' });
-  }
-
-  return res.status(200).json({ ok: true, removed: staleIds.length });
-}
-
 // ------------------------------------------------------------------- handler
 export default async function handler(req, res) {
   if (req.method === 'POST') return ingest(req, res);
   if (req.method === 'GET') return dashboard(req, res);
-  if (req.method === 'DELETE') return purge(req, res);
-  res.setHeader('Allow', 'POST, GET, DELETE');
+  res.setHeader('Allow', 'POST, GET');
   return res.status(405).json({ ok: false, error: 'Method not allowed' });
 }
