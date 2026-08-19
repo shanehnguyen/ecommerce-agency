@@ -1,14 +1,21 @@
 /* =====================================================================
    pricing.ts — SINGLE SOURCE OF TRUTH for the two offers.
-   Straight from the catalog (00-MASTER-OFFER.md §4.3 and §4.4): one page
-   for a single campaign, or the full store — sold as, respectively, a
-   fixed-price single-page build and the last website you'll need.
-   Used on both the homepage pricing section AND the /apply "which option"
-   question, so the two never drift apart. Change it once, here.
+   Two depths of the same job: the three pages that decide whether people
+   buy (Essentials), or the whole store with the conversion guarantee
+   attached (Conversion Build). Used on both the homepage pricing section
+   AND /apply, so the two never drift apart. Change it once, here.
 
-   The homepage renders the value STACK (stack + bonuses + totalValue +
-   price) when present; /apply keeps rendering the shorter `features`
-   checklist — same data file, two densities.
+   Each card LEADS with the promise it's liable for, not with scope — the
+   guarantee is the first `stack` line on both. The two guarantees differ
+   because what's measurable differs: a store with no traffic yet has no
+   baseline to beat, so Essentials promises a date instead of a number.
+
+   Bonuses live on Essentials ONLY. Stacking extras onto the $4,500 makes
+   it read like it needs justifying; at that price they're assumed.
+
+   PriceCardContent renders `stack` when present and falls back to
+   `features`. Both cards carry a stack, so `features` is currently the
+   unused fallback — kept accurate so it's safe if a stack is ever cut.
    Value anchors are deliberately BELOW market (agencies charge $10k-25k
    for this scope) so the math stays believable, never inflated.
    ===================================================================== */
@@ -21,7 +28,7 @@ export type PriceCard = {
   qualifier: string;
   cta: string;
   event: string;
-  /** Short checklist used on /apply's compact offer cards. */
+  /** Fallback checklist — only rendered if `stack` is absent. */
   features: string[];
   /** Homepage "what you get" list — plain-language deliverables, no
    * per-item dollar tags (self-assigned line prices read as invented;
@@ -45,39 +52,48 @@ export const priceCards: PriceCard[] = [
   {
     eyebrow: 'Option 1 · Scale everything',
     name: 'The 14-Day Conversion Build',
-    description: 'Your whole store, built to convert higher.',
+    description: "Perfect if you're an established brand looking to get more out of the traffic you already have.",
     price: '$4,500', qualifier: 'one-time', featured: true,
     cta: 'Build my website', event: 'Pricing:Full',
     features: [
-      'Option 2 but for every page',
-      'Every page optimized for conversion + unlimited revisions',
-      'Higher conversion rates (or we work for free)',
-      'Done-for-you & delivered in 14 days',
-    ],
-    stack: [
-      'Every page, rebuilt: home, product, cart, checkout',
-      'All the words written for you',
+      'Beats your old conversion rate, or I keep working free',
+      'Every page you need to convert traffic from any source',
+      'Every word written for you',
       'Unlimited changes until you love it',
     ],
-    bonuses: [
-      'Loads in under 2 seconds',
-      'Email capture built in',
-      'Breakdown of your top 3 competitors',
+    stack: [
+      'Beats your old conversion rate, or I keep working free',
+      'Every page you need to convert traffic from any source',
+      'Every word written for you',
+      'Unlimited changes until you love it',
+      'Live in 14 days',
     ],
     anchor: 'Agencies charge $15,000+ for less.',
     riskFree: 'Pay $0 until you approve it.',
   },
   {
-    eyebrow: 'Option 2 · Prove it fast',
-    name: 'The 7-Day Campaign Page',
-    description: 'One page for one offer. Made for ads.',
+    eyebrow: 'Option 2 · Start here',
+    name: 'The 10-Day Essentials Build',
+    description: "Perfect if you're just launching your brand or you just haven't been seeing results.",
     price: '$2,000', qualifier: 'one-time',
-    cta: 'Build my landing page', event: 'Pricing:Landing',
-    features: ['Customer research and ad audit', 'Format selection: advertorial, listicle, quiz, comparison, or product page', 'Copywriting', 'Design and development'],
-    stack: [
-      'We study your customers and your ads',
+    // event name kept as-is on purpose: renaming it splits the funnel
+    // history in two. The offer changed; the tracking key shouldn't.
+    cta: 'Build my store', event: 'Pricing:Landing',
+    features: [
+      "Live in 10 days or you don't pay",
+      'Homepage, collection, and product page rebuilt',
+      'We study your customers and traffic',
       'Every word written to sell',
-      'Designed, built, and live in 7 days',
+    ],
+    stack: [
+      "Live in 10 days or you don't pay",
+      'Homepage, collection, and product page rebuilt',
+      'We study your customers and traffic',
+      'Every word written to sell',
+    ],
+    bonuses: [
+      'Loads in under two seconds',
+      'Email capture built in',
     ],
     riskFree: 'Pay $0 until you approve it.',
   },
