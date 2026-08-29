@@ -26,7 +26,7 @@ export const site = {
   phone: '(408) 908-8131',          // optional, leave blank to hide
 
   // ---- The single CTA (identical on every button, per the structure spec)
-  cta: { label: 'GET YOUR FREE HOMEPAGE', href: '/apply' },
+  cta: { label: 'SEE YOUR HOMEPAGE FIRST', href: '/apply' },
 
   // ---- Scarcity — evergreen copy ("I only take N builds a month"), so
   // nothing goes stale. slotsOpen is the TRUE capacity cap; only change it

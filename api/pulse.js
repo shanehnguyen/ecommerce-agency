@@ -5,7 +5,7 @@ import { createHash } from 'node:crypto';
    /api/pulse — booking-funnel telemetry + drop-off alerts.
 
    The /apply page beacons a "journey" here as a visitor moves through the
-   funnel (landed → offer → revenue → details → calendar → booked). This
+   funnel (landed → revenue → traffic → details → calendar → booked). This
    endpoint:
 
      • upserts the journey in Redis (kept forever) and indexes it, so /pulse
@@ -46,11 +46,12 @@ const WRITE_RATE_WINDOW_S = 60;
 const MIN_DWELL_FOR_EMAIL_MS = 1500;
 
 // Funnel stages, in order. A journey's stage only ever moves forward.
-const STAGES = ['landed', 'offer', 'revenue', 'details', 'calendar', 'booked'];
+const STAGES = ['landed', 'offer', 'revenue', 'traffic', 'details', 'calendar', 'booked'];
 const STAGE_LABEL = {
   landed: 'Just landed on the page',
   offer: 'Picked which option they want',
   revenue: 'Answered monthly revenue',
+  traffic: 'Answered monthly traffic',
   details: 'On the contact details step',
   calendar: 'Completed the form — reached the calendar',
   booked: 'Booked a time',
@@ -159,6 +160,7 @@ async function ingest(req, res) {
     id: b.id,
     stage,
     revenue: pick('revenue', 40),
+    traffic: pick('traffic', 40),
     interest: pick('interest', 80),
     fbp: pick('fbp', 120),
     fbc: pick('fbc', 300),
@@ -213,7 +215,7 @@ async function maybeEmail(redis, j) {
   if (!redis) return;
 
   const dwell = (j.updatedAt || 0) - (j.landedAt || 0);
-  const engaged = j.revenue || j.interest || stageIndex(j.stage) > 0;
+  const engaged = j.revenue || j.traffic || j.interest || stageIndex(j.stage) > 0;
   if (dwell < MIN_DWELL_FOR_EMAIL_MS && !engaged) return; // prefetch/bot bounce
 
   try {
@@ -235,6 +237,7 @@ async function maybeEmail(redis, j) {
     'Time on page': fmtDwell(dwell),
     Name: j.fullName || '—',
     'Monthly revenue': j.revenue || '—',
+    'Monthly traffic': j.traffic || '—',
     'Interested in': j.interest || '—',
     'Came from': j.source || j.referrer || 'direct',
   };
@@ -370,6 +373,7 @@ export async function upsertLead(redis, j, now) {
     email: keep(j.email, 'email'),
     phone: keep(j.phone, 'phone'),
     revenue: keep(j.revenue, 'revenue'),
+    traffic: keep(j.traffic, 'traffic'),
     interest: keep(j.interest, 'interest'),
     source: keep(j.source, 'source'),
     referrer: keep(j.referrer, 'referrer'),

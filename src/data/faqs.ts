@@ -3,7 +3,7 @@
    would actually ask them, answered in plain words: short sentences, no
    jargon, one idea per line. Answers are arrays of short paragraphs
    (FAQ.astro renders each as its own <p>; the FAQPage schema joins them).
-   Every fact matches the deal timeline: free design after the call, pay
+   Every fact matches the deal timeline: design first after the call, pay
    only on approval, live by day 14, free work until it outconverts.
    ===================================================================== */
 
@@ -11,10 +11,10 @@ export type Faq = { q: string; a: string | string[] };
 
 export const homeFaqs: Faq[] = [
   {
-    q: 'What do I get for free?',
+    q: 'Do I see it before I buy it?',
     a: [
-      'The call, and your new homepage design.',
-      'You see the design first. If you like it, we build the rest. If you don’t, you walk away and pay nothing.',
+      'Yes. The call and your new homepage design come first.',
+      'You see the design, then you decide. If you like it, we build the rest. If you don’t, you walk away and owe nothing.',
     ],
   },
   {
@@ -28,14 +28,14 @@ export const homeFaqs: Faq[] = [
     q: 'What if it’s not done in 14 days?',
     a: [
       'Then you don’t pay. Simple as that.',
-      'Day 0 is our first call. Day 14 is your new site, live. The free design happens inside those 14 days, not before them.',
+      'Day 0 is our first call. Day 14 is your new site, live. The design happens inside those 14 days, not before them.',
     ],
   },
   {
-    q: 'What if my new site doesn’t sell more?',
+    q: 'How do I know if it actually worked?',
     a: [
-      'We keep working on it for free until it beats your old numbers.',
-      'On day one, we screenshot your current stats together. That’s the number we have to beat. No end date, no excuses.',
+      'We screenshot your current numbers together on day one. That is your baseline.',
+      'Six weeks after launch we sit down and compare the two. Most people who build you a website never come back to tell you whether it worked.',
     ],
   },
   {

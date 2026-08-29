@@ -6,15 +6,18 @@
    <form>; values live in the DOM and persist to sessionStorage so nothing
    is lost. On submit the lead fires to Web3Forms and the Calendly
    calendar takes over the same spot; a booked time shows the confirmation.
-   Exactly 3 questions: which offer (the EXACT same full sales cards as the
-   homepage pricing section, via PriceCardContent — featured card first,
-   scrolling is fine), monthly revenue (no gate — every band goes through),
-   then contact details → calendar. Contact details go last since that's
-   the step that actually submits. */
+   Exactly 3 questions: monthly revenue, monthly traffic, then contact
+   details → calendar. Neither band question gates — every answer moves
+   the form forward; they exist so the call is informed, not to block.
+   Both are asked because either alone misfires: revenue misses the
+   offline-first brand (real money, few sessions), traffic misses the
+   funded pre-revenue founder. Contact details go last since that's the
+   step that actually submits. */
 import BareLayout from '../layouts/BareLayout.astro';
 import { site } from '../data/site.config';
 
 const revenueBands = ['Pre-revenue', 'Under $10k', '$10k–$30k', '$30k–$60k', '$60k–$100k', '$100k+'];
+const trafficBands = ['Not launched yet', 'Under 2,500', '2,500–10,000', '10,000–25,000', '25,000–50,000', '50,000+'];
 ---
 <BareLayout
   title="Apply: Get your build in 14 days"
@@ -27,7 +30,7 @@ const revenueBands = ['Pre-revenue', 'Under $10k', '$10k–$30k', '$30k–$60k',
 
         <header class="bk-intro">
           <h1 class="bk-intro__h1">Claim your free homepage design.</h1>
-          <p class="bk-intro__sub">Two questions away from getting your new home page. You pay $0 until you approve it.</p>
+          <p class="bk-intro__sub">Three questions away from getting your new home page. You pay $0 until you approve it.</p>
         </header>
 
         <form class="bk-form" data-book-form novalidate>
@@ -36,7 +39,7 @@ const revenueBands = ['Pre-revenue', 'Under $10k', '$10k–$30k', '$30k–$60k',
                The old "which option" question was killed: /pulse showed
                visitors dying there. Product choice is a call question. -->
           <fieldset class="bk-step" data-step>
-            <p class="bk-count">1/2</p>
+            <p class="bk-count">1/3</p>
             <h2 class="bk-q">How much monthly revenue does your ecommerce business do?</h2>
             <div class="bk-field" data-field="revenue">
               <div class="bk-cards bk-cards--row" data-name="revenue" data-radio>
@@ -45,10 +48,25 @@ const revenueBands = ['Pre-revenue', 'Under $10k', '$10k–$30k', '$30k–$60k',
             </div>
           </fieldset>
 
-          <!-- Q2 — NAME + EMAIL + PHONE → submit -->
+          <!-- Q2 — TRAFFIC (no gate). Revenue alone misses the offline-first
+               brand (real money, few sessions); traffic alone misses the
+               funded pre-revenue founder. The PAIR is what decides fit, so
+               both are asked and neither one blocks. -->
           <fieldset class="bk-step" data-step hidden>
             <button type="button" class="bk-back" data-back><span aria-hidden="true">←</span> Back</button>
-            <p class="bk-count">2/2</p>
+            <p class="bk-count">2/3</p>
+            <h2 class="bk-q">How many visitors does your site get a month? A rough number is fine.</h2>
+            <div class="bk-field" data-field="traffic">
+              <div class="bk-cards bk-cards--row" data-name="traffic" data-radio>
+                {trafficBands.map((b) => <button type="button" class="bk-card" data-value={b}>{b}</button>)}
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Q3 — NAME + EMAIL + PHONE → submit -->
+          <fieldset class="bk-step" data-step hidden>
+            <button type="button" class="bk-back" data-back><span aria-hidden="true">←</span> Back</button>
+            <p class="bk-count">3/3</p>
             <h2 class="bk-q">Last thing: let’s lock this in and build your personalized strategy.</h2>
             <div class="bk-fields">
               <div class="bk-field" data-field="fullName">
@@ -234,7 +252,7 @@ const revenueBands = ['Pre-revenue', 'Under $10k', '$10k–$30k', '$30k–$60k',
     const nowMs = () => Date.now();
     const PULSE = { id: pulseId(), stage: 'landed', landedAt: nowMs(), stageTimes: {} as Record<string, number>, ...pulseSource() };
     // 'offer' kept in the ranking for old stored journeys; the form no longer has that step.
-    const PSTAGES = ['landed', 'offer', 'revenue', 'details', 'calendar', 'booked'];
+    const PSTAGES = ['landed', 'offer', 'revenue', 'traffic', 'details', 'calendar', 'booked'];
     const prank = (s: string) => PSTAGES.indexOf(s);
     PULSE.stageTimes.landed = PULSE.landedAt; // stamp the landing as the first stage time
     const pulsePayload = (final: boolean) => {
@@ -242,6 +260,7 @@ const revenueBands = ['Pre-revenue', 'Under $10k', '$10k–$30k', '$30k–$60k',
       return {
         id: PULSE.id, stage: PULSE.stage,
         revenue: answers.revenue || '',
+        traffic: answers.traffic || '',
         fullName: answers.fullName || '',
         email: answers.email || '',
         phone: answers.phone || '',
@@ -264,9 +283,9 @@ const revenueBands = ['Pre-revenue', 'Under $10k', '$10k–$30k', '$30k–$60k',
       }
       if (up || final) pulseSend(pulsePayload(final), final);
     };
-    // Furthest step → stage. Q1 revenue · Q2 details → calendar → booked.
+    // Furthest step → stage. Q1 revenue · Q2 traffic · Q3 details → calendar → booked.
     const stageForCurrent = () =>
-      current >= 1 ? 'details' : (answers.revenue ? 'revenue' : 'landed');
+      current >= 2 ? 'details' : current >= 1 ? 'traffic' : (answers.revenue ? 'revenue' : 'landed');
 
     // Fire the "started applying" signal once, the moment they pick a revenue
     // band — marks top-of-funnel intent even if they never finish.
@@ -337,6 +356,7 @@ const revenueBands = ['Pre-revenue', 'Under $10k', '$10k–$30k', '$30k–$60k',
       fd.append('Email', answers.email || '');
       fd.append('Phone', answers.phone || '');
       fd.append('Monthly revenue', answers.revenue || '');
+      fd.append('Monthly traffic', answers.traffic || '');
       if (window.location.search) fd.append('Query params', window.location.search);
       if (document.referrer) fd.append('Referrer', document.referrer);
       fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd }).catch(() => { /* best-effort */ });

@@ -1,14 +1,12 @@
 /* =====================================================================
    pricing.ts — SINGLE SOURCE OF TRUTH for the two offers.
    Two depths of the same job: the three pages that decide whether people
-   buy (Essentials), or the whole store with the conversion guarantee
-   attached (Conversion Build). Used on both the homepage pricing section
-   AND /apply, so the two never drift apart. Change it once, here.
+   buy (Essentials), or the whole store (Conversion Build). Used on
+   both the homepage pricing section AND /apply, so the two never
+   drift apart. Change it once, here.
 
    Each card LEADS with the promise it's liable for, not with scope — the
-   guarantee is the first `stack` line on both. The two guarantees differ
-   because what's measurable differs: a store with no traffic yet has no
-   baseline to beat, so Essentials promises a date instead of a number.
+   delivery-date guarantee is the first `stack` line on both.
 
    Bonuses live on Essentials ONLY. Stacking extras onto the $4,500 makes
    it read like it needs justifying; at that price they're assumed.
@@ -39,7 +37,7 @@ export type PriceCard = {
   /** One provable market anchor shown above the price, e.g. what agencies
    * charge for the same scope (verifiable, unlike a made-up total). */
   anchor?: string;
-  /** Risk-reversal line under the price: the see-it-before-you-pay promise.
+  /** Risk-reversal line under the price: the see-it-before-you-buy promise.
    * Mechanics live in the FAQ ("What's the free homepage design?"). */
   riskFree?: string;
   /** When true, renders as wrapped chips instead of a checklist, with
@@ -56,20 +54,19 @@ export const priceCards: PriceCard[] = [
     price: '$4,500', qualifier: 'one-time', featured: true,
     cta: 'Build my website', event: 'Pricing:Full',
     features: [
-      'Beats your old conversion rate, or I keep working free',
+      "Live in 14 days or you don't pay",
       'Every page you need to convert traffic from any source',
       'Every word written for you',
       'Unlimited changes until you love it',
     ],
     stack: [
-      'Beats your old conversion rate, or I keep working free',
+      "Live in 14 days or you don't pay",
       'Every page you need to convert traffic from any source',
       'Every word written for you',
       'Unlimited changes until you love it',
-      'Live in 14 days',
     ],
     anchor: 'Agencies charge $15,000+ for less.',
-    riskFree: 'Pay $0 until you approve it.',
+    riskFree: 'See it before you buy it.',
   },
   {
     eyebrow: 'Option 2 · Start here',
@@ -95,6 +92,6 @@ export const priceCards: PriceCard[] = [
       'Loads in under two seconds',
       'Email capture built in',
     ],
-    riskFree: 'Pay $0 until you approve it.',
+    riskFree: 'See it before you buy it.',
   },
 ];

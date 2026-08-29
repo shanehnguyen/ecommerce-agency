@@ -131,13 +131,13 @@ import BareLayout from '../layouts/BareLayout.astro';
     'not-configured': { label: '● database not configured', cls: 'is-bad' },
   };
 
-  const STAGE_ORDER = ['landed', 'offer', 'revenue', 'details', 'calendar', 'booked'];
+  const STAGE_ORDER = ['landed', 'offer', 'revenue', 'traffic', 'details', 'calendar', 'booked'];
   const STAGE_LABELS: Record<string, string> = {
-    landed: 'Landed', offer: 'Picked offer', revenue: 'Revenue answered',
+    landed: 'Landed', offer: 'Picked offer', revenue: 'Revenue answered', traffic: 'Traffic answered',
     details: 'On details', calendar: 'At calendar', booked: 'Booked',
   };
   const STAGE_TONE: Record<string, string> = {
-    landed: 'cool', offer: 'cool', revenue: 'mid', details: 'warm', calendar: 'good', booked: 'good',
+    landed: 'cool', offer: 'cool', revenue: 'mid', traffic: 'mid', details: 'warm', calendar: 'good', booked: 'good',
   };
   const ENTRY_LABEL: Record<string, string> = { cta: 'On-site CTA', ad: 'Ad / tagged', ref: 'Referral', direct: 'Direct' };
   const stageLabel = (s: string) => STAGE_LABELS[s] || s;
@@ -237,9 +237,10 @@ import BareLayout from '../layouts/BareLayout.astro';
       stage: j.stage || 'landed',
       stageRank: stageRankOf(j.stage || 'landed'),
       revenue: j.revenue || '',
+      traffic: j.traffic || '',
       email: j.email || '',
       phone: j.phone || '',
-      tRevenue: elapsed('revenue'), tOffer: elapsed('offer'), tDetails: elapsed('details'),
+      tRevenue: elapsed('revenue'), tTraffic: elapsed('traffic'), tOffer: elapsed('offer'), tDetails: elapsed('details'),
       tCal: elapsed('calendar'), tBooked: elapsed('booked'),
       dwell: (Number(j.updatedAt) || landed) - landed,
       entryKind: entry.kind, entryLabel: entry.label,
@@ -271,10 +272,12 @@ import BareLayout from '../layouts/BareLayout.astro';
     { key: 'reached',     label: 'Reached',       type: 'num',                     get: (r: any) => r.stageRank,               cell: badgeCell },
     { key: 'when',        label: 'Landed',        type: 'num',                     get: (r: any) => r.when,                    cell: whenCell },
     { key: 'revenue',     label: 'Revenue · Q1',  type: 'text',                    get: (r: any) => r.revenue.toLowerCase(),   cell: (r: any) => txt(r.revenue) },
-    { key: 'email',       label: 'Email · Q2',    type: 'text',                    get: (r: any) => r.email.toLowerCase(),     cell: (r: any) => txt(r.email) },
-    { key: 'phone',       label: 'Phone · Q2',    type: 'text',                    get: (r: any) => r.phone.toLowerCase(),     cell: (r: any) => txt(r.phone) },
+    { key: 'traffic',     label: 'Traffic · Q2',  type: 'text',                    get: (r: any) => r.traffic.toLowerCase(),   cell: (r: any) => txt(r.traffic) },
+    { key: 'email',       label: 'Email · Q3',    type: 'text',                    get: (r: any) => r.email.toLowerCase(),     cell: (r: any) => txt(r.email) },
+    { key: 'phone',       label: 'Phone · Q3',    type: 'text',                    get: (r: any) => r.phone.toLowerCase(),     cell: (r: any) => txt(r.phone) },
     { key: 'tOffer',      label: '→ Offer',       type: 'numNull',                 get: (r: any) => r.tOffer,                  cell: (r: any) => elapsedCell(r.tOffer) },
     { key: 'tRevenue',    label: '→ Revenue',     type: 'numNull',                 get: (r: any) => r.tRevenue,                cell: (r: any) => elapsedCell(r.tRevenue) },
+    { key: 'tTraffic',    label: '→ Traffic',     type: 'numNull',                 get: (r: any) => r.tTraffic,                cell: (r: any) => elapsedCell(r.tTraffic) },
     { key: 'tDetails',    label: '→ Details',     type: 'numNull',                 get: (r: any) => r.tDetails,                cell: (r: any) => elapsedCell(r.tDetails) },
     { key: 'tCal',        label: '→ Calendar',    type: 'numNull',                 get: (r: any) => r.tCal,                    cell: (r: any) => elapsedCell(r.tCal) },
     { key: 'tBooked',     label: '→ Booked',      type: 'numNull',                 get: (r: any) => r.tBooked,                 cell: (r: any) => elapsedCell(r.tBooked) },
@@ -336,7 +339,7 @@ import BareLayout from '../layouts/BareLayout.astro';
     return rows.filter((r) => {
       for (const k in fs) { if (String(r[k] || '') !== fs[k]) return false; }
       if (q) {
-        const hay = [r.name, r.revenue, r.email, r.phone, r.utmSource, r.utmMedium,
+        const hay = [r.name, r.revenue, r.traffic, r.email, r.phone, r.utmSource, r.utmMedium,
           r.utmCampaign, r.utmContent, r.utmTerm, r.campaign, r.adset, r.ad,
           r.from, r.paid, r.referrer, r.device, r.ip,
           r.entryLabel, r.j.query, r.j.id].join(' ').toLowerCase();
@@ -537,8 +540,8 @@ import BareLayout from '../layouts/BareLayout.astro';
     const cols: [string, (r: any) => any][] = [
       ['Name', (r) => r.name], ['Reached', (r) => stageLabel(r.stage)],
       ['Landed', (r) => r.when ? new Date(r.when).toISOString() : ''],
-      ['Revenue', (r) => r.revenue], ['Email', (r) => r.email], ['Phone', (r) => r.phone],
-      ['t_to_offer_s', (r) => secs(r.tOffer)], ['t_to_revenue_s', (r) => secs(r.tRevenue)], ['t_to_details_s', (r) => secs(r.tDetails)],
+      ['Revenue', (r) => r.revenue], ['Traffic', (r) => r.traffic], ['Email', (r) => r.email], ['Phone', (r) => r.phone],
+      ['t_to_offer_s', (r) => secs(r.tOffer)], ['t_to_revenue_s', (r) => secs(r.tRevenue)], ['t_to_traffic_s', (r) => secs(r.tTraffic)], ['t_to_details_s', (r) => secs(r.tDetails)],
       ['t_to_calendar_s', (r) => secs(r.tCal)], ['t_to_booked_s', (r) => secs(r.tBooked)], ['on_page_s', (r) => secs(r.dwell)],
       ['Entry', (r) => r.entryLabel], ['Ads (FB/IG)', (r) => r.ads === 'yes' ? 'Yes' : 'No'],
       ['Platform', (r) => r.utmSource], ['Campaign', (r) => r.campaign], ['Adset', (r) => r.adset], ['Ad', (r) => r.ad],

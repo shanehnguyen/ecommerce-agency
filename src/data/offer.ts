@@ -76,17 +76,13 @@ export const tiers: Tier[] = [
 
 export const addOns = 'Add-ons priced individually. Migration +$1,500. Copywriting +$1,200.';
 
-// ---- The three guarantees (three separate promises, never merged) ------
+// ---- The guarantees (separate promises, never merged) -----------------
 export type Guarantee = { title: string; body: string };
 
 export const guarantees: Guarantee[] = [
   {
     title: 'Live in 14 days or you don’t pay',
     body: 'The clock starts when you send assets. Miss the date and your balance is waived.',
-  },
-  {
-    title: 'It beats your old numbers',
-    body: 'I keep iterating free for 60 days until your conversion rate beats the baseline we screenshot on day one.',
   },
   {
     title: 'Six-month code warranty',
