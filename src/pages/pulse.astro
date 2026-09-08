@@ -230,17 +230,26 @@ import BareLayout from '../layouts/BareLayout.astro';
   // you see in Ads Manager. Unknown ids show as the raw id. ----
   const ENTITY_NAMES: Record<string, string> = {
     '120248004818180252': 'Ecom Lead Campaign',
-    '120248534129220252': 'Adset2-Variable',
+    // adsets
     '120248004818170252': 'Adset1-Control',
-    '120248534237360252': 'ecomadset3-if-raised-adspend',
-    '120248534284670252': 'ecomadset3-ads-not-problem',
-    '120248534129210252': 'ecomadset3-using-template-2',
-    '120248534273500252': 'ecomadset3-sick-of-freelancers',
-    '120248364918670252': 'ecom-adset2-shopify-templates',
+    '120248534129220252': 'Adset2-Variable',
+    '120248772662900252': 'Adset3-Qualifying',
     // ads under Adset1-Control (120248004818170252)
     '120248004818190252': 'Ad1-Winning-Creative',
     '120248534129230252': 'Ad2-Test-Creative',
     '120248772662910252': 'Ad3-New-Variation',
+    // ads under Adset2-Variable (120248534129220252)
+    '120248364918670252': 'ecom-adset2-shopify-templates',
+    '120248858045700252': 'ecom-adset2-shopify-templates - Copy',
+    '120248534273500252': 'ecomadset3-sick-of-freelancers',
+    '120248534129210252': 'ecomadset3-using-template-2',
+    '120248534237360252': 'ecomadset3-if-raised-adspend',
+    '120248534284670252': 'ecomadset3-ads-not-problem',
+    // ads under Adset3-Qualifying (120248772662900252)
+    '120248772662890252': 'ecom-adset4-theme-editor',
+    '120248772707200252': 'ecom-adset4-spending-on-marketing',
+    '120248772707210252': 'ecom-adset-4-handling-traffic',
+    '120248772707190252': 'ecom-adset-4-freelancers',
   };
   const entityName = (id: string) => (id && ENTITY_NAMES[id]) || id || '';
 
