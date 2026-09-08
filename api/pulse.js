@@ -191,8 +191,8 @@ async function ingest(req, res) {
     console.warn('pulse store failed:', err.message);
   }
 
-  // Partial-lead capture: once we have a name, dedupe-write a lead record keyed
-  // by lead, with a status field, upgraded partial → booked.
+  // Lead capture: only for people who SUBMITTED the form (reached the calendar).
+  // Dedupe-writes one record per lead, status upgraded applied → booked.
   await upsertLead(redis, journey, now);
 
   // Server-side Meta events (Conversions API) — fires once per journey per
@@ -352,10 +352,14 @@ async function maybeCapi(redis, j) {
 }
 
 // Dedupe leads in Redis keyed by email (falling back to name if no email yet).
-// ONE record per lead: status 'partial' once we have an identifier, upgraded to
-// 'booked' when Calendly completes, never downgraded. Internal follow-up data only.
+// ONLY people who actually SUBMITTED the form become leads — reaching 'calendar'
+// is the submit. Someone who typed a name into the details step and left is a
+// drop-off, not a lead; they stay in the journeys list and never land here.
+// ONE record per lead: status 'applied' on submit, upgraded to 'booked' when
+// Calendly completes, never downgraded. Internal follow-up data only.
 const LEADS_KEY = 'pulse:leads';
 export async function upsertLead(redis, j, now) {
+  if (stageIndex(j.stage) < stageIndex('calendar')) return; // never submitted → not a lead
   const idRaw = j.email || j.fullName;
   if (!redis || !idRaw) return; // no identifier yet → nothing to key on
   const leadKey = idRaw.trim().toLowerCase().slice(0, 120);
@@ -365,7 +369,7 @@ export async function upsertLead(redis, j, now) {
   try { prev = await redis.get(key); } catch { /* treat as new */ }
   prev = prev && typeof prev === 'object' ? prev : null;
 
-  // Status only ever climbs: partial → booked, never back to partial.
+  // Status only ever climbs: applied → booked, never back to applied.
   const booked = stageIndex(j.stage) >= stageIndex('booked') || (prev && prev.status === 'booked');
   const keep = (v, k) => v || (prev ? prev[k] : '') || '';
   const record = {
@@ -378,7 +382,7 @@ export async function upsertLead(redis, j, now) {
     source: keep(j.source, 'source'),
     referrer: keep(j.referrer, 'referrer'),
     query: keep(j.query, 'query'),
-    status: booked ? 'booked' : 'partial',
+    status: booked ? 'booked' : 'applied',
     journeyId: j.id,
     ip: (prev && prev.ip) || j.ip || '',
     createdAt: (prev && prev.createdAt) || now,
