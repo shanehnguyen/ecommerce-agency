@@ -143,6 +143,14 @@ import BareLayout from '../layouts/BareLayout.astro';
   const stageLabel = (s: string) => STAGE_LABELS[s] || s;
   const stageRankOf = (s: string) => { const i = STAGE_ORDER.indexOf(s); return i < 0 ? 0 : i; };
 
+  // ---- status = where they left off. Booked if they booked, Lead if they left
+  // contact details but never booked, otherwise the furthest step they reached. ----
+  const isLead = (r: any) => !!(r.email || r.phone);
+  const statusLabel = (r: any) => r.stage === 'booked' ? 'Booked' : (isLead(r) ? 'Lead' : stageLabel(r.stage));
+  const statusTone = (r: any) => r.stage === 'booked' ? 'good' : (isLead(r) ? 'warm' : (STAGE_TONE[r.stage] || 'cool'));
+  // sort key: booked on top, then leads, then everyone else by how far they got
+  const statusRank = (r: any) => r.stage === 'booked' ? 100 : (isLead(r) ? 50 + r.stageRank : r.stageRank);
+
   const esc = (s: any) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] as string));
 
@@ -155,6 +163,14 @@ import BareLayout from '../layouts/BareLayout.astro';
     const h = Math.round(m / 60);
     if (h < 24) return `${h}h ago`;
     return `${Math.round(h / 24)}d ago`;
+  }
+  // ts → "Sep 8, 2:14 PM" (year only when it isn't this year)
+  function fmtDate(ts: number): string {
+    if (!ts) return '';
+    const d = new Date(ts);
+    const opts: any = { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' };
+    if (d.getFullYear() !== new Date().getFullYear()) opts.year = 'numeric';
+    return d.toLocaleString(undefined, opts);
   }
   // ms → compact "12s" / "1m 30s" / "2h 5m"; null/undefined → em dash
   function fmtElapsed(ms: any): string {
@@ -221,6 +237,10 @@ import BareLayout from '../layouts/BareLayout.astro';
     '120248534129210252': 'ecomadset3-using-template-2',
     '120248534273500252': 'ecomadset3-sick-of-freelancers',
     '120248364918670252': 'ecom-adset2-shopify-templates',
+    // ads under Adset1-Control (120248004818170252)
+    '120248004818190252': 'Ad1-Winning-Creative',
+    '120248534129230252': 'Ad2-Test-Creative',
+    '120248772662910252': 'Ad3-New-Variation',
   };
   const entityName = (id: string) => (id && ENTITY_NAMES[id]) || id || '';
 
@@ -262,19 +282,21 @@ import BareLayout from '../layouts/BareLayout.astro';
   const txt = (v: any) => v ? esc(v) : '<span class="pl-dash">-</span>';
   const elapsedCell = (ms: any) => (ms == null) ? '<span class="pl-dash">-</span>' : esc(fmtElapsed(ms));
   const nameCell = (r: any) => r.name ? esc(r.name) : '<span class="pl-anon">Anonymous</span>';
-  const badgeCell = (r: any) => `<span class="pl-badge pl-tone--${STAGE_TONE[r.stage] || 'cool'}">${esc(stageLabel(r.stage))}</span>`;
-  const whenCell = (r: any) => r.when ? `<span title="${esc(new Date(r.when).toLocaleString())}">${esc(ago(r.when))}</span>` : '<span class="pl-dash">-</span>';
+  const badgeCell = (r: any) => `<span class="pl-badge pl-tone--${statusTone(r)}">${esc(statusLabel(r))}</span>`;
+  const whenCell = (r: any) => r.when
+    ? `<span title="${esc(new Date(r.when).toLocaleString() + '  ·  ' + ago(r.when))}">${esc(fmtDate(r.when))}</span>`
+    : '<span class="pl-dash">-</span>';
   const entryCell = (r: any) => r.entryLabel ? `<span class="pl-entry--${r.entryKind}">${esc(r.entryLabel)}</span>` : '<span class="pl-dash">-</span>';
 
   // ---- column model. order = left→right; first is sticky. ----
   const COLUMNS: any[] = [
     { key: 'name',        label: 'Name',          type: 'text',    cls: 'col-biz', get: (r: any) => r.name.toLowerCase(),     cell: nameCell },
-    { key: 'reached',     label: 'Reached',       type: 'num',                     get: (r: any) => r.stageRank,               cell: badgeCell },
-    { key: 'when',        label: 'Landed',        type: 'num',                     get: (r: any) => r.when,                    cell: whenCell },
-    { key: 'revenue',     label: 'Revenue · Q1',  type: 'text',                    get: (r: any) => r.revenue.toLowerCase(),   cell: (r: any) => txt(r.revenue) },
-    { key: 'traffic',     label: 'Traffic · Q2',  type: 'text',                    get: (r: any) => r.traffic.toLowerCase(),   cell: (r: any) => txt(r.traffic) },
     { key: 'email',       label: 'Email · Q3',    type: 'text',                    get: (r: any) => r.email.toLowerCase(),     cell: (r: any) => txt(r.email) },
     { key: 'phone',       label: 'Phone · Q3',    type: 'text',                    get: (r: any) => r.phone.toLowerCase(),     cell: (r: any) => txt(r.phone) },
+    { key: 'traffic',     label: 'Traffic · Q2',  type: 'text',                    get: (r: any) => r.traffic.toLowerCase(),   cell: (r: any) => txt(r.traffic) },
+    { key: 'revenue',     label: 'Revenue · Q1',  type: 'text',                    get: (r: any) => r.revenue.toLowerCase(),   cell: (r: any) => txt(r.revenue) },
+    { key: 'status',      label: 'Status',        type: 'num',                     get: (r: any) => statusRank(r),             cell: badgeCell },
+    { key: 'when',        label: 'Date',          type: 'num',                     get: (r: any) => r.when,                    cell: whenCell },
     { key: 'tOffer',      label: '→ Offer',       type: 'numNull',                 get: (r: any) => r.tOffer,                  cell: (r: any) => elapsedCell(r.tOffer) },
     { key: 'tRevenue',    label: '→ Revenue',     type: 'numNull',                 get: (r: any) => r.tRevenue,                cell: (r: any) => elapsedCell(r.tRevenue) },
     { key: 'tTraffic',    label: '→ Traffic',     type: 'numNull',                 get: (r: any) => r.tTraffic,                cell: (r: any) => elapsedCell(r.tTraffic) },
@@ -538,9 +560,10 @@ import BareLayout from '../layouts/BareLayout.astro';
   function exportCsv() {
     const rows = filterRows(ALL_ROWS);
     const cols: [string, (r: any) => any][] = [
-      ['Name', (r) => r.name], ['Reached', (r) => stageLabel(r.stage)],
-      ['Landed', (r) => r.when ? new Date(r.when).toISOString() : ''],
-      ['Revenue', (r) => r.revenue], ['Traffic', (r) => r.traffic], ['Email', (r) => r.email], ['Phone', (r) => r.phone],
+      ['Name', (r) => r.name], ['Email', (r) => r.email], ['Phone', (r) => r.phone],
+      ['Traffic', (r) => r.traffic], ['Revenue', (r) => r.revenue],
+      ['Status', (r) => statusLabel(r)], ['Date', (r) => r.when ? new Date(r.when).toISOString() : ''],
+      ['Reached', (r) => stageLabel(r.stage)],
       ['t_to_offer_s', (r) => secs(r.tOffer)], ['t_to_revenue_s', (r) => secs(r.tRevenue)], ['t_to_traffic_s', (r) => secs(r.tTraffic)], ['t_to_details_s', (r) => secs(r.tDetails)],
       ['t_to_calendar_s', (r) => secs(r.tCal)], ['t_to_booked_s', (r) => secs(r.tBooked)], ['on_page_s', (r) => secs(r.dwell)],
       ['Entry', (r) => r.entryLabel], ['Ads (FB/IG)', (r) => r.ads === 'yes' ? 'Yes' : 'No'],
