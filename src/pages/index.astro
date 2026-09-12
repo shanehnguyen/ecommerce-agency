@@ -167,10 +167,10 @@ const fourteenLabel = fourteenDayLabel();
         <span class="countdown-track__bar"><span class="countdown-track__fill"></span></span>
         <span class="countdown-track__point">
           <span class="countdown-track__dot countdown-track__dot--end"></span>
-          <span class="mono">{fourteenLabel}</span>
+          <span class="mono" data-14day>{fourteenLabel}</span>
         </span>
       </div>
-      <p>Book today and you’ll see your new homepage design before you buy it. And it’s live by {fourteenLabel}: fourteen days start to finish, design included.</p>
+      <p>Book today and you’ll see your new homepage design before you buy it. And it’s live by <span data-14day>{fourteenLabel}</span>: fourteen days start to finish, design included.</p>
       <p>Tap the button. Fill out the form. Pick a time.</p>
       <p class="closing__alt">Prefer email? <a href={`mailto:${site.email}`}>{site.email}</a></p>
       <div class="closing__cta">
@@ -182,6 +182,20 @@ const fourteenLabel = fourteenDayLabel();
 
   <ScarcityBar />
 </BaseLayout>
+
+<script>
+  /* ---- "Live by <date>" stays true after the build date ----
+     fourteenDayLabel() runs at BUILD time, so a site that sits undeployed
+     for a week quotes a launch date already less than 14 days out. The
+     rendered value is the no-JS fallback; this recomputes it from the
+     visitor's own clock on load. Same helper, so the two can never
+     disagree about how the date is formatted. ---- */
+  import { fourteenDayLabel } from '../utils/dates';
+  (function () {
+    var label = fourteenDayLabel();
+    document.querySelectorAll('[data-14day]').forEach(function (el) { el.textContent = label; });
+  })();
+</script>
 
 <script>
   // ---- Signature motion: statement-style headings resolve on scroll ----
@@ -468,7 +482,11 @@ const fourteenLabel = fourteenDayLabel();
   .pricing__accent { color: var(--accent-deep); }
   .pricing__sub { margin-top: var(--space-4); font-size: var(--fs-lede); color: var(--ink-soft); max-width: 42ch; margin-inline: auto; }
   .pricing__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); max-width: 64rem; margin-inline: auto; }
-  @media (min-width: 44em) { .pricing__grid { grid-template-columns: 1fr 1fr; gap: var(--space-8); } }
+  /* align-items:start so each card is only as tall as its own scope.
+     Stretched to equal height, the shorter Essentials card padded itself
+     out with ~400px of dead space under its CTA; now the smaller offer is
+     visibly the smaller card, which is the point. */
+  @media (min-width: 44em) { .pricing__grid { grid-template-columns: 1fr 1fr; gap: var(--space-8); align-items: start; } }
   /* .pcard* card styles (including the value stack) are shared in
      components.css — rendered via PriceCardContent.astro on both the
      homepage and /apply so the two never drift apart. Only the pricing
