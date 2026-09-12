@@ -3,8 +3,11 @@
    would actually ask them, answered in plain words: short sentences, no
    jargon, one idea per line. Answers are arrays of short paragraphs
    (FAQ.astro renders each as its own <p>; the FAQPage schema joins them).
-   Every fact matches the deal timeline: design first after the call, pay
-   only on approval, live by day 14, free work until it outconverts.
+   Every fact matches the deal timeline in TheDeal.astro: design first
+   after the call (days 0-4, free), pay only on approval (day 4), then the
+   14-day build clock runs to launch. The 14 days are counted from
+   APPROVAL, never from the first call — if that ever changes, this file,
+   TheDeal.astro and the hero headline all move together.
    ===================================================================== */
 
 export type Faq = { q: string; a: string | string[] };
@@ -28,7 +31,8 @@ export const homeFaqs: Faq[] = [
     q: 'What if it’s not done in 14 days?',
     a: [
       'Then you don’t pay. Simple as that.',
-      'Day 0 is our first call. Day 14 is your new site, live. The design happens inside those 14 days, not before them.',
+      'The 14 days start the day you approve your homepage design. Fourteen days later your site is live.',
+      'The design comes before that clock, and it costs you nothing. You are never paying for days you are waiting to see something.',
     ],
   },
   {
