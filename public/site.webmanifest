@@ -1,13 +1,13 @@
 {
   "name": "Front Page Commerce",
   "short_name": "Front Page",
-  "description": "We build cabinet dealer sites and contractor portals. Fixed scope, dealer-owned, live in 3–5 weeks.",
+  "description": "Conversion-built Shopify storefronts for consumer brands. Live in 14 days.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "theme_color": "#F6F2EC",
-  "background_color": "#F6F2EC",
+  "theme_color": "#F4F1EA",
+  "background_color": "#F4F1EA",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -22,7 +22,7 @@
       "purpose": "any"
     },
     {
-      "src": "/android-chrome-512x512.png",
+      "src": "/android-chrome-maskable-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
