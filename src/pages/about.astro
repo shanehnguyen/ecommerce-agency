@@ -1,0 +1,72 @@
+---
+/* /about — a plain founder page, mainly so "Shane Nguyen" and
+   "Front Page Commerce" searches have one page tying the person to the
+   business. Kept to facts already stated elsewhere on the site. */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Cta from '../components/Cta.astro';
+import { site } from '../data/site.config';
+
+const profileSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  url: `${site.url}/about`,
+  name: `About ${site.founder}`,
+  mainEntity: { '@id': `${site.url}/#founder` },
+};
+---
+<BaseLayout
+  title={`About ${site.founder}, Founder of ${site.brand}`}
+  description={`${site.founder} is the founder of ${site.brand}, building custom Shopify storefronts for consumer brands. Homepage design first, live in 14 days.`}
+>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(profileSchema)} />
+  <section class="section about">
+    <div class="container container--prose">
+      <img
+        class="about__photo"
+        src="/assets/images/shane-nguyen.webp"
+        alt={`${site.founder}, founder of ${site.brand}`}
+        width="640" height="640"
+      />
+      <p class="eyebrow-num mono">About</p>
+      <h1>{site.founder}</h1>
+      <p class="about__role">Founder, {site.brand}</p>
+
+      <p>
+        I’m {site.founder}, the founder of {site.brand}. I design and build custom Shopify
+        storefronts for consumer brands.
+      </p>
+      <p>
+        Every build starts with your new homepage. You see the design before you pay anything, and the
+        full store goes live in 14 days.
+      </p>
+      <p>
+        See the work: <a href="/case-studies/lynhs-drinks">Lynh’s Drinks</a> and
+        <a href="/case-studies/pk-cabinets">PK Cabinets</a>.
+      </p>
+
+      <h2>Find me</h2>
+      <ul class="about__links">
+        <li><a href={site.social.linkedin} target="_blank" rel="noopener me">LinkedIn</a></li>
+        <li><a href={site.social.instagram} target="_blank" rel="noopener me">Instagram</a></li>
+        <li><a href={site.social.facebook} target="_blank" rel="noopener me">Facebook</a></li>
+        <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+      </ul>
+
+      <p class="about__legal">{site.brand} is a trade name of {site.legalEntity}.</p>
+
+      <Cta event="about" center={false} />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about { padding-block: clamp(2.5rem, 7vh, 4.5rem); }
+  .about__photo { width: 9rem; height: 9rem; border-radius: 50%; object-fit: cover; margin-bottom: var(--space-6); }
+  .about h1 { font-family: var(--font-display); margin-top: var(--space-2); }
+  .about__role { color: var(--ink-50); margin-top: var(--space-2); }
+  .about h2 { font-family: var(--font-display); font-size: var(--fs-h3); margin-top: var(--space-8); }
+  .about p, .about li { color: var(--ink-70); margin-top: var(--space-3); line-height: 1.6; }
+  .about__links { padding-left: var(--space-6); }
+  .about__legal { font-size: var(--fs-caption); color: var(--ink-50); margin-top: var(--space-8); }
+  .about :global(.cta-block) { margin-top: var(--space-6); }
+</style>

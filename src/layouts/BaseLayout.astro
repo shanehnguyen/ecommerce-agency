@@ -43,7 +43,8 @@ const founderSchema = {
   name: site.founder,
   jobTitle: 'Founder',
   worksFor: { '@id': `${site.url}/#organization` },
-  url: `${site.url}/`,
+  url: `${site.url}/about`,
+  image: `${site.url}/assets/images/shane-nguyen.webp`,
   sameAs: [site.social.linkedin, site.social.instagram, site.social.facebook],
 };
 const websiteSchema = {

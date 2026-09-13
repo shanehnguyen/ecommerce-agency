@@ -14,7 +14,6 @@ export default defineConfig({
     '/done-for-you': '/',
     '/websites': '/',
     '/scorecard': '/',
-    '/about': '/',
     '/calculator': '/',
     '/seo': '/',
     '/get-found': '/',
