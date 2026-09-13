@@ -28,6 +28,8 @@ const orgSchema = {
   '@id': `${site.url}/#organization`,
   name: site.brand,
   legalName: site.legalEntity,
+  alternateName: site.formerName,
+  description: `${site.tagline} Formerly ${site.formerName}.`,
   url: site.url,
   logo: `${site.url}/assets/images/fp-logo.png`,
   email: site.email,
