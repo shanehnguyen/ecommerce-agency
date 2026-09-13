@@ -320,7 +320,7 @@ async function maybeCapi(redis, j) {
       event_time: Math.floor(Date.now() / 1000),
       event_id: `${idPrefix}_${j.id}`, // matches the browser pixel's eventID
       action_source: 'website',
-      event_source_url: 'https://www.flipfixdigital.com/apply',
+      event_source_url: 'https://www.madefrontpage.com/apply',
       user_data: capiUserData(j),
     });
   };

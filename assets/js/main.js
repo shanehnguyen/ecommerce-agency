@@ -142,13 +142,13 @@
         } else {
           if (status) {
             status.setAttribute('data-state', 'error');
-            status.textContent = "Something went wrong. Email shanehnguyen@flipfixdigital.com directly.";
+            status.textContent = "Something went wrong. Email shanehnguyen@gmail.com directly.";
           }
         }
       } catch (err) {
         if (status) {
           status.setAttribute('data-state', 'error');
-          status.textContent = "Network error. Email shanehnguyen@flipfixdigital.com directly.";
+          status.textContent = "Network error. Email shanehnguyen@gmail.com directly.";
         }
       } finally {
         if (submit) {

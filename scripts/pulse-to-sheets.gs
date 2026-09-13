@@ -21,7 +21,7 @@
 
 var SPREADSHEET_ID = '1ABBrpP1UNxmM2oZftmYRGa7z9wljhxjDsauKX2_XDCI'; // "Leads" sheet
 var SHEET_NAME = 'Sheet1';
-var DEFAULT_URL = 'https://www.flipfixdigital.com/api/pulse';
+var DEFAULT_URL = 'https://www.madefrontpage.com/api/pulse';
 var LEAD_STAGES = { calendar: true, booked: true };
 
 // header keyword → field. Matched against lower-cased row-1 titles.

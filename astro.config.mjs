@@ -5,7 +5,7 @@ import vercel from '@astrojs/vercel';
 // Static-first build (KitchenWebsites-Build-Spec §3 performance budget).
 // The /api/*.js Vercel functions deploy alongside the static output untouched.
 export default defineConfig({
-  site: 'https://www.flipfixdigital.com',
+  site: 'https://www.madefrontpage.com',
   output: 'static',
   // Old kitchen-site paths → the new one-pager / apply flow, so existing
   // links and ads never 404.

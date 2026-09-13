@@ -1,4 +1,4 @@
-# Build Agreement — FlipFix Digital
+# Build Agreement — Front Page Commerce
 
 > Template. Fill the brackets per client, send as PDF with the 50% invoice after design approval on Call 2. Have them reply "agreed" or sign — either is fine at this ticket size.
 > (Not legal advice — worth a one-time lawyer review when convenient, but a clear plain-English one-pager beats no agreement every day.)
@@ -6,7 +6,7 @@
 ---
 
 **Project:** The 14-Day Conversion Build — [Client brand], [store URL]
-**Between:** [Client name / company] and Shane Nguyen, FlipFix Digital
+**Between:** [Client name / company] and Shane Nguyen, Front Page Commerce
 **Date:** [date] · **Kickoff (Day 0 of the build phase):** [date] · **Launch target (Day 14):** [date]
 
 ## What you're getting
@@ -42,8 +42,8 @@ At final payment, everything is yours: theme code, design files, all assets. No 
 
 ## Communication
 
-You'll hear from me at every milestone (design → build → feedback round → QA → launch). One point of contact each side: [client contact] and shanehnguyen@flipfixdigital.com.
+You'll hear from me at every milestone (design → build → feedback round → QA → launch). One point of contact each side: [client contact] and shanehnguyen@gmail.com.
 
 ---
 
-Agreed: _____________ (client) · _____________ Shane Nguyen, FlipFix Digital
+Agreed: _____________ (client) · _____________ Shane Nguyen, Front Page Commerce

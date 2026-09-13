@@ -1,4 +1,4 @@
-# FlipFix Digital — Ads & Funnel (source of truth)
+# Front Page Commerce — Ads & Funnel (source of truth)
 
 Last updated: 2026-08-08. Ads are live at $100/day on Meta.
 
@@ -48,7 +48,7 @@ The 14 days is **end-to-end** — the free design days are inside the window, no
 
 ```
 Meta ad (talking-head video)
-  → flipfixdigital.com  (hero → problem/portfolio → pricing → deal timeline → FAQ → closing)
+  → madefrontpage.com  (hero → problem/portfolio → pricing → deal timeline → FAQ → closing)
     → /apply  (3 steps: pick offer → revenue band → contact)
       → Calendly (30-min call)
         → free homepage design → approval → 50% → build → launch

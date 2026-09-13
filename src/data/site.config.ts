@@ -12,18 +12,24 @@ export const site = {
   // The wordmark renders as two words: the second is brass (the design's
   // one accent). Byline under the wordmark credits the solo operator —
   // "people buy the person" at this price.
-  brand: 'FlipFix Digital',
-  wordmark: { lead: 'FlipFix', accent: 'Digital' },
+  brand: 'Front Page Commerce',
+  legalEntity: 'FLIPFIX LLC',
+  legalName: 'FLIPFIX LLC d/b/a Front Page Commerce', // footer + legal pages
+  wordmark: { lead: 'Front Page', accent: 'Commerce' },
   byline: 'by Shane N.',
   founder: 'Shane Nguyen',
   tagline: 'Conversion-built Shopify storefronts for consumer brands.',
 
-  domain: 'flipfixdigital.com',
-  url: 'https://www.flipfixdigital.com',
+  domain: 'madefrontpage.com',
+  url: 'https://www.madefrontpage.com',
 
   // ---- Contact --------------------------------------------------------
-  email: 'shanehnguyen@flipfixdigital.com',
+  email: 'shanehnguyen@gmail.com',
   phone: '(408) 908-8131',          // optional, leave blank to hide
+  social: {
+    instagram: 'https://www.instagram.com/madefrontpage',
+    facebook: 'https://www.facebook.com/madefrontpage',
+  },
 
   // ---- The single CTA (identical on every button, per the structure spec)
   cta: { label: 'SEE YOUR HOMEPAGE FIRST', href: '/apply' },

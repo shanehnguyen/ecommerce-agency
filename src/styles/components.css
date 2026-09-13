@@ -297,7 +297,7 @@ button.pcard.is-on .pcard__select { background: var(--accent-strong); color: var
 
 /* mobile: links collapse into a solid dropdown panel under the bar */
 @media (max-width: 55.99em) {
-  /* drop the "by FlipFix Digital" tagline on the small navbar — keep just the wordmark */
+  /* drop the "by Front Page Commerce" tagline on the small navbar — keep just the wordmark */
   .nav__logo-by { display: none; }
   /* tighten the bar so logo + CTA + hamburger always fit (the empty centered
      menu would otherwise reserve two wide gaps and push the hamburger off-screen).

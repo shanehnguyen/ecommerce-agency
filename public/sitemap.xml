@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- /apply, /thank-you and /pulse are intentionally omitted: noindex
+  <!-- /apply, /thank-you, /pulse, /privacy and /terms are intentionally omitted: noindex
        (single-goal or private), reachable via the site's CTA/direct links only. -->
-  <url><loc>https://www.flipfixdigital.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://www.flipfixdigital.com/case-studies</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://www.flipfixdigital.com/case-studies/lynhs-drinks</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://www.flipfixdigital.com/case-studies/pk-cabinets</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://www.flipfixdigital.com/privacy</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>
-  <url><loc>https://www.flipfixdigital.com/terms</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>
+  <url><loc>https://www.madefrontpage.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://www.madefrontpage.com/case-studies</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.madefrontpage.com/case-studies/lynhs-drinks</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.madefrontpage.com/case-studies/pk-cabinets</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
 </urlset>

@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Placeholder Open Graph / Twitter card image.
-  1200x630 is the spec for og:image / twitter:image (summary_large_image).
-  TODO: export a real 1200x630 JPG or PNG before deploy.
-  Some social scrapers (older Twitter, LinkedIn) do not render SVG.
-  This SVG works for development preview only.
+  Open Graph / Twitter share card source (1200x630). Pages use the PNG
+  export (og-cover.png) because Facebook, Instagram and LinkedIn don't
+  render SVG previews. Re-export after editing:
+    node scripts/render-og.mjs
 -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
-  <rect width="1200" height="630" fill="#F6F2EC"/>
-  <rect x="80" y="470" width="72" height="2" fill="#A89060"/>
-  <text x="80" y="310" font-family="Georgia, 'Times New Roman', serif" font-size="84" font-weight="400" fill="#1A1A1A" letter-spacing="-1.5">FlipFix Digital</text>
-  <text x="80" y="410" font-family="Georgia, 'Times New Roman', serif" font-size="44" font-weight="400" fill="#6B6258" letter-spacing="-0.5">Cabinet dealer sites, built by a specialist.</text>
-  <text x="80" y="530" font-family="Manrope, system-ui, sans-serif" font-size="22" font-weight="600" fill="#A89060" letter-spacing="3" text-transform="uppercase">SHOPLINE &#xB7; SHOPIFY &#xB7; CUSTOM STACKS</text>
+  <rect width="1200" height="630" fill="#F4F1EA"/>
+  <text x="80" y="118" font-family="'Arial Black', 'Segoe UI', sans-serif" font-size="26" fill="#1A1814" letter-spacing="3">FRONT PAGE <tspan fill="#9E7B3D">COMMERCE</tspan></text>
+  <text font-family="'Arial Black', 'Segoe UI', sans-serif" font-size="72" fill="#1A1814" letter-spacing="-1">
+    <tspan x="80" y="270">SHOPIFY STORES THAT</tspan>
+    <tspan x="80" y="356">CONVERT <tspan fill="#9E7B3D">1.5–2X</tspan> HIGHER.</tspan>
+  </text>
+  <text x="80" y="428" font-family="'Segoe UI', Arial, sans-serif" font-size="32" fill="#4A463E">Custom ecommerce storefronts for consumer brands. Live in 14 days.</text>
+  <rect x="80" y="506" width="72" height="3" fill="#9E7B3D"/>
+  <text x="80" y="558" font-family="'Segoe UI', Arial, sans-serif" font-weight="700" font-size="22" fill="#6E5424" letter-spacing="3">MADEFRONTPAGE.COM</text>
+  <text x="1120" y="558" text-anchor="end" font-family="'Segoe UI', Arial, sans-serif" font-weight="700" font-size="22" fill="#6E5424" letter-spacing="3">SEE YOUR HOMEPAGE FIRST</text>
 </svg>

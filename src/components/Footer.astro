@@ -29,11 +29,13 @@ const year = 2026; // build-stamped; Date is intentionally not called at module 
           <h4>Contact</h4>
           <a href={`mailto:${site.email}`}>{site.email}</a>
           {site.phone && <a href={`tel:${site.phone.replace(/[^\d+]/g, '')}`}>{site.phone}</a>}
+          <a href={site.social.instagram} target="_blank" rel="noopener">Instagram</a>
+          <a href={site.social.facebook} target="_blank" rel="noopener">Facebook</a>
         </div>
       </div>
     </div>
     <div class="footer__legal">
-      <span>© {year} {site.brand}. {site.tagline}</span>
+      <span>© {year} {site.legalName}. {site.tagline}</span>
       <span>
         <a href="/privacy" style="color: var(--paper-70);">Privacy</a>
         &nbsp;·&nbsp;
