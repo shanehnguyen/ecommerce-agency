@@ -21,16 +21,31 @@ interface Props {
 const { title, description, ogImage = '/assets/images/og-cover.png', noindex = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, site.url).toString();
 const fullTitle = title.includes(site.brand) ? title : `${title} | ${site.brand}`;
+// Organization on every page; WebSite (Google's source for the site name
+// shown above search results) on the homepage, where Google reads it.
 const orgSchema = {
-  '@context': 'https://schema.org',
   '@type': 'Organization',
+  '@id': `${site.url}/#organization`,
   name: site.brand,
   legalName: site.legalEntity,
   url: site.url,
+  logo: `${site.url}/assets/images/fp-logo.png`,
   email: site.email,
   telephone: site.phone,
   founder: { '@type': 'Person', name: site.founder },
   sameAs: [site.social.instagram, site.social.facebook],
+};
+const websiteSchema = {
+  '@type': 'WebSite',
+  '@id': `${site.url}/#website`,
+  name: site.brand,
+  alternateName: ['FrontPage Commerce', site.domain],
+  url: `${site.url}/`,
+  publisher: { '@id': `${site.url}/#organization` },
+};
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': Astro.url.pathname === '/' ? [orgSchema, websiteSchema] : [orgSchema],
 };
 ---
 <!doctype html>
@@ -62,7 +77,7 @@ const orgSchema = {
     <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
 
     <Analytics />
   </head>
