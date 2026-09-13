@@ -32,7 +32,18 @@ const orgSchema = {
   logo: `${site.url}/assets/images/fp-logo.png`,
   email: site.email,
   telephone: site.phone,
-  founder: { '@type': 'Person', name: site.founder },
+  founder: { '@id': `${site.url}/#founder` },
+  sameAs: [site.social.instagram, site.social.facebook],
+};
+// Ties "Shane Nguyen" searches to the brand: same person across the site and
+// the social profiles in sameAs.
+const founderSchema = {
+  '@type': 'Person',
+  '@id': `${site.url}/#founder`,
+  name: site.founder,
+  jobTitle: 'Founder',
+  worksFor: { '@id': `${site.url}/#organization` },
+  url: `${site.url}/`,
   sameAs: [site.social.instagram, site.social.facebook],
 };
 const websiteSchema = {
@@ -45,7 +56,7 @@ const websiteSchema = {
 };
 const schema = {
   '@context': 'https://schema.org',
-  '@graph': Astro.url.pathname === '/' ? [orgSchema, websiteSchema] : [orgSchema],
+  '@graph': Astro.url.pathname === '/' ? [orgSchema, founderSchema, websiteSchema] : [orgSchema, founderSchema],
 };
 ---
 <!doctype html>
