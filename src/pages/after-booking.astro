@@ -31,6 +31,11 @@ import { callFaqGroups } from '../data/faqs';
         <h2 class="ab__faq-h">Frequently Asked Questions</h2>
         <div class="ab__faq-list"><FAQ groups={callFaqGroups} headingTag="h3" /></div>
       </div>
+
+      <div class="ab__more">
+        <p class="ab__more-q">Still have questions?</p>
+        <a class="btn btn--ghost" href="/faq">Read our full FAQ <span aria-hidden="true">→</span></a>
+      </div>
     </div>
   </section>
 </BareLayout>
@@ -47,4 +52,6 @@ import { callFaqGroups } from '../data/faqs';
   .ab__faq { margin-top: clamp(3rem, 8vh, 5rem); text-align: left; }
   .ab__faq-h { text-align: center; font-size: clamp(1.5rem, 4vw, 2.5rem); }
   .ab__faq-list { margin-top: var(--space-6); }
+  .ab__more { margin-top: var(--space-10); display: flex; flex-direction: column; align-items: center; gap: var(--space-4); }
+  .ab__more-q { font-family: var(--font-display); font-weight: var(--fw-display); font-size: var(--fs-h4); color: var(--ink); }
 </style>
