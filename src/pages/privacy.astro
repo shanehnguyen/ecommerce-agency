@@ -2,30 +2,46 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../data/site.config';
 ---
-<BaseLayout title="Privacy" description={`How ${site.brand} handles the information you share.`} noindex={true}>
+<BaseLayout title="Privacy Policy" description={`How ${site.brand} collects, uses, and protects the information you share.`} noindex={true}>
   <section class="section legal">
     <div class="container container--prose">
-      <h1>Privacy</h1>
+      <h1>Privacy Policy</h1>
       <p class="legal__date mono">Last updated September 2026</p>
-      <!-- LEGAL REVIEW REQUIRED before launch. Plain-language draft only. -->
+      <!-- Keep this accurate to what the site actually does: api/pulse.js,
+           Analytics.astro, and the /apply form. SMS section is required for
+           A2P 10DLC registration; don't soften the sharing statements. -->
       <p>
-        This site is operated by {site.legalName} (“{site.brand},” “we”).
-        {site.brand} collects only what you give us: the answers and contact details you enter in the
-        application and booking forms. We use them to review your application, follow up about the work,
-        and improve the site.
+        This site is operated by {site.legalName} (“{site.brand},” “we,” “us”). This policy explains what
+        information we collect through {site.domain}, how we use it, and the choices you have.
       </p>
-      <h2>What we collect</h2>
+
+      <h2>Information we collect</h2>
       <ul>
-        <li>Your name, email, phone, store details, and the answers you give when you apply or book a call.</li>
-        <li>Standard analytics (page views, events) via Meta Pixel, Microsoft Clarity, and, optionally, Google Analytics.</li>
+        <li><strong>Information you give us:</strong> your name, email address, phone number, and your answers
+          about your business (such as monthly revenue and traffic) when you apply or book a call.</li>
+        <li><strong>SMS consent:</strong> whether you agreed to receive text messages, and the date, time, and
+          wording of that consent.</li>
+        <li><strong>Automatically collected information:</strong> your IP address, browser and device type, the
+          pages you visit, how you arrived at the site (such as an ad or link), and how far you get through the
+          application form.</li>
       </ul>
-      <h2>What we don’t do</h2>
-      <p>We don’t sell your information. We don’t run a 14-email nurture machine. You can unsubscribe anytime.</p>
+
+      <h2>How we use your information</h2>
+      <ul>
+        <li>To review your application, contact you, and schedule and hold your call.</li>
+        <li>To deliver the work you hire us for and keep you updated on it.</li>
+        <li>To send text messages, only if you opted in (see below).</li>
+        <li>To understand how the site is used and improve it.</li>
+        <li>To measure whether our advertising works.</li>
+        <li>To prevent spam and abuse, and to meet legal obligations.</li>
+      </ul>
+      <p>We do not sell or rent your personal information.</p>
+
       <h2 id="sms">Text messages (SMS)</h2>
       <p>
         If you check the SMS consent box on our application form, {site.brand} will text the phone number you
-        provided about your application, call reminders, and project updates. Message frequency varies.
-        Message and data rates may apply. Consent to receive texts is not a condition of purchase.
+        provided about your application, call reminders, and project updates. Opting in is optional and is not a
+        condition of purchase. Message frequency varies. Message and data rates may apply.
       </p>
       <p>
         Reply <strong>STOP</strong> to any message to opt out, and you’ll receive one final confirmation text.
@@ -33,15 +49,69 @@ import { site } from '../data/site.config';
         or {site.phone}.
       </p>
       <p>
-        We keep a record of your consent (the date, time, and wording you agreed to). No mobile information will be
-        shared with third parties or affiliates for marketing or promotional purposes. Text messaging originator
-        opt-in data and consent will not be shared with any third parties.
+        <strong>No mobile information will be shared with third parties or affiliates for marketing or promotional
+        purposes. Text messaging originator opt-in data and consent will not be shared with any third parties.</strong>
       </p>
+
+      <h2>Cookies and tracking</h2>
+      <p>We use cookies and similar technologies for the following:</p>
+      <ul>
+        <li><strong>Meta Pixel</strong> (Facebook and Instagram): measures visits and form completions from our ads.
+          When you submit the application, your email address is sent to Meta in hashed (scrambled) form so the
+          conversion can be matched to an ad. Your phone number is never sent to Meta.</li>
+        <li><strong>Microsoft Clarity:</strong> records how visitors use pages (clicks, scrolling) so we can improve
+          them. Text typed into form fields is masked.</li>
+        <li><strong>Browser session storage:</strong> keeps your form answers while you fill out the application,
+          so nothing is lost if the page reloads. It clears when you close the tab.</li>
+      </ul>
+      <p>
+        You can block or delete cookies in your browser settings, and control ad personalization in your
+        Facebook/Instagram ad preferences. The site still works if you do.
+      </p>
+
+      <h2>Who we share information with</h2>
+      <p>
+        We use a small number of service providers to run the site and our business: website hosting and data
+        storage, a form-delivery service that emails us your application, and a scheduling tool for booking calls.
+        They may only use your information to provide those services to us. We may also disclose information if the
+        law requires it. The categories above exclude SMS opt-in data and consent, which are never shared with any
+        third party.
+      </p>
+
+      <h2>Data security and retention</h2>
+      <p>
+        The site runs over encrypted HTTPS connections. Your information is stored with reputable hosting providers,
+        and access is limited to {site.founder} and the people who need it to do the work. No method of storage or
+        transmission is completely secure, but we take reasonable steps to protect your information. We keep
+        application records until you ask us to delete them, or as long as needed for our business and legal
+        obligations.
+      </p>
+
+      <h2>Your rights</h2>
+      <ul>
+        <li>Ask what personal information we hold about you.</li>
+        <li>Ask us to correct or delete it.</li>
+        <li>Opt out of text messages at any time by replying STOP.</li>
+        <li>Opt out of email from us at any time by asking.</li>
+      </ul>
+      <p>
+        Email <a href={`mailto:${site.email}`}>{site.email}</a> to make a request. We’ll respond within 30 days and
+        won’t treat you differently for using these rights. Depending on where you live (for example, California),
+        you may have additional rights under local law, and we honor them.
+      </p>
+
+      <h2>Children</h2>
+      <p>This site and our services are for adults 18 and older. We don’t knowingly collect information from children.</p>
+
+      <h2>Changes</h2>
+      <p>If we change this policy, we’ll update the date at the top of this page.</p>
+
       <h2>Contact</h2>
       <p>
-        Questions about your data: {site.legalName}<br />
+        {site.legalName}<br />
         <a href={`mailto:${site.email}`}>{site.email}</a> · {site.phone}
       </p>
+      <p>See also our <a href="/terms">Terms of Service</a>.</p>
     </div>
   </section>
 </BaseLayout>

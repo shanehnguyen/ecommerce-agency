@@ -2,16 +2,21 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../data/site.config';
 ---
-<BaseLayout title="Terms" description={`The terms for using the ${site.brand} website.`} noindex={true}>
+<BaseLayout title="Terms of Service" description={`The terms for using the ${site.brand} website, forms, and text messages.`} noindex={true}>
   <section class="section legal">
     <div class="container container--prose">
-      <h1>Terms</h1>
+      <h1>Terms of Service</h1>
       <p class="legal__date mono">Last updated September 2026</p>
       <!-- LEGAL REVIEW REQUIRED before launch. Plain-language draft only. -->
       <p>
         This site is operated by {site.legalName} (“{site.brand},” “we”).
         These terms cover use of the {site.brand} website and its application and booking forms. Using the
-        site means you’re okay with them.
+        site means you agree to them. Our <a href="/privacy">Privacy Policy</a> explains how we handle your information.
+      </p>
+      <h2>Eligibility</h2>
+      <p>
+        You must be at least 18 years old to use this site, submit an application, or opt in to text messages.
+        By doing so, you confirm that you are 18 or older.
       </p>
       <h2>The calculator is an estimate</h2>
       <p>
@@ -26,7 +31,7 @@ import { site } from '../data/site.config';
       <h2 id="sms">SMS terms</h2>
       <p>
         <strong>Program.</strong> {site.brand} sends text messages about your application, call reminders, and
-        project updates to people who check the SMS consent box on our application form.
+        project updates to people 18 or older who check the SMS consent box on our application form.
       </p>
       <p>
         <strong>Opt-in is optional.</strong> Consent to receive texts is not a condition of purchase. You can

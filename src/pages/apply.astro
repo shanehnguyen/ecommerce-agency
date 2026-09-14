@@ -399,10 +399,11 @@ const trafficBands = ['Not launched yet', 'Under 2,500', '2,500–10,000', '10,0
         (window as any).kwTrack?.('LeadQualified', { via: 'apply' });
         // B1 — Advanced Matching: re-init the pixel with identifiers (Meta hashes
         // them browser-side) so events match real people. Raises EMQ.
+        // Email only: phone numbers are never sent to Meta (SMS compliance:
+        // the privacy policy promises mobile info isn't shared for marketing).
         try {
           const em = (answers.email || '').trim().toLowerCase();
-          const ph = (answers.phone || '').replace(/\D/g, '');
-          if (em || ph) (window as any).fbq?.('init', site.analytics.metaPixelId, { ...(em ? { em } : {}), ...(ph ? { ph } : {}) });
+          if (em) (window as any).fbq?.('init', site.analytics.metaPixelId, { em });
         } catch { /* matching is best-effort */ }
         // eventID matches the server-side Conversions API event so Meta dedupes
         (window as any).fbq?.('track', 'Lead', {}, { eventID: 'lead_' + PULSE.id });

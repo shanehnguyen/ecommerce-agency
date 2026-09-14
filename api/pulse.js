@@ -280,21 +280,16 @@ const CAPI_URL = `https://graph.facebook.com/v23.0/${META_PIXEL_ID}/events`;
 
 const sha256 = (v) => createHash('sha256').update(v).digest('hex');
 const hashEmail = (e) => (e ? [sha256(e.trim().toLowerCase())] : undefined);
-const hashPhone = (p) => {
-  if (!p) return undefined;
-  let d = String(p).replace(/\D/g, '');
-  if (d.length === 10) d = '1' + d; // bare US number → E.164-ish
-  return d.length >= 11 ? [sha256(d)] : undefined;
-};
 const hashName = (n) => (n ? [sha256(n.trim().toLowerCase())] : undefined);
 
 function capiUserData(j) {
   const parts = (j.fullName || '').trim().split(/\s+/).filter(Boolean);
   // _fbc cookie wins; else rebuild it from the fbclid per Meta's documented format
   const fbc = j.fbc || (j.fbclid ? `fb.1.${Number(j.landedAt) || Date.now()}.${j.fbclid}` : '');
+  // No phone (ph): mobile numbers are never sent to Meta. SMS compliance: the
+  // privacy policy promises mobile info isn't shared for marketing.
   const u = {
     em: hashEmail(j.email),
-    ph: hashPhone(j.phone),
     fn: hashName(parts[0]),
     ln: parts.length > 1 ? hashName(parts.slice(1).join(' ')) : undefined,
     client_ip_address: j.ip && j.ip !== 'unknown' ? j.ip : undefined,
@@ -308,7 +303,7 @@ function capiUserData(j) {
 
 async function maybeCapi(redis, j) {
   if (!META_CAPI_TOKEN || !redis) return; // not configured → no-op
-  if (!j.email && !j.phone) return; // no identifiers yet → nothing Meta could match
+  if (!j.email) return; // no identifier yet → nothing Meta could match
 
   const events = [];
   const queue = async (name, idPrefix) => {
