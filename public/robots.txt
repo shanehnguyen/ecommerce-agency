@@ -4,5 +4,6 @@ Allow: /
 # Single-goal, noindex pages — keep them out of the index.
 Disallow: /apply
 Disallow: /thank-you
+Disallow: /after-booking
 
 Sitemap: https://www.madefrontpage.com/sitemap.xml

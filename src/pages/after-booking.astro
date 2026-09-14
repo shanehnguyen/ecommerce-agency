@@ -1,0 +1,42 @@
+---
+/* /after-booking — where a booked lead lands: one short video from Shane on
+   the one thing to do before the call. An FAQ goes below the video (copy to
+   come from Shane; slot marked). noindex, and kept out of the sitemap. */
+import BareLayout from '../layouts/BareLayout.astro';
+---
+<BareLayout
+  title="One last thing before our call"
+  description="You're booked. Watch this short video before we talk."
+  noindex={true}
+>
+  <section class="section ab">
+    <div class="container container--narrow">
+      <h1 class="ab__h1">One last thing to do before our call...</h1>
+
+      <div class="ab__video">
+        <video
+          class="ab__media"
+          controls playsinline preload="metadata"
+          disablepictureinpicture controlslist="nodownload noplaybackrate"
+          poster="/video/after-booking-poster.jpg"
+          aria-label="A short video from Shane before your call"
+        >
+          <source src="/video/after-booking.mp4" type="video/mp4" />
+        </video>
+      </div>
+
+      <!-- FAQ goes here (questions and answers coming from Shane). -->
+    </div>
+  </section>
+</BareLayout>
+
+<style>
+  .ab { padding-block: clamp(2.5rem, 7vh, 4.5rem) clamp(3rem, 8vh, 5rem); text-align: center; }
+  .ab__h1 { margin-inline: auto; max-width: 20ch; font-size: clamp(2rem, 5vw, 3.25rem); }
+  .ab__video {
+    position: relative; width: 100%; max-width: 27rem; aspect-ratio: 3 / 4;
+    margin: var(--space-8) auto 0; border-radius: 16px; overflow: hidden;
+    background: #0f120e; box-shadow: 0 40px 80px -40px rgba(26, 24, 20, 0.5);
+  }
+  .ab__media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+</style>
