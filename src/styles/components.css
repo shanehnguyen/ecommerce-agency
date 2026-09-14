@@ -220,10 +220,13 @@ button.pcard.is-on .pcard__select { background: var(--accent-strong); color: var
 }
 .nav[data-scrolled="true"] .nav__inner { padding-block: var(--space-2); }
 .nav__logo {
-  display: inline-flex; flex-direction: column; justify-content: center; gap: 1px;
+  display: inline-flex; align-items: center; gap: 0.6rem;
   min-height: 44px; /* tap target */
   color: var(--ink); text-decoration: none; line-height: 1;
 }
+/* FP mark to the left of the wordmark; sized to the name + byline stack */
+.nav__logo-mark { height: 2.1rem; width: auto; flex-shrink: 0; }
+.nav__logo-text { display: inline-flex; flex-direction: column; justify-content: center; gap: 1px; }
 .nav__logo-name {
   font-family: var(--font-display);
   font-weight: var(--fw-display);
@@ -260,6 +263,7 @@ button.pcard.is-on .pcard__select { background: var(--accent-strong); color: var
   .nav__cta-mini { display: inline; }
   .nav__cta { padding: 10px 16px; font-size: 13px; min-height: 44px; }
   .nav__logo-name { font-size: 1.05rem; }
+  .nav__logo-mark { height: 1.6rem; }
   .nav__actions { gap: var(--space-2); }
 }
 
@@ -336,8 +340,9 @@ button.pcard.is-on .pcard__select { background: var(--accent-strong); color: var
 .footer { background: var(--dark); color: var(--dark-soft); padding-block: var(--space-12); }
 .footer__inner { max-width: var(--container-standard); margin-inline: auto; padding-inline: var(--gutter); display: grid; gap: var(--space-8); }
 .footer__top { display: flex; flex-wrap: wrap; gap: var(--space-8) var(--space-16); justify-content: space-between; }
-.footer__brand { font-family: var(--font-display); font-weight: var(--fw-display); text-transform: uppercase; color: var(--dark-ink); font-size: 1.3rem; }
-.footer__brand span { color: var(--accent-strong); }
+.footer__brand { display: flex; align-items: center; gap: 0.6rem; font-family: var(--font-display); font-weight: var(--fw-display); text-transform: uppercase; color: var(--dark-ink); font-size: 1.3rem; }
+.footer__brand-mark { height: 1.9rem; width: auto; flex-shrink: 0; filter: invert(1); }
+.footer__brand-text span { color: var(--accent-strong); }
 .footer__cols { display: flex; flex-wrap: wrap; gap: var(--space-12); }
 .footer__col h4 { color: var(--paper-50); font-size: var(--fs-eyebrow); letter-spacing: var(--tracking-caps); text-transform: uppercase; margin-bottom: var(--space-3); }
 .footer__col a, .footer__col > span { display: block; color: var(--dark-soft); text-decoration: none; font-size: var(--fs-body); padding-block: var(--space-1); }

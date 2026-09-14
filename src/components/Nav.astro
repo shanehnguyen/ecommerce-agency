@@ -7,8 +7,11 @@ import { site } from '../data/site.config';
 <header class="nav" data-nav>
   <div class="nav__inner">
     <a class="nav__logo" href="/" aria-label={`${site.brand}, home`}>
-      <span class="nav__logo-name">{site.wordmark.lead} <span>{site.wordmark.accent}</span></span>
-      <span class="nav__logo-by">{site.byline}</span>
+      <img class="nav__logo-mark" src="/assets/images/fp-mark.png" alt="" width="102" height="120" />
+      <span class="nav__logo-text">
+        <span class="nav__logo-name">{site.wordmark.lead} <span>{site.wordmark.accent}</span></span>
+        <span class="nav__logo-by">{site.byline}</span>
+      </span>
     </a>
 
     <img class="nav__partner-logo" src="/shopify-partners.png" alt="Shopify Partners" width="110" height="22" loading="lazy" />
