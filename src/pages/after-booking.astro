@@ -5,6 +5,7 @@
 import BareLayout from '../layouts/BareLayout.astro';
 import FAQ from '../components/FAQ.astro';
 import { callFaqGroups } from '../data/faqs';
+import { site } from '../data/site.config';
 ---
 <BareLayout
   title="One last thing before our call"
@@ -26,6 +27,12 @@ import { callFaqGroups } from '../data/faqs';
           <source src="/video/after-booking.mp4" type="video/mp4" />
         </video>
       </div>
+
+      <!-- The video's ask in plain text, for anyone who watches muted or not at all. -->
+      <p class="ab__todo">
+        <strong>Check your email and accept the calendar invite.</strong>
+        Wrong time? <a href={`sms:+1${site.phone.replace(/\D/g, '')}`}>Text me: {site.phone}</a>
+      </p>
 
       <div class="ab__faq">
         <h2 class="ab__faq-h">Frequently Asked Questions</h2>
@@ -49,6 +56,9 @@ import { callFaqGroups } from '../data/faqs';
     background: #0f120e; box-shadow: 0 40px 80px -40px rgba(26, 24, 20, 0.5);
   }
   .ab__media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .ab__todo { margin: var(--space-6) auto 0; max-width: 27rem; font-size: var(--fs-lede); line-height: 1.5; color: var(--ink-70); }
+  .ab__todo strong { display: block; color: var(--ink); }
+  .ab__todo a { color: var(--ink); font-weight: var(--fw-body-semi); white-space: nowrap; }
   .ab__faq { margin-top: clamp(3rem, 8vh, 5rem); text-align: left; }
   .ab__faq-h { text-align: center; font-size: clamp(1.5rem, 4vw, 2.5rem); }
   .ab__faq-list { margin-top: var(--space-6); }
