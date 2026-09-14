@@ -1,27 +1,54 @@
 ---
-/* /faq — the full FAQ (same list as under the /after-booking video). */
+/* /faq — the long-form FAQ (src/data/faq-full.ts), with jump links to each
+   section. /after-booking shows the short 12-question version (faqs.ts). */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import FAQ from '../components/FAQ.astro';
 import Cta from '../components/Cta.astro';
 import { site } from '../data/site.config';
-import { callFaqGroups } from '../data/faqs';
+import { fullFaqGroups } from '../data/faq-full';
+
+const slug = (t: string) => t.toLowerCase().replace(/[’']/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 ---
 <BaseLayout
   title="FAQ"
-  description={`Pricing, timelines, payment, and what's included when ${site.brand} builds your Shopify store.`}
+  description={`Answers about ${site.brand}: the free homepage design, pricing, payment, timeline, what's included, ads and SEO, monthly plans and results.`}
 >
   <section class="section faqp">
     <div class="container container--prose">
       <h1 class="faqp__h1">Frequently Asked Questions</h1>
-      <div class="faqp__list"><FAQ groups={callFaqGroups} headingTag="h2" /></div>
+      <nav class="faqp__jump" aria-label="FAQ sections">
+        {fullFaqGroups.map((g) => <a href={`#${slug(g.title)}`}>{g.title}</a>)}
+      </nav>
+      <div class="faqp__list"><FAQ groups={fullFaqGroups} headingTag="h2" /></div>
       <div class="faqp__cta"><Cta event="faq" /></div>
     </div>
   </section>
 </BaseLayout>
 
+<script>
+  // Jump links: scroll through the site's smooth scroller (Lenis) when it's on,
+  // so the section lands just under the sticky nav instead of stopping short.
+  document.querySelectorAll<HTMLAnchorElement>('.faqp__jump a').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      const target = document.querySelector<HTMLElement>(a.getAttribute('href') || '');
+      const lenis = (window as any).lenis;
+      if (!target || !lenis) return; // native anchor jump + scroll-margin
+      e.preventDefault();
+      lenis.scrollTo(target); // honours the section's scroll-margin-top
+      history.replaceState(null, '', a.getAttribute('href'));
+    });
+  });
+</script>
+
 <style>
   .faqp { padding-block: clamp(2.5rem, 7vh, 4.5rem) clamp(3rem, 8vh, 5rem); }
   .faqp__h1 { text-align: center; margin-inline: auto; max-width: 20ch; font-size: clamp(2rem, 5vw, 3.25rem); }
-  .faqp__list { margin-top: var(--space-8); }
+  .faqp__jump { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); margin-top: var(--space-6); }
+  .faqp__jump a {
+    padding: var(--space-1) var(--space-3); border: var(--rule-width) solid var(--line); border-radius: 999px;
+    font-size: var(--fs-caption); color: var(--ink-70); text-decoration: none; background: var(--bg-raised);
+  }
+  .faqp__jump a:hover { color: var(--ink); border-color: var(--ink-50); }
+  .faqp__list { margin-top: var(--space-10); }
   .faqp__cta { margin-top: var(--space-10); }
 </style>

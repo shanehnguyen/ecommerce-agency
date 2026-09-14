@@ -9,6 +9,8 @@ interface Props { items?: Faq[]; groups?: FaqGroup[]; headingTag?: 'h2' | 'h3'; 
 const { items: flat, groups, headingTag: H = 'h2' } = Astro.props;
 const sections: FaqGroup[] = groups ?? [{ title: '', items: flat ?? [] }];
 const items = sections.flatMap((g) => g.items);
+// "What’s Included" → "whats-included", for #anchor links to a section
+const faqSlug = (t: string) => t.toLowerCase().replace(/[’']/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 // Inline markup → HTML: escape first, then **bold** and [text](/path).
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -40,7 +42,7 @@ const schema = {
 };
 ---
 {sections.map((g) => (
-  <div class="faq__section">
+  <div class="faq__section" id={g.title ? faqSlug(g.title) : undefined}>
     {g.title && <H class="faq__group">{g.title}</H>}
     <div class="faq">
       {g.items.map((f) => (
@@ -62,6 +64,7 @@ const schema = {
 <style>
   .faq { border-top: var(--rule-width) solid var(--rule); }
   .faq__section + .faq__section { margin-top: var(--space-10); }
+  .faq__section { scroll-margin-top: 6rem; }
   .faq__group { font-size: var(--fs-caption); color: var(--accent-deep); margin-bottom: var(--space-3); text-align: left; }
   .faq__item { border-bottom: var(--rule-width) solid var(--rule); }
   .faq__q {
