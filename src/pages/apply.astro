@@ -534,6 +534,10 @@ const trafficBands = ['Not launched yet', 'Under 2,500', '2,500–10,000', '10,0
         if (flow) flow.hidden = true;
         if (done) done.hidden = false;
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Then on to the pre-call video. The pulse beacon (sendBeacon) and the
+        // server-side CAPI Schedule survive navigation; the short pause lets the
+        // browser pixel's Schedule request go out first.
+        setTimeout(() => { window.location.href = '/after-booking'; }, 700);
       }
     });
 
