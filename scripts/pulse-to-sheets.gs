@@ -29,6 +29,7 @@ var FIELDS = [
   ['name',    'name'],
   ['mail',    'email'],
   ['phone',   'phone'],
+  ['sms',     'sms'],     // e.g. an "SMS opt-in" column
   ['revenue', 'revenue'],
   ['status',  'status'],
   ['date',    'date'],
@@ -106,6 +107,7 @@ function syncPulse() {
     if (col.name)    line[col.name - 1]    = j.fullName || '';
     if (col.email)   line[col.email - 1]   = j.email || '';
     if (col.phone)   line[col.phone - 1]   = j.phone || '';
+    if (col.sms)     line[col.sms - 1]     = j.smsConsent === 'yes' ? 'Yes' : (j.smsConsent === 'no' ? 'No' : ''); // blank = applied before the checkbox
     if (col.revenue) line[col.revenue - 1] = j.revenue || '';
     if (col.status)  line[col.status - 1]  = status;
     if (col.date)    line[col.date - 1]    = when ? new Date(when) : '';

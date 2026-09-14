@@ -84,6 +84,7 @@ import BareLayout from '../layouts/BareLayout.astro';
               <div class="pl-multi" data-pl-filter="stage" data-all-label="All stages"></div>
               <div class="pl-multi" data-pl-filter="entryKind" data-all-label="All entries"></div>
               <div class="pl-multi" data-pl-filter="ads" data-all-label="Ads or not"></div>
+              <div class="pl-multi" data-pl-filter="sms" data-all-label="SMS opt-in"></div>
               <div class="pl-multi" data-pl-filter="utmSource" data-all-label="All platforms"></div>
               <div class="pl-multi" data-pl-filter="campaign" data-all-label="All campaigns"></div>
               <div class="pl-multi" data-pl-filter="adset" data-all-label="All adsets"></div>
@@ -271,6 +272,10 @@ import BareLayout from '../layouts/BareLayout.astro';
       traffic: j.traffic || '',
       email: j.email || '',
       phone: j.phone || '',
+      // SMS opt-in from the /apply checkbox, only for people who submitted (earlier
+      // drop-offs never saw it). '' = didn't submit, or applied before it existed.
+      sms: stageRankOf(j.stage || 'landed') < stageRankOf('calendar') ? ''
+        : (j.smsConsent === 'yes' ? 'yes' : (j.smsConsent === 'no' ? 'no' : '')),
       tRevenue: elapsed('revenue'), tTraffic: elapsed('traffic'), tOffer: elapsed('offer'), tDetails: elapsed('details'),
       tCal: elapsed('calendar'), tBooked: elapsed('booked'),
       dwell: (Number(j.updatedAt) || landed) - landed,
@@ -304,6 +309,7 @@ import BareLayout from '../layouts/BareLayout.astro';
     { key: 'name',        label: 'Name',          type: 'text',    cls: 'col-biz', get: (r: any) => r.name.toLowerCase(),     cell: nameCell },
     { key: 'email',       label: 'Email · Q3',    type: 'text',                    get: (r: any) => r.email.toLowerCase(),     cell: (r: any) => txt(r.email) },
     { key: 'phone',       label: 'Phone · Q3',    type: 'text',                    get: (r: any) => r.phone.toLowerCase(),     cell: (r: any) => txt(r.phone) },
+    { key: 'sms',         label: 'SMS opt-in',    type: 'text',                    get: (r: any) => r.sms,                     cell: (r: any) => r.sms === 'yes' ? '<span class="pl-sms--yes">Opted in</span>' : (r.sms === 'no' ? '<span class="pl-sms--no">No</span>' : '<span class="pl-dash">-</span>') },
     { key: 'traffic',     label: 'Traffic · Q2',  type: 'text',                    get: (r: any) => r.traffic.toLowerCase(),   cell: (r: any) => txt(r.traffic) },
     { key: 'revenue',     label: 'Revenue · Q1',  type: 'text',                    get: (r: any) => r.revenue.toLowerCase(),   cell: (r: any) => txt(r.revenue) },
     { key: 'status',      label: 'Status',        type: 'num',                     get: (r: any) => statusRank(r),             cell: badgeCell },
@@ -424,6 +430,7 @@ import BareLayout from '../layouts/BareLayout.astro';
     buildMulti('stage', STAGE_ORDER.map((s) => [s, stageLabel(s)]));
     buildMulti('entryKind', distinct(rows.map((r) => r.entryKind)).map((v) => [v, ENTRY_LABEL[v] || v]));
     buildMulti('ads', [['yes', 'Ads (Facebook/Instagram)'], ['no', 'Not ads']]);
+    buildMulti('sms', [['yes', 'Opted in to texts'], ['no', 'Did not opt in']]);
     ['utmSource', 'campaign', 'adset', 'ad'].forEach((k) =>
       buildMulti(k, distinct(rows.map((r) => r[k])).map((v) => [v, v])));
   }
@@ -605,7 +612,7 @@ import BareLayout from '../layouts/BareLayout.astro';
   function exportCsv() {
     const rows = filterRows(ALL_ROWS);
     const cols: [string, (r: any) => any][] = [
-      ['Name', (r) => r.name], ['Email', (r) => r.email], ['Phone', (r) => r.phone],
+      ['Name', (r) => r.name], ['Email', (r) => r.email], ['Phone', (r) => r.phone], ['SMS opt-in', (r) => r.sms === 'yes' ? 'Yes' : (r.sms === 'no' ? 'No' : '')],
       ['Traffic', (r) => r.traffic], ['Revenue', (r) => r.revenue],
       ['Status', (r) => statusLabel(r)], ['Date', (r) => r.when ? new Date(r.when).toISOString() : ''],
       ['Reached', (r) => stageLabel(r.stage)],
@@ -848,6 +855,8 @@ import BareLayout from '../layouts/BareLayout.astro';
   .pl-anon { color: var(--ink-50); font-style: italic; }
   .pl-entry--cta { color: #3F7F4F; font-weight: var(--fw-body-semi); }
   .pl-entry--ad { color: #A9722B; font-weight: var(--fw-body-semi); }
+  .pl-sms--yes { color: #2F7A4A; font-weight: var(--fw-body-semi); }
+  .pl-sms--no { color: var(--ink-50); }
   .pl-entry--ref { color: var(--ink-70); }
   .pl-entry--direct { color: var(--ink-50); }
 
