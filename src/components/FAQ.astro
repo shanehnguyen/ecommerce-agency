@@ -1,16 +1,36 @@
 ---
 /* FAQ — CSS-only details/summary accordions + FAQPage schema.org markup.
    Voice-forward; doubles as on-page SEO (spec §5 / §6). */
-import type { Faq } from '../data/faqs';
+import type { Faq, FaqBlock, FaqBullet } from '../data/faqs';
 interface Props { items: Faq[]; }
 const { items } = Astro.props;
+
+// Inline markup → HTML: escape first, then **bold** and [text](/path).
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const inline = (s: string) => esc(s)
+  .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+  .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2">$1</a>');
+const bulletHtml = (b: FaqBullet): string => typeof b === 'string'
+  ? `<li>${inline(b)}</li>`
+  : `<li>${inline(b.text)}<ul>${b.list.map((x) => `<li>${inline(x)}</li>`).join('')}</ul></li>`;
+const blockHtml = (b: FaqBlock) => typeof b === 'string'
+  ? `<p>${inline(b)}</p>`
+  : `<ul>${b.list.map(bulletHtml).join('')}</ul>`;
+const answerHtml = (a: Faq['a']) => (Array.isArray(a) ? a : [a]).map(blockHtml).join('');
+
+// Plain text for the schema: markup stripped, list items joined.
+const plain = (s: string) => s.replace(/\*\*(.+?)\*\*/g, '$1').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+const bulletText = (b: FaqBullet): string => typeof b === 'string' ? plain(b) : [plain(b.text), ...b.list.map(plain)].join(' ');
+const answerText = (a: Faq['a']) => (Array.isArray(a) ? a : [a])
+  .map((b) => typeof b === 'string' ? plain(b) : b.list.map(bulletText).join(' ')).join(' ');
+
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
   mainEntity: items.map((f) => ({
     '@type': 'Question',
     name: f.q,
-    acceptedAnswer: { '@type': 'Answer', text: Array.isArray(f.a) ? f.a.join(' ') : f.a },
+    acceptedAnswer: { '@type': 'Answer', text: answerText(f.a) },
   })),
 };
 ---
@@ -22,9 +42,7 @@ const schema = {
         <span class="faq__icon" aria-hidden="true"></span>
       </summary>
       <div class="faq__a-wrap">
-        <div class="faq__a">
-          {Array.isArray(f.a) ? f.a.map((line) => <p>{line}</p>) : <p>{f.a}</p>}
-        </div>
+        <div class="faq__a" set:html={answerHtml(f.a)} />
       </div>
     </details>
   ))}
@@ -100,6 +118,12 @@ const schema = {
   .faq__a-wrap { height: 0; overflow: hidden; transition: height 300ms var(--ease-out); }
   .faq__item[open] .faq__a-wrap { height: auto; }
   .faq__a { padding-bottom: var(--space-5); max-width: 65ch; }
-  .faq__a p { color: var(--ink-70); line-height: 1.6; }
-  .faq__a p + p { margin-top: var(--space-3); }
+  /* answer HTML comes in via set:html, so these need :global to reach it */
+  .faq__a :global(p), .faq__a :global(li) { color: var(--ink-70); line-height: 1.6; }
+  .faq__a :global(* + p), .faq__a :global(* + ul) { margin-top: var(--space-3); }
+  .faq__a :global(ul) { padding-left: var(--space-5); list-style: disc; }
+  .faq__a :global(ul ul) { margin-top: var(--space-2); list-style: circle; }
+  .faq__a :global(li + li) { margin-top: var(--space-1); }
+  .faq__a :global(strong) { color: var(--ink); font-weight: var(--fw-body-semi); }
+  .faq__a :global(a) { color: var(--ink); }
 </style>

@@ -1,0 +1,27 @@
+---
+/* /faq — the full FAQ (same list as under the /after-booking video). */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FAQ from '../components/FAQ.astro';
+import Cta from '../components/Cta.astro';
+import { site } from '../data/site.config';
+import { callFaqs } from '../data/faqs';
+---
+<BaseLayout
+  title="FAQ"
+  description={`Pricing, timelines, payment, and what's included when ${site.brand} builds your Shopify store.`}
+>
+  <section class="section faqp">
+    <div class="container container--prose">
+      <h1 class="faqp__h1">Frequently Asked Questions</h1>
+      <div class="faqp__list"><FAQ items={callFaqs} /></div>
+      <div class="faqp__cta"><Cta event="faq" /></div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .faqp { padding-block: clamp(2.5rem, 7vh, 4.5rem) clamp(3rem, 8vh, 5rem); }
+  .faqp__h1 { text-align: center; margin-inline: auto; max-width: 20ch; font-size: clamp(2rem, 5vw, 3.25rem); }
+  .faqp__list { margin-top: var(--space-8); }
+  .faqp__cta { margin-top: var(--space-10); }
+</style>

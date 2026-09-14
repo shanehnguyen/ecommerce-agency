@@ -1,8 +1,10 @@
 ---
 /* /after-booking — where a booked lead lands: one short video from Shane on
-   the one thing to do before the call. An FAQ goes below the video (copy to
-   come from Shane; slot marked). noindex, and kept out of the sitemap. */
+   the one thing to do before the call, then the full FAQ (src/data/faqs.ts,
+   shared with /faq). noindex, and kept out of the sitemap. */
 import BareLayout from '../layouts/BareLayout.astro';
+import FAQ from '../components/FAQ.astro';
+import { callFaqs } from '../data/faqs';
 ---
 <BareLayout
   title="One last thing before our call"
@@ -25,7 +27,10 @@ import BareLayout from '../layouts/BareLayout.astro';
         </video>
       </div>
 
-      <!-- FAQ goes here (questions and answers coming from Shane). -->
+      <div class="ab__faq">
+        <h2 class="ab__faq-h">Frequently Asked Questions</h2>
+        <div class="ab__faq-list"><FAQ items={callFaqs} /></div>
+      </div>
     </div>
   </section>
 </BareLayout>
@@ -39,4 +44,7 @@ import BareLayout from '../layouts/BareLayout.astro';
     background: #0f120e; box-shadow: 0 40px 80px -40px rgba(26, 24, 20, 0.5);
   }
   .ab__media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .ab__faq { margin-top: clamp(3rem, 8vh, 5rem); text-align: left; }
+  .ab__faq-h { text-align: center; font-size: clamp(1.5rem, 4vw, 2.5rem); }
+  .ab__faq-list { margin-top: var(--space-6); }
 </style>
