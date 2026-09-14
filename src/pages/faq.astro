@@ -4,7 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import FAQ from '../components/FAQ.astro';
 import Cta from '../components/Cta.astro';
 import { site } from '../data/site.config';
-import { callFaqs } from '../data/faqs';
+import { callFaqGroups } from '../data/faqs';
 ---
 <BaseLayout
   title="FAQ"
@@ -13,7 +13,7 @@ import { callFaqs } from '../data/faqs';
   <section class="section faqp">
     <div class="container container--prose">
       <h1 class="faqp__h1">Frequently Asked Questions</h1>
-      <div class="faqp__list"><FAQ items={callFaqs} /></div>
+      <div class="faqp__list"><FAQ groups={callFaqGroups} headingTag="h2" /></div>
       <div class="faqp__cta"><Cta event="faq" /></div>
     </div>
   </section>

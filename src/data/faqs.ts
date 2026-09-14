@@ -211,3 +211,23 @@ export const callFaqs: Faq[] = [
     ],
   },
 ];
+
+/* The same questions, sorted into short labelled sections for /faq and
+   /after-booking. Picked by the start of each question, so a typo here fails
+   the build instead of silently dropping a question. */
+export type FaqGroup = { title: string; items: Faq[] };
+const byQ = (start: string): Faq => {
+  const f = callFaqs.find((x) => x.q.startsWith(start));
+  if (!f) throw new Error(`FAQ not found: ${start}`);
+  return f;
+};
+export const callFaqGroups: FaqGroup[] = [
+  { title: 'Pricing', items: [byQ('What do I get'), byQ('How much is it'), byQ('When do I pay')] },
+  { title: 'Timeline', items: [byQ('How long does it take'), byQ('What happens to my current store')] },
+  { title: 'What’s Included', items: [byQ('What’s included'), byQ('Do you run ads'), byQ('What happens after launch')] },
+  { title: 'Results', items: [byQ('I don’t have much traffic'), byQ('What results can I expect')] },
+  { title: 'Why Me', items: [byQ('I’ve been burned'), byQ('Why you over')] },
+];
+if (callFaqGroups.reduce((n, g) => n + g.items.length, 0) !== callFaqs.length) {
+  throw new Error('callFaqGroups is missing a question from callFaqs');
+}

@@ -4,7 +4,7 @@
    shared with /faq). noindex, and kept out of the sitemap. */
 import BareLayout from '../layouts/BareLayout.astro';
 import FAQ from '../components/FAQ.astro';
-import { callFaqs } from '../data/faqs';
+import { callFaqGroups } from '../data/faqs';
 ---
 <BareLayout
   title="One last thing before our call"
@@ -29,7 +29,7 @@ import { callFaqs } from '../data/faqs';
 
       <div class="ab__faq">
         <h2 class="ab__faq-h">Frequently Asked Questions</h2>
-        <div class="ab__faq-list"><FAQ items={callFaqs} /></div>
+        <div class="ab__faq-list"><FAQ groups={callFaqGroups} headingTag="h3" /></div>
       </div>
     </div>
   </section>

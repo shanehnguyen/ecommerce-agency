@@ -2,9 +2,13 @@
 /* FAQ — plain details/summary accordions + FAQPage schema.org markup.
    No animations by request: no scroll reveal, no slide, no icon spin —
    items open and close instantly. Doubles as on-page SEO (spec §5 / §6). */
-import type { Faq, FaqBlock, FaqBullet } from '../data/faqs';
-interface Props { items: Faq[]; }
-const { items } = Astro.props;
+import type { Faq, FaqBlock, FaqBullet, FaqGroup } from '../data/faqs';
+/* Pass a flat `items` list, or `groups` to show short section labels between
+   questions. `headingTag` sets the label level to fit the page's outline. */
+interface Props { items?: Faq[]; groups?: FaqGroup[]; headingTag?: 'h2' | 'h3'; }
+const { items: flat, groups, headingTag: H = 'h2' } = Astro.props;
+const sections: FaqGroup[] = groups ?? [{ title: '', items: flat ?? [] }];
+const items = sections.flatMap((g) => g.items);
 
 // Inline markup → HTML: escape first, then **bold** and [text](/path).
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -35,23 +39,30 @@ const schema = {
   })),
 };
 ---
-<div class="faq">
-  {items.map((f) => (
-    <details class="faq__item">
-      <summary class="faq__q">
-        <span>{f.q}</span>
-        <span class="faq__icon" aria-hidden="true"></span>
-      </summary>
-      <div class="faq__a-wrap">
-        <div class="faq__a" set:html={answerHtml(f.a)} />
-      </div>
-    </details>
-  ))}
-</div>
+{sections.map((g) => (
+  <div class="faq__section">
+    {g.title && <H class="faq__group">{g.title}</H>}
+    <div class="faq">
+      {g.items.map((f) => (
+        <details class="faq__item">
+          <summary class="faq__q">
+            <span>{f.q}</span>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="faq__a-wrap">
+            <div class="faq__a" set:html={answerHtml(f.a)} />
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+))}
 <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
 
 <style>
   .faq { border-top: var(--rule-width) solid var(--rule); }
+  .faq__section + .faq__section { margin-top: var(--space-10); }
+  .faq__group { font-size: var(--fs-caption); color: var(--accent-deep); margin-bottom: var(--space-3); text-align: left; }
   .faq__item { border-bottom: var(--rule-width) solid var(--rule); }
   .faq__q {
     display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
