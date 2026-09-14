@@ -116,7 +116,7 @@ export const callFaqs: Faq[] = [
     a: [
       'It stays live and keeps selling while I work. I build your new design as a separate copy inside your Shopify account, so your products, checkout, shipping, web address and links stay exactly as they are. I keep what’s already working and rebuild the pages that do the selling.',
       'When you’re happy with it, you pick the day it goes live, and we switch it over together on a call.',
-      'The store is 100% yours. When I hand it over, I send you a video showing how to change your own text, images, prices and products.',
+      'The store is 100% yours, and I make it easy for you to change your own text, images, prices and products, just like you would with a normal template.',
     ],
   },
   {
@@ -155,7 +155,7 @@ export const callFaqs: Faq[] = [
         'Fast-loading pages',
         'SEO basics, so Google can read your store',
         '14 days of unlimited changes after delivery',
-        'A video showing you how to edit your store',
+        'A store that’s easy to edit, just like a normal template',
       ] },
       '**Available at added cost (monthly plans, see the next question):**',
       { list: [
@@ -179,7 +179,7 @@ export const callFaqs: Faq[] = [
     a: [
       'First, you get 14 days of unlimited changes. After that, you have two choices.',
       { list: [
-        '**Run it yourself.** The store is yours, and my video shows you how to edit it.',
+        '**Run it yourself.** The store is yours, and I make it easy for you to edit, just like you would a normal template.',
         { text: '**Keep me on monthly.** There are three plans, and each one includes everything in the one before it:', list: [
           '**Maintenance:** I keep your store running. Updates, fixes when anything breaks, text and image changes, product changes, and new pages when you need them.',
           '**Conversion Partner:** everything in Maintenance, plus every month I find what’s stopping people from buying, fix it, and show you the numbers.',
