@@ -27,6 +27,7 @@ export const site = {
   // ---- Contact --------------------------------------------------------
   email: 'shanehnguyen@gmail.com',
   phone: '(408) 908-8131',          // optional, leave blank to hide
+  location: { city: 'Austin', region: 'TX', label: 'Austin, Texas' },
   social: {
     instagram: 'https://www.instagram.com/madefrontpage',
     facebook: 'https://www.facebook.com/madefrontpage',

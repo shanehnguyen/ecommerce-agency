@@ -34,6 +34,7 @@ const orgSchema = {
   logo: `${site.url}/assets/images/fp-logo.png`,
   email: site.email,
   telephone: site.phone,
+  address: { '@type': 'PostalAddress', addressLocality: site.location.city, addressRegion: site.location.region, addressCountry: 'US' },
   founder: { '@id': `${site.url}/#founder` },
   sameAs: [site.social.instagram, site.social.facebook],
 };
