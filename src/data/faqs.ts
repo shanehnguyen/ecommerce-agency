@@ -157,11 +157,11 @@ export const callFaqs: Faq[] = [
         '14 days of unlimited changes after delivery',
         'A store that’s easy to edit, just like a normal template',
       ] },
-      '**Available at added cost (monthly plans, see the next question):**',
+      '**Available at added cost (monthly plans, more under “What happens after launch?”):**',
       { list: [
-        'Maintenance',
-        'Conversion Partner',
-        'Full Partnership with SEO (blog posts, new pages, and links from other websites)',
+        '**Maintenance:** I keep your store running and make the changes you need, from text and images to products and new pages.',
+        '**Conversion Partner:** everything in Maintenance, plus I find and fix what’s stopping people from buying, every month.',
+        '**Full Partnership:** everything in Conversion Partner, plus monthly SEO: blog posts, new pages, and links from other websites.',
       ] },
       '**What I don’t do:**',
       { list: [
