@@ -87,14 +87,12 @@ const trafficBands = ['Not launched yet', 'Under 2,500', '2,500–10,000', '10,0
             <div class="bk-consent">
               <input id="bk-sms" name="smsConsent" type="checkbox" value="yes" />
               <label for="bk-sms" data-sms-disclosure>
-                By checking this box, I agree to receive text messages from {site.brand} at the phone number
-                provided about my application, call reminders, and project updates. Message frequency varies.
-                Msg &amp; data rates may apply. Reply STOP to opt out or HELP for help. Consent is not a
-                condition of purchase.
+                I agree to texts from {site.brand} about my application and call. Msg frequency varies.
+                Msg &amp; data rates may apply. Reply STOP to opt out, HELP for help.
               </label>
               <p class="bk-consent__links">
-                <a href="/privacy#sms" target="_blank" rel="noopener">Privacy Policy</a> ·
-                <a href="/terms#sms" target="_blank" rel="noopener">Terms of Service</a>
+                <a href="/privacy#sms" target="_blank" rel="noopener">Privacy</a> ·
+                <a href="/terms#sms" target="_blank" rel="noopener">Terms</a>
               </p>
             </div>
             <div class="bk-nav"><button type="button" class="btn btn--primary btn--lg" data-submit>{site.cta.label} <span aria-hidden="true">→</span></button></div>
@@ -116,18 +114,6 @@ const trafficBands = ['Not launched yet', 'Under 2,500', '2,500–10,000', '10,0
           <div class="bk-cal__widget" data-calendly></div>
           <a class="bk-cal__direct" href={site.bookingUrl} target="_blank" rel="noopener">Calendar not loading? Open it in a new tab →</a>
         </div>
-
-        <!-- Always-visible SMS program disclosure. The consent checkbox lives on
-             step 3, which is hidden at page load, so compliance scanners (and
-             reviewers) can't see its wording; this repeats it in plain view. -->
-        <p class="bk-smsnote">
-          <strong>SMS consent:</strong> By checking the SMS consent box on this form, you agree to receive text
-          messages from {site.brand} about your application, call reminders, and project updates. Message
-          frequency varies. Msg &amp; data rates may apply. Reply STOP to opt out or HELP for help. Consent is
-          optional and not a condition of purchase.
-          <a href="/privacy#sms" target="_blank" rel="noopener">Privacy Policy</a> ·
-          <a href="/terms#sms" target="_blank" rel="noopener">Terms of Service</a>
-        </p>
 
       </div>
     </section>
@@ -594,8 +580,6 @@ const trafficBands = ['Not launched yet', 'Under 2,500', '2,500–10,000', '10,0
 
   .bk-fields { margin: var(--space-5) auto 0; display: grid; gap: var(--space-4); max-width: 32rem; text-align: left; }
   .bk-field { display: block; }
-  .bk-smsnote { margin: var(--space-10) auto 0; max-width: 60ch; font-size: var(--fs-caption); line-height: 1.5; color: var(--ink-50); text-align: center; }
-  .bk-smsnote a { color: var(--ink-70); }
   .bk-consent { display: grid; grid-template-columns: auto 1fr; gap: var(--space-2) var(--space-3); align-items: start; margin-top: var(--space-5); text-align: left; }
   .bk-consent input { width: 1.125rem; height: 1.125rem; margin-top: 0.2rem; accent-color: var(--ink); cursor: pointer; }
   .bk-consent label { font-size: var(--fs-caption); line-height: 1.5; color: var(--ink-70); cursor: pointer; }
