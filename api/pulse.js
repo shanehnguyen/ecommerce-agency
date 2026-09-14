@@ -167,6 +167,7 @@ async function ingest(req, res) {
     fullName: pick('fullName', 160),
     email: pick('email', 200),
     phone: pick('phone', 60),
+    smsConsent: pick('smsConsent', 3),
     source: pick('source', 200),
     referrer: pick('referrer', 300),
     query: q,
@@ -376,6 +377,9 @@ export async function upsertLead(redis, j, now) {
     fullName: keep(j.fullName, 'fullName'),
     email: keep(j.email, 'email'),
     phone: keep(j.phone, 'phone'),
+    // SMS opt-in proof: yes/no plus when it was first recorded (ip kept below).
+    smsConsent: keep(j.smsConsent, 'smsConsent'),
+    smsConsentAt: j.smsConsent === 'no' ? 0 : ((prev && prev.smsConsentAt) || (j.smsConsent === 'yes' ? now : 0)),
     revenue: keep(j.revenue, 'revenue'),
     traffic: keep(j.traffic, 'traffic'),
     interest: keep(j.interest, 'interest'),

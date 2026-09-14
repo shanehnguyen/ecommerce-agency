@@ -81,6 +81,22 @@ const trafficBands = ['Not launched yet', 'Under 2,500', '2,500–10,000', '10,0
                 <input class="bk-input" id="bk-phone" name="phone" type="tel" autocomplete="tel" placeholder="(555) 555-5555" required />
               </div>
             </div>
+            <!-- SMS opt-in (A2P 10DLC). Optional and unchecked by default — never
+                 required to submit. The exact wording is sent with the lead as
+                 the consent record, so edit it here only. -->
+            <div class="bk-consent">
+              <input id="bk-sms" name="smsConsent" type="checkbox" value="yes" />
+              <label for="bk-sms" data-sms-disclosure>
+                By checking this box, I agree to receive text messages from {site.brand} at the phone number
+                provided about my application, call reminders, and project updates. Message frequency varies.
+                Msg &amp; data rates may apply. Reply STOP to opt out or HELP for help. Consent is not a
+                condition of purchase.
+              </label>
+              <p class="bk-consent__links">
+                <a href="/privacy#sms" target="_blank" rel="noopener">Privacy Policy</a> ·
+                <a href="/terms#sms" target="_blank" rel="noopener">Terms of Service</a>
+              </p>
+            </div>
             <div class="bk-nav"><button type="button" class="btn btn--primary btn--lg" data-submit>{site.cta.label} <span aria-hidden="true">→</span></button></div>
             <p class="bk-form__status mono" data-book-status hidden></p>
           </fieldset>
@@ -188,6 +204,7 @@ const trafficBands = ['Not launched yet', 'Under 2,500', '2,500–10,000', '10,0
     const collectAll = () => {
       form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input[name], textarea[name]').forEach((f) => {
         if (f.name === 'hp_confirm') return;
+        if (f.name === 'smsConsent') { answers.smsConsent = (f as HTMLInputElement).checked ? 'yes' : 'no'; return; }
         if ((f as HTMLInputElement).type === 'radio' || (f as HTMLInputElement).type === 'checkbox') return;
         answers[f.name] = f.value.trim();
       });
@@ -199,7 +216,8 @@ const trafficBands = ['Not launched yet', 'Under 2,500', '2,500–10,000', '10,0
       Object.assign(answers, saved);
       Object.entries(saved).forEach(([k, v]) => {
         const el = form.querySelector<HTMLInputElement | HTMLTextAreaElement>(`[name="${k}"]`);
-        if (el && typeof v === 'string') el.value = v;
+        if (el && (el as HTMLInputElement).type === 'checkbox') (el as HTMLInputElement).checked = v === 'yes';
+        else if (el && typeof v === 'string') el.value = v;
       });
       form.querySelectorAll<HTMLElement>('[data-radio]').forEach((g) => {
         const val = saved[g.dataset.name!];
@@ -212,7 +230,7 @@ const trafficBands = ['Not launched yet', 'Under 2,500', '2,500–10,000', '10,0
       collectAll();
       Object.entries(answers).forEach(([k, v]) => {
         const el = form.querySelector<HTMLInputElement | HTMLTextAreaElement>(`[name="${k}"]`);
-        if (el) el.value = v;
+        if (el && (el as HTMLInputElement).type !== 'checkbox') el.value = v;
       });
     };
 
@@ -263,6 +281,7 @@ const trafficBands = ['Not launched yet', 'Under 2,500', '2,500–10,000', '10,0
         fullName: answers.fullName || '',
         email: answers.email || '',
         phone: answers.phone || '',
+        smsConsent: answers.smsConsent || '',
         source: PULSE.source, referrer: PULSE.referrer, query: PULSE.query,
         utmSource: PULSE.utmSource, utmMedium: PULSE.utmMedium, utmCampaign: PULSE.utmCampaign,
         utmContent: PULSE.utmContent, utmTerm: PULSE.utmTerm, gclid: PULSE.gclid, fbclid: PULSE.fbclid,
@@ -356,6 +375,13 @@ const trafficBands = ['Not launched yet', 'Under 2,500', '2,500–10,000', '10,0
       fd.append('Phone', answers.phone || '');
       fd.append('Monthly revenue', answers.revenue || '');
       fd.append('Monthly traffic', answers.traffic || '');
+      // SMS consent record: yes/no, when, and the exact disclosure they saw.
+      fd.append('SMS consent', answers.smsConsent === 'yes' ? 'YES, opted in to texts' : 'No');
+      if (answers.smsConsent === 'yes') {
+        fd.append('SMS consent time', new Date().toISOString());
+        fd.append('SMS consent page', window.location.origin + window.location.pathname);
+        fd.append('SMS disclosure shown', (document.querySelector('[data-sms-disclosure]')?.textContent || '').replace(/\s+/g, ' ').trim());
+      }
       if (window.location.search) fd.append('Query params', window.location.search);
       if (document.referrer) fd.append('Referrer', document.referrer);
       fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd }).catch(() => { /* best-effort */ });
@@ -555,6 +581,11 @@ const trafficBands = ['Not launched yet', 'Under 2,500', '2,500–10,000', '10,0
 
   .bk-fields { margin: var(--space-5) auto 0; display: grid; gap: var(--space-4); max-width: 32rem; text-align: left; }
   .bk-field { display: block; }
+  .bk-consent { display: grid; grid-template-columns: auto 1fr; gap: var(--space-2) var(--space-3); align-items: start; margin-top: var(--space-5); text-align: left; }
+  .bk-consent input { width: 1.125rem; height: 1.125rem; margin-top: 0.2rem; accent-color: var(--ink); cursor: pointer; }
+  .bk-consent label { font-size: var(--fs-caption); line-height: 1.5; color: var(--ink-70); cursor: pointer; }
+  .bk-consent__links { grid-column: 2; font-size: var(--fs-caption); color: var(--ink-50); }
+  .bk-consent__links a { color: var(--ink-70); }
   .bk-label { display: block; font-family: var(--font-body); font-size: var(--fs-body-sm, var(--fs-caption)); font-weight: var(--fw-body-semi); color: var(--ink-70); margin-bottom: var(--space-2); }
   .bk-fields .bk-input { margin-top: 0; max-width: none; }
 

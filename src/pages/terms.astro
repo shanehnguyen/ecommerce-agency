@@ -6,7 +6,7 @@ import { site } from '../data/site.config';
   <section class="section legal">
     <div class="container container--prose">
       <h1>Terms</h1>
-      <p class="legal__date mono">Last updated July 2026</p>
+      <p class="legal__date mono">Last updated September 2026</p>
       <!-- LEGAL REVIEW REQUIRED before launch. Plain-language draft only. -->
       <p>
         This site is operated by {site.legalName} (“{site.brand},” “we”).
@@ -23,8 +23,40 @@ import { site } from '../data/site.config';
         The delivery guarantee, the 60-day iteration warranty, the six-month code warranty, and the specific
         conditions on each are stated in full in your build agreement. Those govern the actual work.
       </p>
+      <h2 id="sms">SMS terms</h2>
+      <p>
+        <strong>Program.</strong> {site.brand} sends text messages about your application, call reminders, and
+        project updates to people who check the SMS consent box on our application form.
+      </p>
+      <p>
+        <strong>Opt-in is optional.</strong> Consent to receive texts is not a condition of purchase. You can
+        apply and work with us without it.
+      </p>
+      <p>
+        <strong>Frequency and cost.</strong> Message frequency varies. Message and data rates may apply,
+        according to your mobile plan.
+      </p>
+      <p>
+        <strong>Opting out.</strong> Reply <strong>STOP</strong> to any message to stop receiving texts. You’ll
+        get one confirmation message and no further texts unless you opt in again.
+      </p>
+      <p>
+        <strong>Help.</strong> Reply <strong>HELP</strong> for help, or contact
+        <a href={`mailto:${site.email}`}>{site.email}</a> or {site.phone}.
+      </p>
+      <p>
+        <strong>Carriers.</strong> Mobile carriers are not liable for delayed or undelivered messages.
+      </p>
+      <p>
+        <strong>Privacy.</strong> See the <a href="/privacy#sms">SMS section of our Privacy Policy</a>. We never
+        share your mobile number or opt-in consent with third parties for marketing.
+      </p>
+
       <h2>Contact</h2>
-      <p>Questions: <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+      <p>
+        {site.legalName}<br />
+        <a href={`mailto:${site.email}`}>{site.email}</a> · {site.phone}
+      </p>
     </div>
   </section>
 </BaseLayout>

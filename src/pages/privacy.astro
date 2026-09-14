@@ -6,7 +6,7 @@ import { site } from '../data/site.config';
   <section class="section legal">
     <div class="container container--prose">
       <h1>Privacy</h1>
-      <p class="legal__date mono">Last updated July 2026</p>
+      <p class="legal__date mono">Last updated September 2026</p>
       <!-- LEGAL REVIEW REQUIRED before launch. Plain-language draft only. -->
       <p>
         This site is operated by {site.legalName} (“{site.brand},” “we”).
@@ -21,8 +21,27 @@ import { site } from '../data/site.config';
       </ul>
       <h2>What we don’t do</h2>
       <p>We don’t sell your information. We don’t run a 14-email nurture machine. You can unsubscribe anytime.</p>
+      <h2 id="sms">Text messages (SMS)</h2>
+      <p>
+        If you check the SMS consent box on our application form, {site.brand} will text the phone number you
+        provided about your application, call reminders, and project updates. Message frequency varies.
+        Message and data rates may apply. Consent to receive texts is not a condition of purchase.
+      </p>
+      <p>
+        Reply <strong>STOP</strong> to any message to opt out, and you’ll receive one final confirmation text.
+        Reply <strong>HELP</strong> for help, or contact us at <a href={`mailto:${site.email}`}>{site.email}</a>
+        or {site.phone}.
+      </p>
+      <p>
+        We keep a record of your consent (the date, time, and wording you agreed to). No mobile information will be
+        shared with third parties or affiliates for marketing or promotional purposes. Text messaging originator
+        opt-in data and consent will not be shared with any third parties.
+      </p>
       <h2>Contact</h2>
-      <p>Questions about your data: <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+      <p>
+        Questions about your data: {site.legalName}<br />
+        <a href={`mailto:${site.email}`}>{site.email}</a> · {site.phone}
+      </p>
     </div>
   </section>
 </BaseLayout>
