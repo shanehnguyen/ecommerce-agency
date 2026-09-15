@@ -28,7 +28,7 @@ const orgSchema = {
   '@id': `${site.url}/#organization`,
   name: site.brand,
   legalName: site.legalEntity,
-  alternateName: site.formerName,
+  alternateName: [...site.searchNames, site.formerName],
   description: `${site.tagline} Formerly ${site.formerName}.`,
   url: site.url,
   logo: `${site.url}/assets/images/fp-logo.png`,
@@ -54,7 +54,7 @@ const websiteSchema = {
   '@type': 'WebSite',
   '@id': `${site.url}/#website`,
   name: site.brand,
-  alternateName: ['FrontPage Commerce', site.domain],
+  alternateName: [...site.searchNames, site.domain],
   url: `${site.url}/`,
   publisher: { '@id': `${site.url}/#organization` },
 };

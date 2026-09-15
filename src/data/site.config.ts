@@ -16,6 +16,9 @@ export const site = {
   legalEntity: 'FLIPFIX LLC',
   legalName: 'FLIPFIX LLC d/b/a Front Page Commerce', // footer + legal pages
   formerName: 'FlipFix Digital', // shown as "Formerly …" in footer + schema
+  // Other names people search for the brand by (the handle/domain read as
+  // words). Schema alternateName only — never rendered.
+  searchNames: ['Made Front Page', 'MadeFrontPage', 'FrontPage Commerce'],
   wordmark: { lead: 'Front Page', accent: 'Commerce' },
   byline: 'by Shane N.',
   founder: 'Shane Nguyen',
