@@ -1,6 +1,7 @@
 ---
-/* /faq — the long-form FAQ (src/data/faq-full.ts), with jump links to each
-   section. /after-booking shows the short 12-question version (faqs.ts). */
+/* /faq — the long-form FAQ (src/data/faq-full.ts), with section jump links
+   that stick under the nav while scrolling and highlight the section you're
+   in. /after-booking shows the short 12-question version (faqs.ts). */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import FAQ from '../components/FAQ.astro';
 import Cta from '../components/Cta.astro';
@@ -16,8 +17,10 @@ const slug = (t: string) => t.toLowerCase().replace(/[’']/g, '').replace(/[^a-
   <section class="section faqp">
     <div class="container container--prose">
       <h1 class="faqp__h1">Frequently Asked Questions</h1>
-      <nav class="faqp__jump" aria-label="FAQ sections">
-        {fullFaqGroups.map((g) => <a href={`#${slug(g.title)}`}>{g.title}</a>)}
+      <nav class="faqp__jump" aria-label="FAQ sections" data-faq-jump>
+        <div class="faqp__jump-row" data-faq-jump-row>
+          {fullFaqGroups.map((g) => <a href={`#${slug(g.title)}`} data-faq-jump-link>{g.title}</a>)}
+        </div>
       </nav>
       <div class="faqp__list"><FAQ groups={fullFaqGroups} headingTag="h2" /></div>
       <div class="faqp__cta"><Cta event="faq" /></div>
@@ -26,15 +29,86 @@ const slug = (t: string) => t.toLowerCase().replace(/[’']/g, '').replace(/[^a-
 </BaseLayout>
 
 <script>
-  // Jump links: scroll through the site's smooth scroller (Lenis) when it's on,
-  // so the section lands just under the sticky nav instead of stopping short.
-  document.querySelectorAll<HTMLAnchorElement>('.faqp__jump a').forEach((a) => {
+  const bar = document.querySelector<HTMLElement>('[data-faq-jump]');
+  const row = document.querySelector<HTMLElement>('[data-faq-jump-row]');
+  const nav = document.querySelector<HTMLElement>('.nav');
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-faq-jump-link]')];
+  const sections = links
+    .map((a) => document.querySelector<HTMLElement>(a.getAttribute('href') || ''))
+    .filter((s): s is HTMLElement => !!s);
+
+  // Stick the bar right under the sticky nav (its height changes on scroll),
+  // and land jumped-to sections below both.
+  const syncOffsets = () => {
+    const navH = nav ? Math.round(nav.getBoundingClientRect().height) : 0;
+    const barH = bar ? Math.round(bar.getBoundingClientRect().height) : 0;
+    document.documentElement.style.setProperty('--faq-stick-top', `${navH}px`);
+    document.documentElement.style.setProperty('--faq-jump-offset', `${navH + barH + 16}px`);
+  };
+  syncOffsets();
+  window.addEventListener('resize', syncOffsets);
+  if (nav) new MutationObserver(syncOffsets).observe(nav, { attributes: true, attributeFilter: ['data-scrolled'] });
+
+  // Highlight the section in view, and keep its button visible in the row.
+  const setActive = (id: string) => {
+    links.forEach((a) => {
+      const on = a.getAttribute('href') === `#${id}`;
+      a.classList.toggle('is-active', on);
+      if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+      if (on && row && row.scrollWidth > row.clientWidth) {
+        // instant: a smooth sideways scroll gets cancelled while the page scrolls
+        const r = row.getBoundingClientRect(), p = a.getBoundingClientRect();
+        row.scrollLeft += (p.left - r.left) - (r.width - p.width) / 2;
+      }
+    });
+  };
+  // Active = the last section whose top has reached the bar's bottom edge.
+  // Measured live on every scroll event (the nav shrinks on scroll) — 10 rects,
+  // cheap enough that throttling only risks missing the final position.
+  let lastActive: string | null = null;
+  // While a tapped jump is animating, keep the tapped section highlighted
+  // instead of flickering through the sections it passes.
+  let jumping = false;
+  let unlockTimer = 0;
+  const onScroll = () => {
+    if (jumping) return;
+    const line = (bar ? bar.getBoundingClientRect().bottom : 0) + 60; // jumps land 16-32px under the bar
+    let current = '';
+    for (const s of sections) { if (s.getBoundingClientRect().top <= line) current = s.id; }
+    if (current !== lastActive) { lastActive = current; setActive(current); }
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  // Lenis (loaded by the layout, possibly after this script) emits its own
+  // scroll event every animation frame; hook it once it exists.
+  let lenisHooked = false;
+  const hookLenis = () => {
+    const l = (window as any).lenis;
+    if (l && !lenisHooked) { l.on('scroll', onScroll); lenisHooked = true; }
+  };
+  hookLenis();
+  window.addEventListener('load', hookLenis);
+  onScroll();
+
+  // Jump through the site's smooth scroller (Lenis) when it's on; it honours
+  // each section's scroll-margin-top. Without it, the native anchor jump does.
+  // The tapped section is highlighted right away and held until the jump ends.
+  links.forEach((a) => {
     a.addEventListener('click', (e) => {
       const target = document.querySelector<HTMLElement>(a.getAttribute('href') || '');
+      if (!target) return;
+      lastActive = target.id;
+      setActive(target.id);
       const lenis = (window as any).lenis;
-      if (!target || !lenis) return; // native anchor jump + scroll-margin
+      if (!lenis) return;
       e.preventDefault();
-      lenis.scrollTo(target); // honours the section's scroll-margin-top
+      syncOffsets();
+      jumping = true;
+      hookLenis();
+      const release = () => { jumping = false; onScroll(); };
+      const unlock = () => { window.clearTimeout(unlockTimer); unlockTimer = window.setTimeout(release, 150); };
+      window.clearTimeout(unlockTimer);
+      unlockTimer = window.setTimeout(release, 2000); // fallback if the jump is interrupted
+      lenis.scrollTo(target, { onComplete: unlock });
       history.replaceState(null, '', a.getAttribute('href'));
     });
   });
@@ -43,12 +117,30 @@ const slug = (t: string) => t.toLowerCase().replace(/[’']/g, '').replace(/[^a-
 <style>
   .faqp { padding-block: clamp(2.5rem, 7vh, 4.5rem) clamp(3rem, 8vh, 5rem); }
   .faqp__h1 { text-align: center; margin-inline: auto; max-width: 20ch; font-size: clamp(2rem, 5vw, 3.25rem); }
-  .faqp__jump { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); margin-top: var(--space-6); }
+
+  /* sticky section bar; the shadow + clip-path paint its background edge to
+     edge without widening the page */
+  .faqp__jump {
+    position: sticky; top: var(--faq-stick-top, 64px); z-index: 5;
+    margin-top: var(--space-6); padding-block: var(--space-3);
+    background: var(--bg); box-shadow: 0 0 0 100vmax var(--bg); clip-path: inset(0 -100vmax);
+    border-bottom: var(--rule-width) solid var(--line);
+  }
+  .faqp__jump-row { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); }
   .faqp__jump a {
-    padding: var(--space-1) var(--space-3); border: var(--rule-width) solid var(--line); border-radius: 999px;
-    font-size: var(--fs-caption); color: var(--ink-70); text-decoration: none; background: var(--bg-raised);
+    flex-shrink: 0; padding: var(--space-1) var(--space-3); border: var(--rule-width) solid var(--line); border-radius: 999px;
+    font-size: var(--fs-caption); color: var(--ink-70); text-decoration: none; background: var(--bg-raised); white-space: nowrap;
   }
   .faqp__jump a:hover { color: var(--ink); border-color: var(--ink-50); }
-  .faqp__list { margin-top: var(--space-10); }
+  .faqp__jump a.is-active { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+
+  /* phones: one swipeable row instead of five wrapped rows */
+  @media (max-width: 55.99em) {
+    .faqp__jump-row { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .faqp__jump-row::-webkit-scrollbar { display: none; }
+  }
+
+  .faqp__list { margin-top: var(--space-8); }
+  .faqp__list :global(.faq__section) { scroll-margin-top: var(--faq-jump-offset, 10rem); }
   .faqp__cta { margin-top: var(--space-10); }
 </style>
