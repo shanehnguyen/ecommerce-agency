@@ -36,7 +36,8 @@ const orgSchema = {
   telephone: site.phone,
   address: { '@type': 'PostalAddress', addressLocality: site.location.city, addressRegion: site.location.region, addressCountry: 'US' },
   founder: { '@id': `${site.url}/#founder` },
-  sameAs: [site.social.instagram, site.social.facebook],
+  // Add a LinkedIn company page here once one exists.
+  sameAs: [site.social.instagram, site.social.facebook, site.social.crunchbase],
 };
 // Ties "Shane Nguyen" searches to the brand: same person across the site and
 // the social profiles in sameAs.

@@ -34,7 +34,8 @@ export const site = {
   social: {
     instagram: 'https://www.instagram.com/madefrontpage',
     facebook: 'https://www.facebook.com/madefrontpage',
-    linkedin: 'https://www.linkedin.com/in/shanenguyen1253/',
+    linkedin: 'https://www.linkedin.com/in/shanenguyen1253/',   // founder's personal profile (Person schema)
+    crunchbase: 'https://www.crunchbase.com/organization/front-page-commerce',
   },
 
   // ---- The single CTA (identical on every button, per the structure spec)
