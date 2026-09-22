@@ -1,23 +1,23 @@
-﻿/* =====================================================================
-   site.config.ts â€” SINGLE SOURCE OF TRUTH
+/* =====================================================================
+   site.config.ts — SINGLE SOURCE OF TRUTH
    Brand strings, contact, scarcity, pricing, calculator defaults, the one
    CTA phrase, and analytics ids all live here so nothing drifts. Every page
-   reads from this file â€” change a value once and it updates everywhere.
+   reads from this file — change a value once and it updates everywhere.
 
-   âš ï¸  BEFORE LAUNCH, confirm the values marked  TODO  below.
+   ⚠️  BEFORE LAUNCH, confirm the values marked  TODO  below.
    ===================================================================== */
 
 export const site = {
   // ---- Brand ----------------------------------------------------------
   // The wordmark renders as two words: the second is brass (the design's
-  // one accent). Byline under the wordmark credits the solo operator â€”
+  // one accent). Byline under the wordmark credits the solo operator —
   // "people buy the person" at this price.
   brand: 'Front Page Commerce',
   legalEntity: 'FLIPFIX LLC',
   legalName: 'FLIPFIX LLC d/b/a Front Page Commerce', // footer + legal pages
-  formerName: 'FlipFix Digital', // shown as "Formerly â€¦" in footer + schema
+  formerName: 'FlipFix Digital', // shown as "Formerly …" in footer + schema
   // Other names people search for the brand by (the handle/domain read as
-  // words). Schema alternateName only â€” never rendered.
+  // words). Schema alternateName only — never rendered.
   searchNames: ['Made Front Page', 'MadeFrontPage', 'FrontPage Commerce'],
   wordmark: { lead: 'Front Page', accent: 'Commerce' },
   byline: 'by Shane N.',
@@ -40,7 +40,7 @@ export const site = {
   // ---- The single CTA (identical on every button, per the structure spec)
   cta: { label: 'SEE YOUR HOMEPAGE FIRST', href: '/apply' },
 
-  // ---- Scarcity â€” evergreen copy ("I only take N builds a month"), so
+  // ---- Scarcity — evergreen copy ("I only take N builds a month"), so
   // nothing goes stale. slotsOpen is the TRUE capacity cap; only change it
   // if actual capacity changes.
   scarcity: {
@@ -52,17 +52,17 @@ export const site = {
   bookingUrl: 'https://calendly.com/shanehnguyen/30-min-strategy-session',
   callLengthMinutes: 30,
 
-  // Web3Forms access key â€” PUBLIC by design (ships in the client form POST;
+  // Web3Forms access key — PUBLIC by design (ships in the client form POST;
   // Web3Forms blocks server-side submits on the free plan). Abuse is limited
   // by domain + spam settings in the Web3Forms dashboard.
   web3formsKey: '874d9b71-c185-4a8c-96a0-aba446ac3bf7',
 
-  // ---- Analytics â€” wired in Analytics.astro, all PUBLIC client ids -----
+  // ---- Analytics — wired in Analytics.astro, all PUBLIC client ids -----
   analytics: {
     // MUST match the ad campaign's selected pixel AND api/pulse.js's
     // META_PIXEL_ID default, or the campaign goes blind to the site's events.
     metaPixelId: '1460315575868963',
-    ga4Id: '',                        // optional â€” blank disables GA4
+    ga4Id: '',                        // optional — blank disables GA4
     clarityId: 'xslhs1jscu',          // Microsoft Clarity id
   },
 } as const;
@@ -76,11 +76,11 @@ export const pricing = {
 
 // ---- ROI calculator defaults (from the offer doc's worked example) ----
 // Defaults are pre-filled so the calculator shows value on page load. The
-// 1.22 uplift multiplier (1.8% â†’ 2.2%) is defensible; do not inflate it.
+// 1.22 uplift multiplier (1.8% → 2.2%) is defensible; do not inflate it.
 export const calculator = {
   sessions: 46000,
   conversionRate: 1.8,     // %
   averageOrderValue: 65,   // $
-  upliftMultiplier: 1.22,  // 1.8% â†’ ~2.2%
+  upliftMultiplier: 1.22,  // 1.8% → ~2.2%
   buildCost: pricing.build,
 } as const;
