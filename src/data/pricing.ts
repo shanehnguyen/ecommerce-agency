@@ -119,6 +119,6 @@ export const priceCards: PriceCard[] = [
     // no checklist: the service tiles carry this card on their own
     features: [],
     stack: [],
-    riskFree: 'Monthly, set on our call. Cancel anytime.',
+    riskFree: 'Based on the services you pick. Cancel anytime.',
   },
 ];
