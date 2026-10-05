@@ -114,7 +114,7 @@ export const priceCards: PriceCard[] = [
     services: [
       { name: 'Site upkeep', desc: 'Fixes, updates and new products, handled for you.' },
       { name: 'Conversion rate optimization', desc: 'Monthly tests that turn more of your visitors into buyers.' },
-      { name: 'Email and SMS', desc: 'Flows and campaigns that bring customers back to buy again.' },
+      { name: 'Email and SMS', desc: 'Flows and campaigns that bring customers back to buy.' },
       { name: 'SEO and AI search', desc: 'Get found on Google and in AI answers like ChatGPT.' },
     ],
     scopeNote: 'Need a service that isn’t on this list? Just ask.',
