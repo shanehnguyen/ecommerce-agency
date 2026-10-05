@@ -71,10 +71,9 @@ export const priceCards: PriceCard[] = [
   {
     eyebrow: 'Phase 1',
     name: 'The Conversion Build',
-    description: "For growing brands with traffic. Every page a customer can land on, rebuilt to sell.",
+    description: "For growing brands with traffic. Every page you need to convert higher.",
     price: '$4,500', pricePrefix: 'starting at', qualifier: '', featured: true,
     cta: 'Build my website', event: 'Pricing:Full',
-    pagesLabel: 'Every page you need to convert higher',
     pages: [
       'Homepage',
       'Collection pages',
