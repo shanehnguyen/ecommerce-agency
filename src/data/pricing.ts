@@ -4,8 +4,9 @@
    Plan). Change it once, here.
 
    The Conversion Build leads with the PAGES it covers, rendered as chips,
-   so scope reads at a glance. The Growth Plan does the same with its five
-   services, then a short checklist of how the plan works.
+   so scope reads at a glance. The Growth Plan lists its services as
+   pickable tiles (name + one line on what it does), then a short
+   checklist of how the plan works.
 
    Search sits last on the Growth Plan on purpose: it's offered, but not
    pushed, because SEO/AEO/GEO can't show results inside a normal
@@ -40,6 +41,9 @@ export type PriceCard = {
    * scope boundary, not a benefit list — keep it literal and complete. */
   pages?: string[];
   pagesLabel?: string;
+  /** Services as name + one-line description tiles, in place of `pages`
+   * chips. Rendered under `pagesLabel`, with `scopeNote` below. */
+  services?: { name: string; desc: string }[];
   /** Plain-language note under the page chips. */
   scopeNote?: string;
 
@@ -107,12 +111,11 @@ export const priceCards: PriceCard[] = [
     price: '$X,XXX', qualifier: '/mo',
     cta: 'Keep it selling', event: 'Pricing:Retainer',
     pagesLabel: 'Pick your services',
-    pages: [
-      'Site upkeep',
-      'Sales and launch pages',
-      'Email and SMS',
-      'SEO and AI search',
-      'Monthly sales reports',
+    services: [
+      { name: 'Site upkeep', desc: 'Fixes, updates and new products, handled for you.' },
+      { name: 'Conversion rate optimization', desc: 'Monthly tests that turn more of your visitors into buyers.' },
+      { name: 'Email and SMS', desc: 'Flows and campaigns that bring customers back to buy again.' },
+      { name: 'SEO and AI search', desc: 'Get found on Google and in AI answers like ChatGPT.' },
     ],
     scopeNote: 'Need a service that isn’t on this list? Just ask.',
     features: [

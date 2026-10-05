@@ -22,12 +22,24 @@ const child = animate ? '' : undefined; // '' renders a bare attribute; undefine
 <p class="pcard__name">{c.name}</p>
 <p class="pcard__desc">{c.description}</p>
 <hr class="pcard__divider" />
-{c.pages && (
+{(c.pages || c.services) && (
   <div class="pcard__pages-group">
     {c.pagesLabel && <p class="pcard__group-label mono" data-reveal-child={child}>{c.pagesLabel}</p>}
-    <ul class="pcard__pages">
-      {c.pages.map((pg) => <li data-reveal-child={child}>{pg}</li>)}
-    </ul>
+    {c.pages && (
+      <ul class="pcard__pages">
+        {c.pages.map((pg) => <li data-reveal-child={child}>{pg}</li>)}
+      </ul>
+    )}
+    {c.services && (
+      <ul class="pcard__services">
+        {c.services.map((sv) => (
+          <li data-reveal-child={child}>
+            <span class="pcard__service-name">{sv.name}</span>
+            <span class="pcard__service-desc">{sv.desc}</span>
+          </li>
+        ))}
+      </ul>
+    )}
     {c.scopeNote && <p class="pcard__scope-note" data-reveal-child={child}>{c.scopeNote}</p>}
   </div>
 )}
