@@ -58,13 +58,13 @@ export const fullFaqGroups: FaqGroup[] = [
         a: [
           { list: [
             '**Conversion Build:** starts at $4,500',
-            '**Monthly Retainer:** one flat monthly fee, quoted on our call',
+            '**Growth Plan:** one flat monthly fee, quoted on our call',
           ] },
           'You see your homepage design before you pay anything for the build.',
         ],
       },
       {
-        q: 'What comes with the Monthly Retainer?',
+        q: 'What comes with the Growth Plan?',
         a: [
           'You pick what you need:',
           { list: [
@@ -72,7 +72,7 @@ export const fullFaqGroups: FaqGroup[] = [
             '**Email and SMS:** automated email flows, email campaigns designed to match your store, popups and signup offers to grow your list, and SMS flows and campaigns.',
             '**Search:** SEO blog posts, plus AEO and GEO (showing up in AI tools like ChatGPT). Search takes months to pay off, so it’s best once the rest is working.',
           ] },
-          'I design every email and popup to match your store, and I write every word. You see your numbers every month.',
+          'I design every email and popup to match your store, and I write every word. You get weekly and monthly reports.',
         ],
       },
       {
@@ -97,7 +97,7 @@ export const fullFaqGroups: FaqGroup[] = [
         a: [
           { list: [
             '**Conversion Build:** your store needs rebuilding so more visitors buy.',
-            '**Monthly Retainer:** your store is built, and you want it kept running, improved, and backed by email and SMS.',
+            '**Growth Plan:** your store is built, and you want it kept running, improved, and backed by email and SMS.',
           ] },
           'Not sure? I’ll tell you on our call.',
         ],
@@ -329,7 +329,7 @@ export const fullFaqGroups: FaqGroup[] = [
         q: 'Does the store connect to my email app, like Klaviyo?',
         a: [
           'Yes. Every build comes with an email signup form connected to your email app.',
-          'Want your emails written and designed too? Flows, campaigns and SMS are part of the Monthly Retainer.',
+          'Want your emails written and designed too? Flows, campaigns and SMS are part of the Growth Plan.',
         ],
       },
       {
@@ -405,7 +405,7 @@ export const fullFaqGroups: FaqGroup[] = [
         a: [
           'SEO stands for search engine optimization. It means showing up on Google.',
           'Every store I build is set up so Google can read it: fast pages, a clean layout, and a title and description on every page. That same setup helps AI tools like ChatGPT understand your store too. That’s called GEO, short for generative engine optimization.',
-          'Ongoing SEO is part of the Monthly Retainer: blog posts, plus AEO and GEO so AI tools can find and recommend your store.',
+          'Ongoing SEO is part of the Growth Plan: blog posts, plus AEO and GEO so AI tools can find and recommend your store.',
         ],
       },
       {
@@ -434,7 +434,7 @@ export const fullFaqGroups: FaqGroup[] = [
       {
         q: 'What’s the monthly plan, and what does it cost?',
         a: [
-          'It’s the Monthly Retainer. You pick what you need: your store (maintenance, CRO, new pages), email and SMS, and search.',
+          'It’s the Growth Plan. You pick what you need: your store (maintenance, CRO, new pages), email and SMS, and search.',
           'It’s a flat monthly fee. I set the price on our call, based on what you pick.',
         ],
       },

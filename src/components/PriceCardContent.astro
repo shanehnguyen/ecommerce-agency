@@ -17,7 +17,7 @@ interface Props {
 const { card: c, animate = false } = Astro.props;
 const child = animate ? '' : undefined; // '' renders a bare attribute; undefined omits it
 ---
-{c.featured && <p class="pcard__tag mono">Most booked</p>}
+{c.featured && <p class="pcard__tag mono">Start here</p>}
 <p class="pcard__eyebrow mono">{c.eyebrow}</p>
 <p class="pcard__name">{c.name}</p>
 <p class="pcard__desc">{c.description}</p>

@@ -1,19 +1,18 @@
 /* =====================================================================
    pricing.ts — SINGLE SOURCE OF TRUTH for the two offers.
-   One build (the Conversion Build) and one ongoing plan (the Monthly
-   Retainer). Change it once, here.
+   One build (the Conversion Build) and one ongoing plan (the Growth
+   Plan). Change it once, here.
 
    The Conversion Build leads with the PAGES it covers, rendered as chips,
    so scope reads at a glance. The retainer leads with service GROUPS
    (store, email + SMS, search) the same way: an inventory you can count,
    not a pile of benefits.
 
-   Search sits last on the retainer with an honest "takes months" note on
-   purpose: it's offered, but steered away from, because SEO/AEO/GEO can't
-   show results inside a normal cancel-anytime window.
+   Search sits last on the retainer on purpose: it's offered, but not
+   pushed, because SEO/AEO/GEO can't show results inside a normal
+   cancel-anytime window.
 
-   The retainer price is deliberately blurred ("starting at" + a hidden
-   number): it's quoted on the call, and a blurred figure says "there is
+   The retainer price is deliberately blurred (a hidden number + /mo): it's quoted on the call, and a blurred figure says "there is
    a real number" without anchoring one.
 
    Keep each stack to FIVE lines or fewer. Past that a checklist stops
@@ -78,7 +77,7 @@ export type PriceCard = {
 
 export const priceCards: PriceCard[] = [
   {
-    eyebrow: 'Option 1 · Complete store',
+    eyebrow: 'Step 1',
     name: 'The Conversion Build',
     description: "For growing brands with traffic. Every page a customer can land on, rebuilt to sell.",
     price: '$4,500', pricePrefix: 'starting at', qualifier: '', featured: true,
@@ -88,14 +87,13 @@ export const priceCards: PriceCard[] = [
       'Homepage',
       'Collection pages',
       'Product pages',
-      'Campaign pages',
       'Ad landing pages',
+      'B2B pages',
       'Cart + upsells',
       'About + brand story',
       'FAQ, contact, policies',
     ],
     scopeNote: 'Need a page that isn’t on this list? It gets built too.',
-    stackLabel: 'On every one of those pages',
     features: [
       "Live in 14 days or you don't pay",
       'Every page you need to convert traffic from any source',
@@ -111,10 +109,10 @@ export const priceCards: PriceCard[] = [
     riskFree: 'See it before you buy it.',
   },
   {
-    eyebrow: 'Option 2 · Ongoing',
-    name: 'The Monthly Retainer',
-    description: "For brands that want it handled after launch. Your store, your emails and your texts, run for you every month.",
-    price: '$X,XXX', pricePrefix: 'starting at', qualifier: '/mo',
+    eyebrow: 'Step 2',
+    name: 'The Growth Plan',
+    description: "For brands that want everything handled. Choose any service you need.",
+    price: '$X,XXX', qualifier: '/mo',
     priceBlurred: true, blurredLabel: 'Price quoted on our call',
     cta: 'Keep it selling', event: 'Pricing:Retainer',
     groups: [
@@ -129,24 +127,17 @@ export const priceCards: PriceCard[] = [
       {
         label: 'Search',
         items: ['SEO + blog posts', 'AI search (AEO + GEO)'],
-        note: 'Search takes months to pay off. Best once the rest is working.',
       },
     ],
-    stackLabel: 'Every month',
     features: [
-      'Your store kept running, tested and improved',
-      'Emails and popups designed to match your store',
-      'Every word written for you',
-      'Your numbers reported every month',
-      "Cancel anytime with 30 days' notice",
+      'All done for you',
+      'Month-to-month. Cancel anytime',
+      'Weekly and monthly reports',
     ],
     stack: [
-      'Your store kept running, tested and improved',
-      'Emails and popups designed to match your store',
-      'Every word written for you',
-      'Your numbers reported every month',
-      "Cancel anytime with 30 days' notice",
+      'All done for you',
+      'Month-to-month. Cancel anytime',
+      'Weekly and monthly reports',
     ],
-    riskFree: 'Pick what you need. Skip the rest.',
   },
 ];
