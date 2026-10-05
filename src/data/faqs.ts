@@ -43,23 +43,21 @@ export const homeFaqs: Faq[] = [
   {
     q: 'What do you need from me?',
     a: [
-      'Just access to your Shopify store. Adding me takes about a minute.',
-      'I handle the design, the words and the build.',
-      'You can ask for as many changes as you want while I build, and for 14 days after launch. Tell me what to change, like a headline or a photo, and I change it.',
-      'You don’t have to ask for anything. If you’re happy, you’re done.',
+      'Access to your Shopify store.',
+      'Everything else is handled. During the 14 days of revisions, you can ask for any changes you want. If you’re happy without the revisions, then you’re done.',
     ],
   },
   {
     q: 'How are you different from every other agency?',
     a: [
-      'Most agencies build stores that look nice. I build stores that sell. That’s the only thing I care about.',
-      'Here’s what I do to get there:',
+      'Most agencies focus on making the store look as pretty as possible. I don’t do that. I build stores that sell. That’s the only metric I care about.',
+      'Here’s what it takes to get there:',
       { list: [
-        '**I study your business first.** Who buys from you, what makes them unsure, what your competitors do and what your ads promise.',
-        '**I write every word to sell.** Your pages answer your buyers’ questions before they leave.',
-        '**I match your pages to your ads.** People who click an ad land on a page that says the same thing, so more of them buy.',
+        '**Studying your business first.** Who buys from you, what makes them unsure, what your competitors do and what your ads promise.',
+        '**Writing every word to sell.** Your pages answer your buyers’ questions before they leave.',
+        '**Matching the traffic to the pages.** People who click an ad land on a page that says the same thing, so more of them buy.',
       ] },
-      'And you see how I work before you pay. I design your homepage first, for free.',
+      'Other agencies will tell you how amazing their stores look. I’ll tell you how much my stores sell.',
     ],
   },
 ];
