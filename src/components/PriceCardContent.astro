@@ -49,7 +49,6 @@ const child = animate ? '' : undefined; // '' renders a bare attribute; undefine
         </li>
       ))}
     </ul>
-    {!c.pages && c.scopeNote && <p class="pcard__scope-note pcard__scope-note--stack" data-reveal-child={child}>{c.scopeNote}</p>}
     <div class="pcard__math" data-reveal-child={child}>
       {c.anchor && <p class="pcard__anchor">{c.anchor}</p>}
       <p class="pcard__mathrow pcard__mathrow--invest">

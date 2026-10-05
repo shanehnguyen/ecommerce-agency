@@ -136,8 +136,6 @@
 /* the limit line — what this build does NOT cover. Set in the muted
    italic serif so it reads as a plain-spoken caveat, not fine print. */
 .pcard__scope-note { margin-top: var(--space-3); font-family: var(--font-serif); font-style: italic; font-size: var(--fs-body-sm, var(--fs-caption)); line-height: 1.45; color: var(--ink-50); }
-/* scope note under a checklist (Growth Plan): sits between the list and the price */
-.pcard__scope-note--stack { margin-top: var(--space-4); }
 .pcard__invest-prefix { white-space: nowrap; font-size: var(--fs-small); font-weight: var(--fw-body-regular); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50); margin-right: var(--space-1); }
 .pcard__stack { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-4); }
 .pcard__stack li { display: flex; align-items: baseline; gap: var(--space-3); font-family: var(--font-serif); font-size: var(--fs-bodyL); line-height: 1.4; color: var(--ink); }

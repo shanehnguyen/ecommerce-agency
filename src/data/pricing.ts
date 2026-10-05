@@ -4,8 +4,8 @@
    Plan). Change it once, here.
 
    The Conversion Build leads with the PAGES it covers, rendered as chips,
-   so scope reads at a glance. The Growth Plan is a plain checklist of
-   services: chips and label rows both read as clutter on that card.
+   so scope reads at a glance. The Growth Plan does the same with its five
+   services, then a short checklist of how the plan works.
 
    Search sits last on the Growth Plan on purpose: it's offered, but not
    pushed, because SEO/AEO/GEO can't show results inside a normal
@@ -106,21 +106,24 @@ export const priceCards: PriceCard[] = [
     description: "For brands that want everything handled. Choose any service you need.",
     price: '$X,XXX', qualifier: '/mo',
     cta: 'Keep it selling', event: 'Pricing:Retainer',
+    pagesLabel: 'What we handle',
+    pages: [
+      'Site upkeep',
+      'Sales and launch pages',
+      'Email and SMS',
+      'SEO and AI search',
+      'Monthly sales reports',
+    ],
     scopeNote: 'Need a service that isn’t on this list? Just ask.',
     features: [
-      'Site upkeep',
-      'Sales and launch pages',
-      'Email and SMS',
-      'SEO and AI search',
-      'Monthly sales reports',
+      'All done for you',
+      'Month-to-month. Cancel anytime',
+      'Weekly and monthly reports',
     ],
     stack: [
-      'Site upkeep',
-      'Sales and launch pages',
-      'Email and SMS',
-      'SEO and AI search',
-      'Monthly sales reports',
+      'All done for you',
+      'Month-to-month. Cancel anytime',
+      'Weekly and monthly reports',
     ],
-    riskFree: 'Month-to-month. Cancel anytime.',
   },
 ];
