@@ -136,6 +136,13 @@ const trafficBands = ['Not launched yet', 'Under 2,500', '2,500–10,000', '10,0
   const bookingUrl = site.bookingUrl;
   const web3Key = site.web3formsKey;
 
+  // Visitors from the Growth Plan card didn't come for a homepage design,
+  // so the headline speaks to what they clicked.
+  if (new URLSearchParams(location.search).get('from') === 'Pricing:Retainer') {
+    const h1 = document.querySelector('.bk-intro__h1');
+    if (h1) h1.textContent = 'Let’s talk about your Growth Plan.';
+  }
+
   const form = document.querySelector<HTMLFormElement>('[data-book-form]');
   const flow = document.querySelector<HTMLElement>('[data-book-flow]');
   const done = document.querySelector<HTMLElement>('[data-book-done]');

@@ -21,6 +21,6 @@ export const portfolioCards: PortfolioCard[] = [
   { name: 'Case Furniture', image: caseFurniture, label: 'Conversion rate', fromTo: '0.9% → 1.9%' },
   { name: 'Junglee Craft Cocktails', image: junglee, label: 'Conversion rate', fromTo: '2.0% → 4.2%' },
   { name: "Kim'C Market", image: kimcMarket, label: 'Conversion rate', fromTo: '1.3% → 2.47%' },
-  { name: 'PK Cabinets', image: pkCabinet, label: 'Avg. order value', fromTo: '$2,081 → $5,556' },
+  { name: 'PK Cabinets', image: pkCabinet, label: 'Average order size', fromTo: '$2,081 → $5,556' },
   { name: 'Yushan Colour', image: yushanColour, label: 'Conversion rate', fromTo: '1.3% → 2.5%' },
 ];

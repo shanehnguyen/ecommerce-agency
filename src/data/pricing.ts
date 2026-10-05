@@ -107,7 +107,7 @@ export const priceCards: PriceCard[] = [
     name: 'The Growth Plan',
     description: "For growing brands that need everything Shopify-related handled. Choose whichever services you need.",
     price: 'Custom', qualifier: '',
-    cta: 'See your homepage first', event: 'Pricing:Retainer',
+    cta: 'Get the Growth Plan', event: 'Pricing:Retainer',
     pagesLabel: 'Pick your services',
     services: [
       { name: 'Site upkeep', desc: 'Fixes, updates and new products, handled for you.' },
