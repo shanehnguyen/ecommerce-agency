@@ -37,7 +37,7 @@ export const homeFaqs: Faq[] = [
       'I’m not going to promise a million dollars. Your sales depend on your product, pricing and visitors.',
       'What I can show you is proof: what has worked for other brands, applied to you.',
       'I also cut your risk every way I can. You get to see your homepage design first, before you decide.',
-      'And this isn’t for every brand. If I don’t think it will work for you, I’ll tell you on our call. Taking on a brand I can’t help is bad for both of us.',
+      'And this isn’t for every brand. If I don’t think it will work for you, I’ll tell you. Taking on a brand I can’t help is bad for both of us.',
     ],
   },
   {
