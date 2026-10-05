@@ -31,19 +31,6 @@ const child = animate ? '' : undefined; // '' renders a bare attribute; undefine
     {c.scopeNote && <p class="pcard__scope-note" data-reveal-child={child}>{c.scopeNote}</p>}
   </div>
 )}
-{c.rows && (
-  <div class="pcard__pages-group">
-    <dl class="pcard__rows">
-      {c.rows.map((r) => (
-        <div class="pcard__row" data-reveal-child={child}>
-          <dt class="pcard__group-label mono">{r.label}</dt>
-          <dd>{r.value}</dd>
-        </div>
-      ))}
-    </dl>
-    {c.scopeNote && <p class="pcard__scope-note" data-reveal-child={child}>{c.scopeNote}</p>}
-  </div>
-)}
 {c.stack ? (
   <>
     {c.stackLabel && <p class="pcard__group-label pcard__group-label--stack mono" data-reveal-child={child}>{c.stackLabel}</p>}
@@ -62,13 +49,12 @@ const child = animate ? '' : undefined; // '' renders a bare attribute; undefine
         </li>
       ))}
     </ul>
+    {!c.pages && c.scopeNote && <p class="pcard__scope-note pcard__scope-note--stack" data-reveal-child={child}>{c.scopeNote}</p>}
     <div class="pcard__math" data-reveal-child={child}>
       {c.anchor && <p class="pcard__anchor">{c.anchor}</p>}
       <p class="pcard__mathrow pcard__mathrow--invest">
         <span>Your investment</span>
-        <span class="pcard__invest-val">{c.pricePrefix && <span class="pcard__invest-prefix mono">{c.pricePrefix}</span>}{c.priceBlurred ? (
-          <><span class="pcard__invest-num pcard__invest-num--blur" aria-hidden="true">{c.price}</span><span class="visually-hidden">{c.blurredLabel}</span></>
-        ) : <span class="pcard__invest-num">{c.price}</span>} {c.qualifier && <span class="pcard__invest-qualifier mono">{c.qualifier}</span>}</span>
+        <span class="pcard__invest-val">{c.pricePrefix && <span class="pcard__invest-prefix mono">{c.pricePrefix}</span>}<span class="pcard__invest-num">{c.price}</span> {c.qualifier && <span class="pcard__invest-qualifier mono">{c.qualifier}</span>}</span>
       </p>
       {c.riskFree && <p class="pcard__risk">{c.riskFree}</p>}
     </div>

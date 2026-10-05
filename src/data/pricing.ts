@@ -4,21 +4,20 @@
    Plan). Change it once, here.
 
    The Conversion Build leads with the PAGES it covers, rendered as chips,
-   so scope reads at a glance. The Growth Plan leads with three service
-   ROWS (store, email + SMS, search), one line each: nine uneven chips in
-   three groups wrapped badly and read as clutter.
+   so scope reads at a glance. The Growth Plan is a plain checklist of
+   services: chips and label rows both read as clutter on that card.
 
-   Search sits last on the retainer on purpose: it's offered, but not
+   Search sits last on the Growth Plan on purpose: it's offered, but not
    pushed, because SEO/AEO/GEO can't show results inside a normal
    cancel-anytime window.
 
-   The retainer price is deliberately blurred (a hidden number + /mo): it's quoted on the call, and a blurred figure says "there is
-   a real number" without anchoring one.
+   The Growth Plan price is a placeholder ($X,XXX/mo): it's quoted on
+   the call.
 
    Keep each stack to FIVE lines or fewer. Past that a checklist stops
    reading as a spec and starts reading as padding.
 
-   PriceCardContent renders `pages` / `rows` + `stack` when present and
+   PriceCardContent renders `pages` + `stack` when present and
    falls back to `features`. Both cards carry a stack, so `features` is
    currently the unused fallback — kept accurate so it's safe if a stack
    is ever cut.
@@ -43,10 +42,7 @@ export type PriceCard = {
   pagesLabel?: string;
   /** Plain-language note under the page chips. */
   scopeNote?: string;
-  /** Label + one-line value rows, rendered as a small spec list instead
-   * of chips. Used by the Growth Plan to list its service areas. Keep
-   * each value short enough to sit on one line next to its label. */
-  rows?: { label: string; value: string }[];
+
   /** Caption above the stack, so the list reads as "and on top of those
    * pages, here's what's done to them". */
   stackLabel?: string;
@@ -69,10 +65,6 @@ export type PriceCard = {
    * features[0] as a lead-in caption. Neither card uses this currently. */
   featuresAsChips?: boolean;
   featured?: boolean;
-  /** Blurs the number in the price row. The real price is quoted on the
-   * call; screen readers get `blurredLabel` instead of the placeholder. */
-  priceBlurred?: boolean;
-  blurredLabel?: string;
 };
 
 export const priceCards: PriceCard[] = [
@@ -113,23 +105,22 @@ export const priceCards: PriceCard[] = [
     name: 'The Growth Plan',
     description: "For brands that want everything handled. Choose any service you need.",
     price: '$X,XXX', qualifier: '/mo',
-    priceBlurred: true, blurredLabel: 'Price quoted on our call',
     cta: 'Keep it selling', event: 'Pricing:Retainer',
-    rows: [
-      { label: 'Your store', value: 'Maintenance, CRO, new pages' },
-      { label: 'Email + SMS', value: 'Flows, campaigns, popups' },
-      { label: 'Search', value: 'SEO, AI search' },
-    ],
     scopeNote: 'Need a service that isn’t on this list? Just ask.',
     features: [
-      'All done for you',
-      'Month-to-month. Cancel anytime',
-      'Weekly and monthly reports',
+      'Site upkeep',
+      'Sales and launch pages',
+      'Email and SMS',
+      'SEO and AI search',
+      'Monthly sales reports',
     ],
     stack: [
-      'All done for you',
-      'Month-to-month. Cancel anytime',
-      'Weekly and monthly reports',
+      'Site upkeep',
+      'Sales and launch pages',
+      'Email and SMS',
+      'SEO and AI search',
+      'Monthly sales reports',
     ],
+    riskFree: 'Month-to-month. Cancel anytime.',
   },
 ];
