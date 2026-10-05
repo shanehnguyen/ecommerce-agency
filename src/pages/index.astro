@@ -13,7 +13,6 @@
    scroll. Respects reduced-motion. */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CtaBlock from '../components/CtaBlock.astro';
-import Cta from '../components/Cta.astro';
 import ScarcityBar from '../components/ScarcityBar.astro';
 import FAQ from '../components/FAQ.astro';
 import TheProblem from '../components/TheProblem.astro';
@@ -132,14 +131,6 @@ const fourteenLabel = fourteenDayLabel();
   {/* <TheDeal /> */}
 
   <PortfolioMarquee />
-
-  <!-- mid-page CTA — after the offer, catching anyone who scrolled past
-       the pricing cards without clicking -->
-  <section class="mid-cta">
-    <div class="container">
-      <Cta event="Problem" pill />
-    </div>
-  </section>
 
   <!-- FAQ (top 5 questions) -->
   <section class="faq-section" id="faq">
@@ -470,7 +461,6 @@ const fourteenLabel = fourteenDayLabel();
   .js .stmt.is-lit { opacity: 1; }
 
   /* ---------- mid-page CTA (after the problem/proof) ---------- */
-  .mid-cta { padding-block: clamp(0.5rem, 2vh, 1.25rem); text-align: center; }
 
   /* ---------- 6. PRICING (two offers — made to stand out, pricing-inspo) ---------- */
   .pricing { padding-block: clamp(2.5rem, 7vh, 5rem); }
