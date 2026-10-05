@@ -4,9 +4,9 @@
    Plan). Change it once, here.
 
    The Conversion Build leads with the PAGES it covers, rendered as chips,
-   so scope reads at a glance. The retainer leads with service GROUPS
-   (store, email + SMS, search) the same way: an inventory you can count,
-   not a pile of benefits.
+   so scope reads at a glance. The Growth Plan leads with three service
+   ROWS (store, email + SMS, search), one line each: nine uneven chips in
+   three groups wrapped badly and read as clutter.
 
    Search sits last on the retainer on purpose: it's offered, but not
    pushed, because SEO/AEO/GEO can't show results inside a normal
@@ -18,7 +18,7 @@
    Keep each stack to FIVE lines or fewer. Past that a checklist stops
    reading as a spec and starts reading as padding.
 
-   PriceCardContent renders `pages` / `groups` + `stack` when present and
+   PriceCardContent renders `pages` / `rows` + `stack` when present and
    falls back to `features`. Both cards carry a stack, so `features` is
    currently the unused fallback — kept accurate so it's safe if a stack
    is ever cut.
@@ -43,10 +43,10 @@ export type PriceCard = {
   pagesLabel?: string;
   /** Plain-language note under the page chips. */
   scopeNote?: string;
-  /** Several labelled chip groups instead of one `pages` group. Used by
-   * the retainer to sort its services by area. `note` renders under that
-   * group's chips. */
-  groups?: { label: string; items: string[]; note?: string }[];
+  /** Label + one-line value rows, rendered as a small spec list instead
+   * of chips. Used by the Growth Plan to list its service areas. Keep
+   * each value short enough to sit on one line next to its label. */
+  rows?: { label: string; value: string }[];
   /** Caption above the stack, so the list reads as "and on top of those
    * pages, here's what's done to them". */
   stackLabel?: string;
@@ -77,7 +77,7 @@ export type PriceCard = {
 
 export const priceCards: PriceCard[] = [
   {
-    eyebrow: 'Step 1',
+    eyebrow: 'Phase 1',
     name: 'The Conversion Build',
     description: "For growing brands with traffic. Every page a customer can land on, rebuilt to sell.",
     price: '$4,500', pricePrefix: 'starting at', qualifier: '', featured: true,
@@ -109,25 +109,16 @@ export const priceCards: PriceCard[] = [
     riskFree: 'See it before you buy it.',
   },
   {
-    eyebrow: 'Step 2',
+    eyebrow: 'Phase 2',
     name: 'The Growth Plan',
     description: "For brands that want everything handled. Choose any service you need.",
     price: '$X,XXX', qualifier: '/mo',
     priceBlurred: true, blurredLabel: 'Price quoted on our call',
     cta: 'Keep it selling', event: 'Pricing:Retainer',
-    groups: [
-      {
-        label: 'Your store',
-        items: ['Maintenance + fixes', 'CRO', 'New pages'],
-      },
-      {
-        label: 'Email + SMS',
-        items: ['Email flows', 'Email campaigns', 'Popups + signup offers', 'SMS flows + campaigns'],
-      },
-      {
-        label: 'Search',
-        items: ['SEO + blog posts', 'AI search (AEO + GEO)'],
-      },
+    rows: [
+      { label: 'Your store', value: 'Maintenance, CRO, new pages' },
+      { label: 'Email + SMS', value: 'Flows, campaigns, popups' },
+      { label: 'Search', value: 'SEO, AI search' },
     ],
     features: [
       'All done for you',
