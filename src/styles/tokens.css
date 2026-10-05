@@ -50,36 +50,29 @@
   --font-serif:   "Source Serif 4 Variable", Georgia, "Times New Roman", serif;
   --font-mono:    "JetBrains Mono Variable", ui-monospace, "SFMono-Regular", "Consolas", monospace;
 
-  /* Fluid type scale */
-  --fs-hero:    clamp(2.75rem, 6vw, 5.25rem);   /* 44 → 84 */
-  --fs-display: clamp(2.75rem, 6vw, 5.25rem);
-  --fs-h1:      clamp(2.5rem, 5vw, 4.5rem);
-  --fs-h2:      clamp(1.875rem, 4vw, 3.25rem);  /* 30 → 52 */
-  --fs-h3:      clamp(1.375rem, 1.2vw + 0.9rem, 1.875rem);
-  --fs-h4:      1.25rem;
-  --fs-lede:    clamp(1.0625rem, 0.4vw + 1rem, 1.1875rem);  /* ~17–19 */
-  --fs-bodyL:   1.1875rem;  /* 19px serif long-form */
-  --fs-body:    1.0625rem;  /* 17px */
-  --fs-caption: 0.875rem;   /* 14px */
-  --fs-mono:    0.9375rem;  /* 15px fine print */
-  --fs-small:   0.75rem;
-  --fs-eyebrow: 0.8125rem;  /* 13px */
-  --fs-stat:    clamp(2.125rem, 4vw, 3.5rem);   /* 34 → 56 */
-  --fs-receipt: clamp(2.5rem, 5vw, 3.75rem);
+  /* Type scale: SEVEN sizes, nothing else. Every font-size on the site
+     is one of these. Need something in between? Pick the nearest one.
+     Desktop values here; phone values in the media block below. */
+  --fs-display: clamp(1.75rem, 5vw, 3.75rem);  /* 60: page titles, homepage section headings */
+  --fs-title:   clamp(1.375rem, 3vw, 2rem);  /* 32: card names, prices, stats, in-page h2 */
+  --fs-subhead: 1.25rem;    /* 20: FAQ questions, small headings, logo */
+  --fs-lede:    1.1875rem;  /* 19: serif intros and long-form */
+  --fs-body:    1.0625rem;  /* 17 */
+  --fs-caption: 0.875rem;   /* 14: chips, notes, fine print */
+  --fs-label:   0.75rem;    /* 12: uppercase labels, eyebrows */
 
   --lh-display: 1.02;
   --lh-tight:   1.1;
   --lh-snug:    1.3;
   --lh-body:    1.6;
 
+  /* three letter-spacings: tight display, normal (0, the default), wide caps */
   --tracking-display: -0.02em;
   --tracking-caps:    0.18em;
-  --tracking-mono:    0.01em;
 
+  /* three weights, nothing else */
   --fw-body-regular: 400;
-  --fw-body-medium:  500;
   --fw-body-semi:    600;
-  --fw-body-bold:    700;
   --fw-display:      800; /* Archivo Black-ish for headlines */
 
   /* ---------- Spacing (4 8 12 16 24 32 48 64 96 128) ---------- */
@@ -122,21 +115,14 @@
 }
 
 /* ---------- Mobile type scale ----------
-   The fluid clamps above bottom out too large on phones (h1 at 40px,
-   body at 17px). One override here shrinks every token consumer at once;
-   desktop values are untouched since the clamps' ceilings still apply. */
+   Fixed phone values for the seven sizes, so a phone shows exactly one
+   size per step. Caption and label stay the same on every screen. */
 @media (max-width: 40em) {
   :root {
-    --fs-hero:    2.25rem;   /* 36 */
-    --fs-display: 2.25rem;
-    --fs-h1:      2rem;      /* 32 */
-    --fs-h2:      1.5rem;    /* 24 */
-    --fs-h3:      1.25rem;   /* 20 */
-    --fs-h4:      1.125rem;  /* 18 */
-    --fs-lede:    1rem;      /* 16 */
-    --fs-bodyL:   1.0625rem; /* 17 */
+    --fs-display: 1.75rem;   /* 28 */
+    --fs-title:   1.375rem;  /* 22 */
+    --fs-subhead: 1.125rem;  /* 18 */
+    --fs-lede:    1.0625rem; /* 17 */
     --fs-body:    1rem;      /* 16 */
-    --fs-stat:    1.875rem;  /* 30 */
-    --fs-receipt: 2rem;      /* 32 */
   }
 }

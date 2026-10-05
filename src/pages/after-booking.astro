@@ -49,7 +49,7 @@ import { site } from '../data/site.config';
 
 <style>
   .ab { padding-block: clamp(2.5rem, 7vh, 4.5rem) clamp(3rem, 8vh, 5rem); text-align: center; }
-  .ab__h1 { margin-inline: auto; max-width: 20ch; font-size: clamp(2rem, 5vw, 3.25rem); }
+  .ab__h1 { margin-inline: auto; max-width: 20ch; font-size: var(--fs-display); }
   .ab__video {
     position: relative; width: 100%; max-width: 27rem; aspect-ratio: 3 / 4;
     margin: var(--space-8) auto 0; border-radius: 16px; overflow: hidden;
@@ -60,8 +60,8 @@ import { site } from '../data/site.config';
   .ab__todo strong { display: block; color: var(--ink); }
   .ab__todo a { color: var(--ink); font-weight: var(--fw-body-semi); white-space: nowrap; }
   .ab__faq { margin-top: clamp(3rem, 8vh, 5rem); text-align: left; }
-  .ab__faq-h { text-align: center; font-size: clamp(1.5rem, 4vw, 2.5rem); }
+  .ab__faq-h { text-align: center; font-size: var(--fs-title); }
   .ab__faq-list { margin-top: var(--space-6); }
   .ab__more { margin-top: var(--space-10); display: flex; flex-direction: column; align-items: center; gap: var(--space-4); }
-  .ab__more-q { font-family: var(--font-display); font-weight: var(--fw-display); font-size: var(--fs-h4); color: var(--ink); }
+  .ab__more-q { font-family: var(--font-display); font-weight: var(--fw-display); font-size: var(--fs-subhead); color: var(--ink); }
 </style>
