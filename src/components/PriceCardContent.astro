@@ -32,14 +32,17 @@ const child = animate ? '' : undefined; // '' renders a bare attribute; undefine
   </div>
 )}
 {c.rows && (
-  <dl class="pcard__rows">
-    {c.rows.map((r) => (
-      <div class="pcard__row" data-reveal-child={child}>
-        <dt class="pcard__group-label mono">{r.label}</dt>
-        <dd>{r.value}</dd>
-      </div>
-    ))}
-  </dl>
+  <div class="pcard__pages-group">
+    <dl class="pcard__rows">
+      {c.rows.map((r) => (
+        <div class="pcard__row" data-reveal-child={child}>
+          <dt class="pcard__group-label mono">{r.label}</dt>
+          <dd>{r.value}</dd>
+        </div>
+      ))}
+    </dl>
+    {c.scopeNote && <p class="pcard__scope-note" data-reveal-child={child}>{c.scopeNote}</p>}
+  </div>
 )}
 {c.stack ? (
   <>

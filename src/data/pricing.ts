@@ -120,6 +120,7 @@ export const priceCards: PriceCard[] = [
       { label: 'Email + SMS', value: 'Flows, campaigns, popups' },
       { label: 'Search', value: 'SEO, AI search' },
     ],
+    scopeNote: 'Need a service that isn’t on this list? Just ask.',
     features: [
       'All done for you',
       'Month-to-month. Cancel anytime',

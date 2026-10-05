@@ -157,7 +157,7 @@
 .pcard__mathrow--invest > span:first-child { white-space: nowrap; }
 /* Growth Plan service rows: label column + value, ruled like a spec
    sheet so three areas line up instead of wrapping like chips */
-.pcard__rows { margin: 0 0 var(--space-6); display: grid; grid-template-columns: max-content 1fr; column-gap: var(--space-5); }
+.pcard__rows { margin: 0; display: grid; grid-template-columns: max-content 1fr; column-gap: var(--space-5); }
 /* subgrid so every label shares one column sized to the longest label */
 .pcard__row { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: baseline; padding-block: var(--space-3); border-bottom: var(--rule-width) solid var(--line); }
 .pcard__row:first-child { padding-top: 0; }
