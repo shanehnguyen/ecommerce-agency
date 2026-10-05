@@ -118,15 +118,9 @@ export const priceCards: PriceCard[] = [
       { name: 'SEO and AI search', desc: 'Get found on Google and in AI answers like ChatGPT.' },
     ],
     scopeNote: 'Need a service that isn’t on this list? Just ask.',
-    features: [
-      'All done for you',
-      'Month-to-month. Cancel anytime',
-      'Weekly and monthly reports',
-    ],
-    stack: [
-      'All done for you',
-      'Month-to-month. Cancel anytime',
-      'Weekly and monthly reports',
-    ],
+    // no checklist: the service tiles carry this card on their own
+    features: [],
+    stack: [],
+    riskFree: 'Month-to-month. Cancel anytime.',
   },
 ];

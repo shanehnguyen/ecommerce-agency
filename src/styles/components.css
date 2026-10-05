@@ -156,6 +156,9 @@
 }
 .pcard__check--plus { background: var(--accent); }
 .pcard__math { margin: var(--space-6) 0 var(--space-8); padding-top: var(--space-5); border-top: var(--rule-width) solid var(--line); display: grid; gap: var(--space-2); }
+/* no checklist (Growth Plan): the services group's own bottom margin is
+   enough space above the price, so don't double it */
+.pcard__pages-group + .pcard__math { margin-top: 0; }
 .pcard__anchor { font-family: var(--font-serif); font-style: italic; font-size: var(--fs-body); color: var(--ink-50); }
 .pcard__mathrow { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); }
 .pcard__mathrow--invest { font-weight: var(--fw-body-bold); color: var(--ink); }
