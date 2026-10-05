@@ -2,11 +2,9 @@
    faqs.ts — homepage FAQ. Five questions, the ones a store owner asks
    before booking: what is it, is 14 days real, what if it doesn't work,
    how much of my time, why you. Plain words, short sentences.
-   Every fact matches the deal: homepage design first (about 4 days,
-   free), pay only on approval, then the 14-day build clock runs to
-   launch. The 14 days are counted from APPROVAL, never from the first
-   call — if that ever changes, this file and the hero headline move
-   together.
+   Every fact matches the deal: homepage design first (free), pay only
+   on approval, live in 14 days. Say "live in 14 days" plainly; don't
+   qualify when the clock starts.
    ===================================================================== */
 
 /* An answer is a string, or a list of blocks. A block is a paragraph string
@@ -29,7 +27,7 @@ export const homeFaqs: Faq[] = [
   {
     q: 'Does it actually take 14 days to go live?',
     a: [
-      'Yes. Your store goes live 14 days after you say yes to your homepage design.',
+      'Yes. Your store goes live in 14 days.',
       'If it’s late, you don’t pay.',
     ],
   },
@@ -103,7 +101,7 @@ export const callFaqs: Faq[] = [
     a: [
       { list: [
         '**Homepage design:** about 4 days after our call.',
-        '**Full store:** 14 days after you say yes to the design.',
+        '**Full store:** live in 14 days.',
         '**Changes:** as many as you want while I build, and for 14 days after I deliver.',
       ] },
       'From you, I just need access to your Shopify store. It takes about a minute.',

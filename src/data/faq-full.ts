@@ -3,8 +3,8 @@
    Written for a 5th grader: short sentences, plain words, first person
    ("I"), every acronym explained. Facts must match the homepage FAQ and
    callFaqs (faqs.ts), the price cards (pricing.ts) and the client
-   agreement: 14 days count from saying yes to the homepage design; all
-   I need from the client is store access; the Growth Plan is
+   agreement: the store is live in 14 days; all I need from the client
+   is store access; the Growth Plan is
    month-to-month, cancel anytime. Same format as faqs.ts: paragraphs and
    bullet lists, with **bold** and [link](/path).
    ===================================================================== */
@@ -166,7 +166,7 @@ export const fullFaqGroups: FaqGroup[] = [
         a: [
           { list: [
             '**Your homepage design:** about 4 days after our call.',
-            '**Your full store:** 14 days after you say yes to the design.',
+            '**Your full store:** live in 14 days.',
           ] },
         ],
       },

@@ -29,8 +29,7 @@ const topFaqs = homeFaqs;
 
 // "14 days from today" — computed at build so the date in the final CTA
 // stays real on every deploy instead of hardcoding one that goes stale.
-// launch date = ~4 days of homepage design + the 14-day build
-const fourteenLabel = fourteenDayLabel(new Date(), 18);
+const fourteenLabel = fourteenDayLabel();
 ---
 <BaseLayout
   title={`${site.brand}: Conversion-Built Shopify Stores for Consumer Brands`}
@@ -163,7 +162,7 @@ const fourteenLabel = fourteenDayLabel(new Date(), 18);
           <span class="mono" data-14day>{fourteenLabel}</span>
         </span>
       </div>
-      <p>Book today and you’ll see your new homepage design in about 4 days. Say yes, and your store is live 14 days later, by <span data-14day>{fourteenLabel}</span>.</p>
+      <p>Book today and you’ll see your new homepage design before you buy it. Your store is live in 14 days, by <span data-14day>{fourteenLabel}</span>.</p>
       <div class="closing__cta">
         <CtaBlock event="Closing" />
       </div>
@@ -183,7 +182,7 @@ const fourteenLabel = fourteenDayLabel(new Date(), 18);
      disagree about how the date is formatted. ---- */
   import { fourteenDayLabel } from '../utils/dates';
   (function () {
-    var label = fourteenDayLabel(new Date(), 18);
+    var label = fourteenDayLabel();
     document.querySelectorAll('[data-14day]').forEach(function (el) { el.textContent = label; });
   })();
 </script>
