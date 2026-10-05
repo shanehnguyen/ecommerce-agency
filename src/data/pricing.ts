@@ -1,32 +1,28 @@
 /* =====================================================================
    pricing.ts — SINGLE SOURCE OF TRUTH for the two offers.
-   Two depths of the same job: the three pages that decide whether people
-   buy (Essentials), or the whole store (Conversion Build). Used on
-   both the homepage pricing section AND /apply, so the two never
-   drift apart. Change it once, here.
+   One build (the Conversion Build) and one ongoing plan (the Monthly
+   Retainer). Change it once, here.
 
-   SCOPE IS THE STORY, and scope is the ONLY difference now: both builds
-   ship in 14 days, so neither name carries a day count — the timeline is
-   a guarantee line inside the card instead. Each card leads its "what you
-   get" with the PAGES it covers, rendered as chips, so the two compare at
-   a glance: eight chips vs four. That contrast does the work, which means
-   the words never have to. Say what each build IS; nothing here describes
-   Essentials by what it lacks. Do not add scope to Essentials without
-   cutting it from the Conversion Build's lead.
+   The Conversion Build leads with the PAGES it covers, rendered as chips,
+   so scope reads at a glance. The retainer leads with service GROUPS
+   (store, email + SMS, search) the same way: an inventory you can count,
+   not a pile of benefits.
+
+   Search sits last on the retainer with an honest "takes months" note on
+   purpose: it's offered, but steered away from, because SEO/AEO/GEO can't
+   show results inside a normal cancel-anytime window.
+
+   The retainer price is deliberately blurred ("starting at" + a hidden
+   number): it's quoted on the call, and a blurred figure says "there is
+   a real number" without anchoring one.
 
    Keep each stack to FIVE lines or fewer. Past that a checklist stops
    reading as a spec and starts reading as padding.
 
-   Bonuses are deliberately NOT on Essentials any more: a "free bonuses"
-   block on the cheaper card makes it out-argue the $4,500 one. Extras
-   belong to the build that's supposed to win.
-
-   PriceCardContent renders `pages` + `stack` when present and falls back
-   to `features`. Both cards carry a stack, so `features` is currently the
-   unused fallback — kept accurate so it's safe if a stack is ever cut.
-   The price rows carry no anchor line and no bonus stack. Both were cut
-   on purpose: next to the number, a comparison or a nudge reads as
-   justification, and a price that justifies itself sounds negotiable.
+   PriceCardContent renders `pages` / `groups` + `stack` when present and
+   falls back to `features`. Both cards carry a stack, so `features` is
+   currently the unused fallback — kept accurate so it's safe if a stack
+   is ever cut.
    ===================================================================== */
 
 export type PriceCard = {
@@ -46,9 +42,12 @@ export type PriceCard = {
    * scope boundary, not a benefit list — keep it literal and complete. */
   pages?: string[];
   pagesLabel?: string;
-  /** Plain-language limit under the page chips. Essentials only: it's the
-   * line that stops a starter budget from reading like a full store. */
+  /** Plain-language note under the page chips. */
   scopeNote?: string;
+  /** Several labelled chip groups instead of one `pages` group. Used by
+   * the retainer to sort its services by area. `note` renders under that
+   * group's chips. */
+  groups?: { label: string; items: string[]; note?: string }[];
   /** Caption above the stack, so the list reads as "and on top of those
    * pages, here's what's done to them". */
   stackLabel?: string;
@@ -71,6 +70,10 @@ export type PriceCard = {
    * features[0] as a lead-in caption. Neither card uses this currently. */
   featuresAsChips?: boolean;
   featured?: boolean;
+  /** Blurs the number in the price row. The real price is quoted on the
+   * call; screen readers get `blurredLabel` instead of the placeholder. */
+  priceBlurred?: boolean;
+  blurredLabel?: string;
 };
 
 export const priceCards: PriceCard[] = [
@@ -108,34 +111,42 @@ export const priceCards: PriceCard[] = [
     riskFree: 'See it before you buy it.',
   },
   {
-    eyebrow: 'Option 2 · Starter scope',
-    name: 'The Essentials Build',
-    description: "For brands just launching. The pages that decide whether someone buys, built to sell from day one.",
-    price: '$2,000', qualifier: 'one-time',
-    // event name kept as-is on purpose: renaming it splits the funnel
-    // history in two. The offer changed; the tracking key shouldn't.
-    cta: 'Start with the essentials', event: 'Pricing:Landing',
-    pagesLabel: 'The pages you get',
-    pages: [
-      'Homepage',
-      'One collection page',
-      'One product page',
-      'About, FAQ, contact, policies',
+    eyebrow: 'Option 2 · Ongoing',
+    name: 'The Monthly Retainer',
+    description: "For brands that want it handled after launch. Your store, your emails and your texts, run for you every month.",
+    price: '$X,XXX', pricePrefix: 'starting at', qualifier: '/mo',
+    priceBlurred: true, blurredLabel: 'Price quoted on our call',
+    cta: 'Keep it selling', event: 'Pricing:Retainer',
+    groups: [
+      {
+        label: 'Your store',
+        items: ['Maintenance + fixes', 'CRO', 'New pages'],
+      },
+      {
+        label: 'Email + SMS',
+        items: ['Email flows', 'Email campaigns', 'Popups + signup offers', 'SMS flows + campaigns'],
+      },
+      {
+        label: 'Search',
+        items: ['SEO + blog posts', 'AI search (AEO + GEO)'],
+        note: 'Search takes months to pay off. Best once the rest is working.',
+      },
     ],
-    scopeNote: 'Built on your existing theme.',
-    stackLabel: 'What happens to them',
+    stackLabel: 'Every month',
     features: [
-      "Live in 14 days or you don't pay",
-      'Homepage, collection, and product page rebuilt',
-      'Every word on those pages written to sell',
-      'Unlimited revisions for 14 days',
+      'Your store kept running, tested and improved',
+      'Emails and popups designed to match your store',
+      'Every word written for you',
+      'Your numbers reported every month',
+      "Cancel anytime with 30 days' notice",
     ],
     stack: [
-      "Live in 14 days or you don't pay",
-      'The three selling pages rewritten and rebuilt word for word',
-      'About, FAQ, contact and policies set up clean and simple',
-      'Unlimited revisions for 14 days',
+      'Your store kept running, tested and improved',
+      'Emails and popups designed to match your store',
+      'Every word written for you',
+      'Your numbers reported every month',
+      "Cancel anytime with 30 days' notice",
     ],
-    riskFree: 'See it before you buy it.',
+    riskFree: 'Pick what you need. Skip the rest.',
   },
 ];

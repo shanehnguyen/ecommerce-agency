@@ -57,23 +57,22 @@ export const fullFaqGroups: FaqGroup[] = [
         q: 'How much does it cost?',
         a: [
           { list: [
-            '**Essentials Build:** $2,000',
             '**Conversion Build:** starts at $4,500',
+            '**Monthly Retainer:** one flat monthly fee, quoted on our call',
           ] },
-          'Either way, you see your homepage design before you pay anything.',
+          'You see your homepage design before you pay anything for the build.',
         ],
       },
       {
-        q: 'What comes with the Essentials Build?',
+        q: 'What comes with the Monthly Retainer?',
         a: [
-          'The pages that decide if someone buys:',
+          'You pick what you need:',
           { list: [
-            'Your homepage',
-            'One collection page (where shoppers browse your products)',
-            'One product page',
-            'Your About, FAQ, contact and policy pages, set up clean and simple',
+            '**Your store:** maintenance and fixes, CRO (finding and fixing what stops people from buying), and new pages when you need them.',
+            '**Email and SMS:** automated email flows, email campaigns designed to match your store, popups and signup offers to grow your list, and SMS flows and campaigns.',
+            '**Search:** SEO blog posts, plus AEO and GEO (showing up in AI tools like ChatGPT). Search takes months to pay off, so it’s best once the rest is working.',
           ] },
-          'I write every word on those pages. It’s built on the Shopify theme you already have.',
+          'I design every email and popup to match your store, and I write every word. You see your numbers every month.',
         ],
       },
       {
@@ -94,11 +93,11 @@ export const fullFaqGroups: FaqGroup[] = [
         ],
       },
       {
-        q: 'Which build is right for me?',
+        q: 'Which one is right for me?',
         a: [
           { list: [
-            '**Essentials:** you’re just launching, or your store hasn’t been getting sales.',
-            '**Conversion:** people already visit your store every day, and you want more of them to buy.',
+            '**Conversion Build:** your store needs rebuilding so more visitors buy.',
+            '**Monthly Retainer:** your store is built, and you want it kept running, improved, and backed by email and SMS.',
           ] },
           'Not sure? I’ll tell you on our call.',
         ],
@@ -306,7 +305,6 @@ export const fullFaqGroups: FaqGroup[] = [
           { list: [
             'Run your ads',
             'Manage your social media',
-            'Write your email campaigns or automated emails (like Klaviyo flows)',
             'Photo shoots',
             'Logo or brand design',
           ] },
@@ -331,14 +329,14 @@ export const fullFaqGroups: FaqGroup[] = [
         q: 'Does the store connect to my email app, like Klaviyo?',
         a: [
           'Yes. Every build comes with an email signup form connected to your email app.',
-          'I don’t write your email campaigns or automated emails.',
+          'Want your emails written and designed too? Flows, campaigns and SMS are part of the Monthly Retainer.',
         ],
       },
       {
         q: 'What is a landing page for my ads, and do I get one?',
         a: [
           'It’s a page made for one ad. It says the same thing your ad says, so people who click know they’re in the right place and are more likely to buy.',
-          'Landing pages come with the Conversion Build. They aren’t part of the Essentials Build.',
+          'Landing pages come with the Conversion Build.',
         ],
       },
       {
@@ -370,8 +368,7 @@ export const fullFaqGroups: FaqGroup[] = [
       {
         q: 'I’m just launching my brand. Can you help?',
         a: [
-          'Yes. The Essentials Build is made for brands that are just launching.',
-          'You’ll need a logo, product photos and a plan to bring people to your store, like ads, social media or a launch.',
+          'Yes. You’ll need a logo, product photos and a plan to bring people to your store, like ads, social media or a launch.',
         ],
       },
       {
@@ -408,7 +405,7 @@ export const fullFaqGroups: FaqGroup[] = [
         a: [
           'SEO stands for search engine optimization. It means showing up on Google.',
           'Every store I build is set up so Google can read it: fast pages, a clean layout, and a title and description on every page. That same setup helps AI tools like ChatGPT understand your store too. That’s called GEO, short for generative engine optimization.',
-          'Ongoing SEO comes with the Full Partnership plan: blog posts, new pages, and getting other websites to link to yours.',
+          'Ongoing SEO is part of the Monthly Retainer: blog posts, plus AEO and GEO so AI tools can find and recommend your store.',
         ],
       },
       {
@@ -435,21 +432,10 @@ export const fullFaqGroups: FaqGroup[] = [
         ],
       },
       {
-        q: 'What are the monthly plans, and what do they cost?',
+        q: 'What’s the monthly plan, and what does it cost?',
         a: [
-          'There are three: Maintenance, Conversion Partner and Full Partnership.',
-          'Each one is a flat monthly fee. I set the price on our call, based on how much work your store needs.',
-        ],
-      },
-      {
-        q: 'What’s the difference between Maintenance, Conversion Partner and Full Partnership?',
-        a: [
-          'Each plan includes everything in the one before it:',
-          { list: [
-            '**Maintenance:** I keep your store running. Updates, fixes when anything breaks, text and image changes, product changes, and new pages when you need them.',
-            '**Conversion Partner:** everything in Maintenance, plus CRO (conversion rate optimization). Every month I find what’s stopping people from buying, fix it, and show you the numbers.',
-            '**Full Partnership:** everything in Conversion Partner, plus monthly SEO (search engine optimization): blog posts, new pages, and links from other websites.',
-          ] },
+          'It’s the Monthly Retainer. You pick what you need: your store (maintenance, CRO, new pages), email and SMS, and search.',
+          'It’s a flat monthly fee. I set the price on our call, based on what you pick.',
         ],
       },
       {

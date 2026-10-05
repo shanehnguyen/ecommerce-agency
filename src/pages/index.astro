@@ -127,8 +127,9 @@ const fourteenLabel = fourteenDayLabel();
 
   <!-- the offer's spine: the 5-step sequence with the money state at each
        step — directly after the cards so "what does it cost" is answered
-       by "when (and whether) you actually pay" -->
-  <TheDeal />
+       by "when (and whether) you actually pay". Hidden for now (Oct 2026);
+       uncomment to bring it back, the component is unchanged. -->
+  {/* <TheDeal /> */}
 
   <PortfolioMarquee />
 
@@ -171,8 +172,6 @@ const fourteenLabel = fourteenDayLabel();
         </span>
       </div>
       <p>Book today and you’ll see your new homepage design before you buy it. And it’s live by <span data-14day>{fourteenLabel}</span>: fourteen days start to finish, design included.</p>
-      <p>Tap the button. Fill out the form. Pick a time.</p>
-      <p class="closing__alt">Prefer email? <a href={`mailto:${site.email}`}>{site.email}</a></p>
       <div class="closing__cta">
         <CtaBlock event="Closing" />
       </div>
@@ -483,9 +482,8 @@ const fourteenLabel = fourteenDayLabel();
   .pricing__sub { margin-top: var(--space-4); font-size: var(--fs-lede); color: var(--ink-soft); max-width: 42ch; margin-inline: auto; }
   .pricing__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); max-width: 64rem; margin-inline: auto; }
   /* align-items:start so each card is only as tall as its own scope.
-     Stretched to equal height, the shorter Essentials card padded itself
-     out with ~400px of dead space under its CTA; now the smaller offer is
-     visibly the smaller card, which is the point. */
+     Stretched to equal height, the shorter card pads itself out with dead
+     space under its CTA. */
   @media (min-width: 44em) { .pricing__grid { grid-template-columns: 1fr 1fr; gap: var(--space-8); align-items: start; } }
   /* .pcard* card styles (including the value stack) are shared in
      components.css — rendered via PriceCardContent.astro on both the
@@ -539,9 +537,6 @@ const fourteenLabel = fourteenDayLabel();
   .js [data-reveal].is-in .countdown-track__fill { transform: scaleX(1); }
 
   .closing__inner p { margin-top: var(--space-4); font-family: var(--font-serif); font-size: var(--fs-bodyL); line-height: 1.65; color: var(--dark-soft); max-width: 56ch; margin-inline: auto; }
-  .closing__alt { font-size: var(--fs-body) !important; }
-  .closing__alt a { color: var(--dark-ink); font-weight: var(--fw-body-bold); text-decoration: underline; text-underline-offset: 3px; }
-  .closing__alt a:hover { color: var(--accent-strong); }
   .closing__cta { margin-top: var(--space-8); }
   .closing__sig { margin-top: var(--space-8) !important; font-family: var(--font-display) !important; font-size: var(--fs-h4) !important; color: var(--dark-ink) !important; }
 

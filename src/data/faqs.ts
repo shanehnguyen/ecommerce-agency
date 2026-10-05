@@ -83,9 +83,9 @@ export const callFaqs: Faq[] = [
   {
     q: 'How much is it, and which build is right for me?',
     a: [
-      'The **Essentials Build is $2,000.** I rebuild your homepage, your collection page (where shoppers browse your products) and your product page, and I write every word. Pick this if you’re just launching, or your store hasn’t been getting sales.',
-      'The **Conversion Build starts at $4,500.** I build every page your store needs to turn visitors into buyers, including pages made just for your ads and emails. Pick this if people already visit your store every day and you want more of them to buy.',
-      'Not sure which one? I’ll tell you on our call.',
+      'The **Conversion Build starts at $4,500.** I build every page your store needs to turn visitors into buyers, including pages made just for your ads and emails.',
+      'The **Monthly Retainer** is for after launch: I keep your store running and improving, and run your email and SMS. It’s one flat monthly fee, quoted on our call.',
+      'Not sure what you need? I’ll tell you on our call.',
       'You pay for your Shopify plan and any apps directly, at their normal price. I add nothing on top.',
     ],
   },
@@ -140,7 +140,7 @@ export const callFaqs: Faq[] = [
     a: [
       '**Ads:** You, or whoever runs your ads now, keeps running them. What I do is look at your ads and make sure the page they send people to matches who’s clicking and what they already know about your product.',
       '**SEO (showing up on Google):** Every store I build is set up so Google can read it: fast pages, a clean layout, and a title and description on every page.',
-      'Ongoing SEO comes with the Full Partnership plan: blog posts, new pages, and getting other websites to link to yours. SEO takes months to bring in visitors, so if you want sales fast, ads are usually the better choice.',
+      'Ongoing SEO is part of the Monthly Retainer: blog posts, plus AEO and GEO so AI tools like ChatGPT can find you. SEO takes months to bring in visitors, so if you want sales fast, ads are usually the better choice.',
     ],
   },
   {
@@ -157,17 +157,16 @@ export const callFaqs: Faq[] = [
         '14 days of unlimited changes after delivery',
         'A store that’s easy to edit, just like a normal template',
       ] },
-      '**Available at added cost (monthly plans, more under “What happens after launch?”):**',
+      '**Available at added cost (the Monthly Retainer, more under “What happens after launch?”):**',
       { list: [
-        '**Maintenance:** I keep your store running and make the changes you need, from text and images to products and new pages.',
-        '**Conversion Partner:** everything in Maintenance, plus I find and fix what’s stopping people from buying, every month.',
-        '**Full Partnership:** everything in Conversion Partner, plus monthly SEO: blog posts, new pages, and links from other websites.',
+        '**Your store:** maintenance and fixes, CRO (finding and fixing what stops people from buying), and new pages when you need them.',
+        '**Email and SMS:** automated email flows, email campaigns designed to match your store, popups and signup offers to grow your list, and SMS flows and campaigns.',
+        '**Search:** SEO blog posts, plus AEO and GEO (showing up in AI tools like ChatGPT). Search takes months to pay off, so it’s best once the rest is working.',
       ] },
       '**What I don’t do:**',
       { list: [
         'Run your ads',
         'Manage your social media',
-        'Write your email campaigns or automated emails (like Klaviyo flows)',
         'Photo shoots',
         'Logo or brand design',
       ] },
@@ -180,13 +179,13 @@ export const callFaqs: Faq[] = [
       'First, you get 14 days of unlimited changes. After that, you have two choices.',
       { list: [
         '**Run it yourself.** The store is yours, and I make it easy for you to edit, just like you would a normal template.',
-        { text: '**Keep me on monthly.** There are three plans, and each one includes everything in the one before it:', list: [
-          '**Maintenance:** I keep your store running. Updates, fixes when anything breaks, text and image changes, product changes, and new pages when you need them.',
-          '**Conversion Partner:** everything in Maintenance, plus every month I find what’s stopping people from buying, fix it, and show you the numbers.',
-          '**Full Partnership:** everything in Conversion Partner, plus monthly SEO: blog posts, new pages, and links from other websites. I handle your whole store so you can focus on your product.',
+        { text: '**Keep me on the Monthly Retainer.** You pick what you need:', list: [
+          '**Your store:** maintenance and fixes, CRO (finding and fixing what stops people from buying), and new pages when you need them.',
+          '**Email and SMS:** automated email flows, email campaigns designed to match your store, popups and signup offers to grow your list, and SMS flows and campaigns.',
+          '**Search:** SEO blog posts, plus AEO and GEO (showing up in AI tools like ChatGPT). Search takes months to pay off, so it’s best once the rest is working.',
         ] },
       ] },
-      'Each plan is one flat monthly fee, priced on our call based on what your store needs. You can cancel anytime with 30 days’ notice. You keep 100% of what your store earns.',
+      'It’s one flat monthly fee, priced on our call based on what you pick. You can cancel anytime with 30 days’ notice. You keep 100% of what your store earns.',
     ],
   },
   {

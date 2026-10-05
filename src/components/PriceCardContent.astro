@@ -1,9 +1,7 @@
 ---
 /* PriceCardContent — the INSIDE of a pricing card (tag, eyebrow, name,
    description, value stack, bonuses, anchor + price math). Shared by the
-   homepage pricing section (wrapped in a div + CTA link) and /apply's
-   "which option" question (wrapped in a selectable <button>), so the two
-   render the exact same offer and never drift. Styles live in
+   homepage pricing section (wrapped in a div + CTA link). Styles live in
    components.css (.pcard__*) — global, so they apply from both wrappers.
 
    `animate` adds the data-reveal-child stagger attributes. Homepage only:
@@ -33,6 +31,19 @@ const child = animate ? '' : undefined; // '' renders a bare attribute; undefine
     {c.scopeNote && <p class="pcard__scope-note" data-reveal-child={child}>{c.scopeNote}</p>}
   </div>
 )}
+{c.groups && (
+  <div class="pcard__pages-group">
+    {c.groups.map((g) => (
+      <div class="pcard__subgroup">
+        <p class="pcard__group-label mono" data-reveal-child={child}>{g.label}</p>
+        <ul class="pcard__pages">
+          {g.items.map((it) => <li data-reveal-child={child}>{it}</li>)}
+        </ul>
+        {g.note && <p class="pcard__scope-note" data-reveal-child={child}>{g.note}</p>}
+      </div>
+    ))}
+  </div>
+)}
 {c.stack ? (
   <>
     {c.stackLabel && <p class="pcard__group-label pcard__group-label--stack mono" data-reveal-child={child}>{c.stackLabel}</p>}
@@ -55,7 +66,9 @@ const child = animate ? '' : undefined; // '' renders a bare attribute; undefine
       {c.anchor && <p class="pcard__anchor">{c.anchor}</p>}
       <p class="pcard__mathrow pcard__mathrow--invest">
         <span>Your investment</span>
-        <span class="pcard__invest-val">{c.pricePrefix && <span class="pcard__invest-prefix mono">{c.pricePrefix}</span>}<span class="pcard__invest-num">{c.price}</span> {c.qualifier && <span class="pcard__invest-qualifier mono">{c.qualifier}</span>}</span>
+        <span class="pcard__invest-val">{c.pricePrefix && <span class="pcard__invest-prefix mono">{c.pricePrefix}</span>}{c.priceBlurred ? (
+          <><span class="pcard__invest-num pcard__invest-num--blur" aria-hidden="true">{c.price}</span><span class="visually-hidden">{c.blurredLabel}</span></>
+        ) : <span class="pcard__invest-num">{c.price}</span>} {c.qualifier && <span class="pcard__invest-qualifier mono">{c.qualifier}</span>}</span>
       </p>
       {c.riskFree && <p class="pcard__risk">{c.riskFree}</p>}
     </div>
