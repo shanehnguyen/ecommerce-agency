@@ -1,10 +1,12 @@
 /* =====================================================================
-   faq-full.ts — the long-form FAQ on /faq (64 questions in sections).
-   Written for a third grader: short sentences, plain words, every
-   acronym spelled out. Facts must match Shane's short FAQ (faqs.ts,
-   callFaqs), the price cards (pricing.ts) and the client agreement.
-   Answer format is the same as faqs.ts: paragraphs and bullet lists,
-   with **bold** and [link](/path).
+   faq-full.ts — the long-form FAQ on /faq, in sections.
+   Written for a 5th grader: short sentences, plain words, first person
+   ("I"), every acronym explained. Facts must match the homepage FAQ and
+   callFaqs (faqs.ts), the price cards (pricing.ts) and the client
+   agreement: 14 days count from saying yes to the homepage design; all
+   I need from the client is store access; the Growth Plan is
+   month-to-month, cancel anytime. Same format as faqs.ts: paragraphs and
+   bullet lists, with **bold** and [link](/path).
    ===================================================================== */
 import type { FaqGroup } from './faqs';
 
@@ -15,38 +17,38 @@ export const fullFaqGroups: FaqGroup[] = [
       {
         q: 'What do I get for free?',
         a: [
-          'I design and write your new homepage before you pay anything.',
-          'I send you a private link, so you can look at it on your phone or computer.',
+          'I design your new homepage and write every word on it, before you pay anything.',
+          'I send you a private link so you can look at it on your phone or computer.',
         ],
       },
       {
         q: 'Is it my homepage or a landing page?',
         a: [
-          'Your homepage. That’s the main page of your store, the one most people see first.',
-          'A landing page is different. It’s a page made for one ad or one offer. Landing pages come with the Conversion Build.',
+          'Your homepage. That’s the main page of your store.',
+          'A landing page is a page made for one ad. Those come with the Conversion Build.',
         ],
       },
       {
         q: 'Do I pay anything before I see it?',
-        a: ['No. You pay nothing until you’ve seen your homepage and decided to move forward.'],
+        a: ['No. You pay nothing until you’ve seen your homepage and said yes.'],
       },
       {
         q: 'Do you need access to my store to make it?',
         a: [
           'No. I design your homepage without touching your store.',
-          'You only add me to your store after you sign, when the build starts.',
+          'You add me to your store later, when the build starts.',
         ],
       },
       {
-        q: 'Why do you need so much information about my business?',
+        q: 'Why do you ask so much about my business?',
         a: [
-          'Because your homepage has to fit your customers, not just any store.',
+          'So your homepage fits your customers, not just any store.',
           'I look at who buys from you, what makes them unsure, what your competitors do and what your ads promise. Then your homepage answers those questions before people leave.',
         ],
       },
       {
-        q: 'What happens if I don’t like it?',
-        a: ['You owe me nothing. No payment, no hard feelings.'],
+        q: 'What if I don’t like it?',
+        a: ['You owe me nothing. No hard feelings.'],
       },
     ],
   },
@@ -57,10 +59,25 @@ export const fullFaqGroups: FaqGroup[] = [
         q: 'How much does it cost?',
         a: [
           { list: [
-            '**Conversion Build:** starts at $4,500',
-            '**Growth Plan:** one flat monthly fee, quoted on our call',
+            '**Conversion Build:** from $4,500',
+            '**Growth Plan:** a monthly fee, set on our call',
           ] },
-          'You see your homepage design before you pay anything for the build.',
+          'You see your homepage design before you pay anything.',
+        ],
+      },
+      {
+        q: 'What comes with the Conversion Build?',
+        a: [
+          'I rebuild every page of your store to get more visitors to buy:',
+          { list: [
+            'Your homepage',
+            'Product pages',
+            'Collection pages (where shoppers browse your products)',
+            'Pages for your ads',
+            'Your cart, with add-on offers',
+            'All your other pages, like About, FAQ and contact',
+          ] },
+          'I write every word on every page.',
         ],
       },
       {
@@ -68,56 +85,40 @@ export const fullFaqGroups: FaqGroup[] = [
         a: [
           'You pick what you need:',
           { list: [
-            '**Your store:** maintenance and fixes, CRO (finding and fixing what stops people from buying), and new pages when you need them.',
-            '**Email and SMS:** automated email flows, email campaigns designed to match your store, popups and signup offers to grow your list, and SMS flows and campaigns.',
-            '**Search:** SEO blog posts, plus AEO and GEO (showing up in AI tools like ChatGPT). Search takes months to pay off, so it’s best once the rest is working.',
+            '**Site upkeep:** fixes, updates and new products.',
+            '**Conversion rate optimization:** monthly tests that get more of your visitors to buy.',
+            '**Email and SMS:** emails and texts that bring customers back to buy.',
+            '**SEO and AI search:** showing up on Google and in AI answers like ChatGPT. This one takes months to work.',
           ] },
           'I design every email and popup to match your store, and I write every word. You get weekly and monthly reports.',
-        ],
-      },
-      {
-        q: 'What comes with the Conversion Build?',
-        a: [
-          'Every page your store needs to turn visitors into buyers:',
-          { list: [
-            'Your homepage',
-            'Collection pages',
-            'Product pages',
-            'Pages for sales and launches',
-            'Landing pages for your ads and emails',
-            'Your cart, with add-on offers',
-            'About and brand story',
-            'FAQ, contact and policy pages',
-          ] },
-          'Need a page that isn’t on this list? It gets built too. I write every word and build custom sections for your products.',
         ],
       },
       {
         q: 'Which one is right for me?',
         a: [
           { list: [
-            '**Conversion Build:** your store needs rebuilding so more visitors buy.',
-            '**Growth Plan:** your store is built, and you want it kept running, improved, and backed by email and SMS.',
+            '**Conversion Build:** your store needs to be rebuilt so more visitors buy.',
+            '**Growth Plan:** your store is built, and you want me to keep it running and growing.',
           ] },
           'Not sure? I’ll tell you on our call.',
         ],
       },
       {
-        q: 'Why does the Conversion Build “start at” $4,500? What makes it cost more?',
+        q: 'Why is the Conversion Build “from” $4,500? What makes it cost more?',
         a: [
-          'Because every store needs a different amount of work.',
-          'The price goes up with things like how many pages you need, how many products you have, and extras like more than one language or moving from another platform.',
+          'Every store needs a different amount of work.',
+          'The price goes up with more pages, more products, or extras like more than one language.',
           'You get the exact price in writing before you pay anything.',
         ],
       },
       {
-        q: 'What do I pay for on top of your fee (Shopify, apps, domain)?',
+        q: 'What do I pay for on top of your fee?',
         a: [
-          'You pay these yourself, straight to each company, at their normal price:',
+          'You pay these yourself, at their normal price:',
           { list: [
             'Your Shopify plan',
             'Any apps you use',
-            'Your web address (domain)',
+            'Your web address',
           ] },
           'I don’t add anything on top.',
         ],
@@ -125,14 +126,14 @@ export const fullFaqGroups: FaqGroup[] = [
     ],
   },
   {
-    title: 'Payment and Contract',
+    title: 'Payment and Agreement',
     items: [
       {
         q: 'When do I pay, and can I split it up?',
         a: [
-          'You pay in two halves, and nothing until you’ve seen your homepage.',
+          'Yes. You pay in two halves:',
           { list: [
-            '**First half:** when you sign. You have 3 days to pay it.',
+            '**First half:** when you say yes to your homepage design and sign. You have 3 days to pay.',
             '**Second half:** when I deliver your finished store.',
           ] },
         ],
@@ -142,16 +143,16 @@ export const fullFaqGroups: FaqGroup[] = [
         a: ['Yes to both. Any credit card works, and you get an invoice for each payment.'],
       },
       {
-        q: 'Is there a contract, and what’s in it?',
+        q: 'Is there an agreement, and what’s in it?',
         a: [
-          'Yes. It’s a short agreement you sign online. It spells out:',
+          'Yes. It’s short, and you sign it online. It lists:',
           { list: [
             'The price',
             'The pages I’m building',
             'The dates',
             'When you pay',
           ] },
-          'The build doesn’t start until we both sign it.',
+          'I don’t start building until we both sign it.',
         ],
       },
     ],
@@ -164,16 +165,16 @@ export const fullFaqGroups: FaqGroup[] = [
         a: [
           { list: [
             '**Your homepage design:** about 4 days after our call.',
-            '**Your full store:** 14 days after you sign and add me to your store.',
+            '**Your full store:** 14 days after you say yes to the design.',
           ] },
         ],
       },
       {
-        q: 'What happens after I sign?',
+        q: 'What happens after I say yes?',
         a: [
           { list: [
-            '**Step 1:** You pay the first half. You have 3 days.',
-            '**Step 2:** You add me to your store and send your logo and photos.',
+            '**Step 1:** You sign and pay the first half.',
+            '**Step 2:** You add me to your store.',
             '**Step 3:** I build your new store as a separate copy, so your current store keeps selling.',
             '**Step 4:** You look it over and ask for changes. As many as you want.',
             '**Step 5:** I deliver it, and you pay the second half.',
@@ -182,33 +183,26 @@ export const fullFaqGroups: FaqGroup[] = [
         ],
       },
       {
-        q: 'What do you need from me, and how much of my time will it take?',
-        a: [
-          'About an hour in total:',
-          { list: [
-            'One call',
-            'Adding me to your store (it’s free and takes a minute)',
-            'Sending me your logo and product photos',
-          ] },
-        ],
+        q: 'What do you need from me?',
+        a: ['Just access to your Shopify store. It’s free and takes about a minute.'],
       },
       {
         q: 'How do I give you access to my store?',
         a: [
           'I send you a request from my Shopify Partner account. You approve it in your Shopify settings, under Users.',
-          'It’s free, and you can remove me anytime.',
+          'You can remove me anytime.',
         ],
       },
       {
         q: 'What if I’m busy or traveling during the build?',
         a: [
-          'That’s fine. Your part takes about an hour, and most of it happens at the start.',
-          'If I’m waiting on something from you, like a photo or an answer, the 14 days pause until I get it.',
+          'That’s fine. I don’t need much from you.',
+          'If I’m waiting on an answer from you, the 14 days pause until I get it.',
         ],
       },
       {
         q: 'How many changes can I ask for?',
-        a: ['Unlimited, while I build and for 14 days after I deliver.'],
+        a: ['As many as you want, while I build and for 14 days after I deliver.'],
       },
       {
         q: 'Who writes the words on my site, and can I change them?',
@@ -226,30 +220,30 @@ export const fullFaqGroups: FaqGroup[] = [
         q: 'What happens to my current store while you build?',
         a: [
           'It stays live and keeps selling.',
-          'I build your new store as a separate copy inside your Shopify account. Your shoppers won’t see anything change until launch day.',
+          'I build your new store as a separate copy inside your Shopify account. Shoppers won’t see any change until launch day.',
         ],
       },
       {
-        q: 'Can you fix my current site instead of rebuilding it?',
+        q: 'Can you fix my current site instead of starting over?',
         a: [
-          'Often, that’s what I do. I keep what’s already working and rebuild the pages that stop people from buying.',
-          'On our call, I’ll tell you which pages need the work.',
+          'Often, yes. I keep what already works and rebuild the pages that stop people from buying.',
+          'On our call, I’ll tell you which pages need work.',
         ],
       },
       {
-        q: 'Will my web address, links, checkout or shipping settings change?',
-        a: ['No. Your web address, links, checkout, shipping and products stay exactly as they are.'],
+        q: 'Will my web address, links, checkout or shipping change?',
+        a: ['No. They all stay exactly the same.'],
       },
       {
         q: 'How is my store built?',
         a: [
-          'On Shopify, with a Shopify theme. That’s the same setup most Shopify stores use.',
-          'I add custom sections made for your products. There’s no strange code, so any Shopify expert can work on it later.',
+          'On Shopify, with a normal Shopify theme, like most Shopify stores.',
+          'I add sections made for your products. There’s no strange code, so any Shopify expert can work on it later.',
         ],
       },
       {
         q: 'Can I edit the store myself afterward?',
-        a: ['Yes. I make it easy to edit, just like a normal template. You can change your text, images, prices and products yourself.'],
+        a: ['Yes. You can change your text, images, prices and products yourself, like any normal Shopify store.'],
       },
       {
         q: 'Who owns the store when it’s done?',
@@ -260,9 +254,9 @@ export const fullFaqGroups: FaqGroup[] = [
         a: ['Yes. Shopify is the only platform I build on.'],
       },
       {
-        q: 'I’m on WooCommerce or another platform. Can you move me to Shopify?',
+        q: 'I’m not on Shopify yet. Can you move me over?',
         a: [
-          'Yes. Moving takes extra work, like bringing over your products and making sure your old links still work, so it costs extra.',
+          'Yes. Moving takes extra work, like bringing over your products and keeping your old links working, so it costs extra.',
           'I’ll tell you the price on our call, before you decide.',
         ],
       },
@@ -272,17 +266,16 @@ export const fullFaqGroups: FaqGroup[] = [
     title: 'What’s Included',
     items: [
       {
-        q: 'What’s included in every build?',
+        q: 'What comes with every build?',
         a: [
           { list: [
             'The design of every page',
             'Every word on every page',
-            'Cleanup of the product photos you already have',
+            'Cleanup of your product photos',
             'An email signup form, connected to your email app',
-            'Fast-loading pages',
-            'SEO (search engine optimization) basics, so Google can read your store',
-            '14 days of unlimited changes after delivery',
-            'A store that’s easy to edit, just like a normal template',
+            'Fast pages that Google can read',
+            '14 days of changes after I deliver',
+            'A store you can easily edit yourself',
           ] },
         ],
       },
@@ -293,8 +286,8 @@ export const fullFaqGroups: FaqGroup[] = [
           { list: [
             'Pages that aren’t part of your build',
             'More than one language',
-            'Moving from another platform to Shopify',
-            'Monthly plans after launch',
+            'Moving to Shopify from another platform',
+            'The Growth Plan after launch',
           ] },
           'If you want something extra, I tell you the price first, and you decide.',
         ],
@@ -305,58 +298,56 @@ export const fullFaqGroups: FaqGroup[] = [
           { list: [
             'Run your ads',
             'Manage your social media',
-            'Photo shoots',
-            'Logo or brand design',
+            'Do photo shoots',
+            'Design logos',
           ] },
-          'I focus on the part that closes the sale: your store.',
         ],
       },
       {
         q: 'Do you edit my product photos? Do I need a photo shoot?',
         a: [
-          'I clean up the product photos you already have, so they look sharp and match your store.',
-          'You usually don’t need a photo shoot. Clear photos of your product are enough to start.',
+          'I clean up the product photos you already have, so they look sharp.',
+          'You usually don’t need a photo shoot. Clear photos of your product are enough.',
         ],
       },
       {
         q: 'Do you write my product descriptions?',
         a: [
           'Yes, for the product pages I build.',
-          'If you have a lot of products, we agree on our call how many descriptions are included.',
+          'If you have a lot of products, we agree on our call how many I write.',
         ],
       },
       {
         q: 'Does the store connect to my email app, like Klaviyo?',
         a: [
           'Yes. Every build comes with an email signup form connected to your email app.',
-          'Want your emails written and designed too? Flows, campaigns and SMS are part of the Growth Plan.',
+          'Want me to write and design your emails too? That’s part of the Growth Plan.',
         ],
       },
       {
-        q: 'What is a landing page for my ads, and do I get one?',
+        q: 'What is a page for my ads, and do I get one?',
         a: [
-          'It’s a page made for one ad. It says the same thing your ad says, so people who click know they’re in the right place and are more likely to buy.',
-          'Landing pages come with the Conversion Build.',
+          'It’s a page made for one ad. It says the same thing your ad says, so people who click know they’re in the right place. That makes them more likely to buy.',
+          'Ad pages come with the Conversion Build.',
         ],
       },
       {
         q: 'Can I show my Amazon or Walmart reviews?',
         a: [
-          'Often, yes. Some review apps can bring in reviews from other places. It depends on the app and the marketplace’s rules.',
+          'Often, yes. Some review apps can bring in reviews from other sites. It depends on the app and the site’s rules.',
           'I’ll check what works for your store and tell you on our call.',
         ],
       },
       {
         q: 'Can you build my store in more than one language?',
         a: [
-          'Yes. Shopify can show your store in more than one language.',
-          'Each language adds work, so tell me on our call and I’ll include it in your price.',
+          'Yes. Each language adds work, so tell me on our call and I’ll include it in your price.',
         ],
       },
       {
         q: 'Can you add wholesale ordering?',
         a: [
-          'Yes, for simple wholesale, like special prices for approved buyers. Shopify has tools for this.',
+          'Yes, for simple wholesale, like special prices for approved buyers.',
           'I don’t build custom software that connects your store to other business systems.',
         ],
       },
@@ -367,57 +358,54 @@ export const fullFaqGroups: FaqGroup[] = [
     items: [
       {
         q: 'I’m just launching my brand. Can you help?',
-        a: [
-          'Yes. You’ll need a logo, product photos and a plan to bring people to your store, like ads, social media or a launch.',
-        ],
+        a: ['Yes. You’ll need a logo, product photos and a plan to bring people to your store, like ads, social media or a launch.'],
       },
       {
-        q: 'I have no traffic or sales yet. Can you help?',
+        q: 'I have no visitors or sales yet. Can you help?',
         a: [
-          'A website turns visitors into buyers. If nobody visits, there’s nobody to buy.',
-          'So if you have no plan to bring people in, this is the wrong product for you right now.',
-          'If you do have a plan, like ads, social media or a launch, this gets your store ready to sell from day one.',
+          'A website turns visitors into buyers. If nobody visits, nobody can buy.',
+          'So you need a plan to bring people in, like ads, social media or a launch. If you have one, I’ll get your store ready to sell from day one.',
         ],
       },
       {
         q: 'Should I spend money on ads or on my website first?',
         a: [
-          'If people already visit your store but don’t buy, fix your website first. More ads won’t fix a store that doesn’t sell.',
+          'If people visit your store but don’t buy, fix your website first. More ads won’t fix a store that doesn’t sell.',
           'If nobody visits yet, you need both: a store that’s ready to sell, and a way to bring people in.',
         ],
       },
       {
         q: 'Do you run ads?',
         a: [
-          'No. You, or whoever runs your ads now, keeps running them.',
-          'What I do is make sure the page your ads send people to matches the ad, so more of those clicks turn into sales.',
+          'No. You, or whoever runs your ads, keeps running them.',
+          'I make sure the page your ad links to says the same thing as the ad, so more clicks turn into sales.',
         ],
       },
       {
         q: 'How much should I spend on ads?',
         a: [
-          'It depends on your product, your prices and your goals. I don’t run ads, so I won’t guess a number for you.',
-          'What I do know: every dollar you spend goes further when your store turns more visitors into buyers.',
+          'It depends on your product, your prices and your goals. I don’t run ads, so I won’t guess a number.',
+          'What I do know: every ad dollar goes further when more of your visitors buy.',
         ],
       },
       {
         q: 'Do you do SEO?',
         a: [
-          'SEO stands for search engine optimization. It means showing up on Google.',
-          'Every store I build is set up so Google can read it: fast pages, a clean layout, and a title and description on every page. That same setup helps AI tools like ChatGPT understand your store too. That’s called GEO, short for generative engine optimization.',
-          'Ongoing SEO is part of the Growth Plan: blog posts, plus AEO and GEO so AI tools can find and recommend your store.',
+          'SEO means showing up on Google.',
+          'Every store I build is set up so Google, and AI tools like ChatGPT, can read it.',
+          'Ongoing SEO is part of the Growth Plan: blog posts, plus work to show up in AI answers.',
         ],
       },
       {
         q: 'How long does SEO take to work?',
         a: [
-          'Months, not weeks. It usually takes a few months before Google sends you steady visitors.',
+          'Months, not weeks.',
           'If you need sales fast, ads are usually the better choice.',
         ],
       },
       {
         q: 'I don’t have many reviews. Will people still buy?',
-        a: ['Yes. You don’t need lots of reviews to start. Your story and your product page do the selling until real reviews come in.'],
+        a: ['Yes. Your story and your product page do the selling until real reviews come in.'],
       },
     ],
   },
@@ -427,32 +415,38 @@ export const fullFaqGroups: FaqGroup[] = [
       {
         q: 'What happens after launch?',
         a: [
-          'First, you get 14 days of unlimited changes.',
-          'After that, you can run the store yourself, or keep me on a monthly plan.',
+          'You get 14 days of changes.',
+          'After that, you can run the store yourself, or keep me on the Growth Plan.',
         ],
       },
       {
-        q: 'What’s the monthly plan, and what does it cost?',
+        q: 'What’s the Growth Plan, and what does it cost?',
         a: [
-          'It’s the Growth Plan. You pick what you need: your store (maintenance, CRO, new pages), email and SMS, and search.',
-          'It’s a flat monthly fee. I set the price on our call, based on what you pick.',
+          'It’s me running your store after launch. Pick any of these:',
+          { list: [
+            '**Site upkeep:** fixes, updates and new products.',
+            '**Conversion rate optimization:** monthly tests that get more of your visitors to buy.',
+            '**Email and SMS:** emails and texts that bring customers back to buy.',
+            '**SEO and AI search:** showing up on Google and in AI answers like ChatGPT. This one takes months to work.',
+          ] },
+          'It’s one monthly fee. I set the price on our call, based on what you pick.',
         ],
       },
       {
-        q: 'Do I have to sign up for a monthly plan?',
+        q: 'Do I have to sign up for the Growth Plan?',
         a: ['No. The store is yours, and you can run it yourself.'],
       },
       {
         q: 'Is there a commitment, and how do I cancel?',
-        a: ['There’s no long commitment. You can cancel anytime with 30 days’ notice.'],
+        a: ['No long commitment. It’s month-to-month, and you can cancel anytime.'],
       },
       {
-        q: 'Can I pay for one new page or product later without a monthly plan?',
+        q: 'Can I pay for one new page later without the Growth Plan?',
         a: ['Yes. Tell me what you need. I’ll tell you the price first, and you decide.'],
       },
       {
-        q: 'Do you do revenue share, equity or partnerships?',
-        a: ['No. I charge a flat price for the build and a flat fee for monthly plans. You keep 100% of what your store earns.'],
+        q: 'Do you take a cut of my sales?',
+        a: ['No. I charge a set price for the build and a set monthly fee for the Growth Plan. You keep 100% of what your store earns.'],
       },
     ],
   },
@@ -462,30 +456,30 @@ export const fullFaqGroups: FaqGroup[] = [
       {
         q: 'What results can I expect, and how soon?',
         a: [
-          'Your results depend on your product, your prices and how many people visit. I’ll be honest with you about all three before we start.',
-          'Once your new store is live, we compare your numbers after enough people have visited to make it fair.',
+          'More of your visitors buying. That’s the whole goal.',
           'For example, Lynh’s Drinks went from 1.2% to 3.4% of visitors buying, 30 days after launch. [Read the case study](/case-studies/lynhs-drinks).',
+          'Your results also depend on your product, your prices and how many people visit. I’ll be honest with you about all three on our call.',
         ],
       },
       {
         q: 'How will I know it worked?',
         a: [
-          'Before I change anything, I write down your numbers: how many of your visitors buy, how much each order is worth, and everything else that matters.',
-          'After launch, you see the same numbers side by side, so you know exactly what changed.',
+          'Check your Shopify numbers. If more of your visitors buy after launch, it worked.',
+          'I’ll go over the numbers with you.',
         ],
       },
       {
-        q: 'What’s a good conversion rate for my store?',
+        q: 'What’s a good conversion rate?',
         a: [
           'Your conversion rate is how many visitors out of every 100 buy something.',
           'The average Shopify store is around 1.4%. The top 20% of stores are above 3.2%.',
-          'It also depends on what you sell. Food and drinks often run higher, and jewelry often runs lower. So compare your store to stores like yours.',
+          'It also depends on what you sell, so compare your store to stores like yours.',
         ],
       },
       {
-        q: 'Why does my store’s design matter if I already have traffic?',
+        q: 'Why does my store’s design matter if I already get visitors?',
         a: [
-          'Because visitors only turn into money when they buy.',
+          'Because visitors only make you money when they buy.',
           'If 100 people visit and 1 buys, getting 2 to buy doubles your sales, without spending a dollar more on ads.',
         ],
       },
@@ -496,35 +490,34 @@ export const fullFaqGroups: FaqGroup[] = [
     items: [
       {
         q: 'Who will I work with?',
-        a: ['Me, Shane Nguyen. You talk to me directly, on real calls, from our first call to launch day. I lead every build and check every page myself.'],
+        a: ['Me, Shane Nguyen. You talk to me directly, from our first call to launch day. I check every page myself.'],
       },
       {
         q: 'Why do you only take 3 builds a month?',
-        a: ['So every store gets my full attention. I study your customers, write every word and check every page myself. I can’t do that for 20 stores at once.'],
+        a: ['So every store gets my full attention. I can’t study your customers and write every word for 20 stores at once.'],
       },
       {
         q: 'I’ve been burned by a developer before. Why is this different?',
         a: [
-          'I hear this a lot. Here’s what’s different:',
           { list: [
             'You see your homepage before you pay anything.',
-            'The price, the pages and the deadline are in writing before we start.',
-            'If you want something extra, I tell you the price first, and you decide.',
-            'Half your money waits until your store is delivered.',
-            'You talk to me directly, on real calls, from start to finish.',
+            'The price, the pages and the deadline are in writing before I start.',
+            'Want something extra? I tell you the price first, and you decide.',
+            'Half your money waits until your store is done.',
+            'You talk to me directly, from start to finish.',
           ] },
         ],
       },
       {
         q: 'Someone quoted me less. Why pay more?',
         a: [
-          'Anyone can make a website. A $100 template site and mine both run on Shopify. The difference is what’s on the page.',
-          'I study your customers and your competitors. Then I write and design every section to answer the questions that stop people from buying.',
+          'A cheap template and my work both run on Shopify. The difference is what’s on the page.',
+          'I study your customers and your competitors. Then I write and design every page to answer the questions that stop people from buying.',
           'And you see my work before you pay, so it’s easy to compare.',
         ],
       },
       {
-        q: 'Am I the right fit?',
+        q: 'Am I a good fit?',
         a: [
           'You’re a good fit if:',
           { list: [
@@ -532,9 +525,8 @@ export const fullFaqGroups: FaqGroup[] = [
             'You make the decisions for your store',
             'You have a logo and product photos',
             'You have a plan to bring people to your store',
-            'You have a budget set aside for the build',
+            'You have money set aside for the build',
           ] },
-          'You’re probably not a fit if you still need a logo, or you need custom software built into your store.',
           'Not sure? Book a call, and I’ll tell you straight.',
         ],
       },

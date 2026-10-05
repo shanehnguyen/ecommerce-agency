@@ -1,8 +1,8 @@
-// fourteenDayLabel — "14 days from today" as a real, non-stale date, computed
-// at build time so it never drifts from a hardcoded value. Shared by the
-// homepage closing section and the exit-intent popup so both quote the same date.
-export function fourteenDayLabel(from: Date = new Date()): string {
-  const target = new Date(from.getTime() + 14 * 24 * 60 * 60 * 1000);
+// fourteenDayLabel — "N days from today" (14 by default) as a real, non-stale
+// date. The homepage closing passes 18: ~4 days of homepage design, then the
+// 14-day build, which starts when the design is approved.
+export function fourteenDayLabel(from: Date = new Date(), days = 14): string {
+  const target = new Date(from.getTime() + days * 24 * 60 * 60 * 1000);
   const ordinal = (n: number) => {
     const s = ['th', 'st', 'nd', 'rd'];
     const v = n % 100;
