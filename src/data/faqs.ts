@@ -1,7 +1,7 @@
 /* =====================================================================
-   faqs.ts — homepage FAQ. Five questions, the ones a store owner asks
+   faqs.ts — homepage FAQ. Four questions, the ones a store owner asks
    before booking: what is it, is 14 days real, what if it doesn't work,
-   how much of my time, why you. Plain words, short sentences.
+   why you. Plain words, short sentences.
    Every fact matches the deal: homepage design first (free), pay only
    on approval, live in 14 days. Say "live in 14 days" plainly; don't
    qualify when the clock starts.
@@ -38,13 +38,6 @@ export const homeFaqs: Faq[] = [
       'What I can show you is proof: what has worked for other brands, applied to you.',
       'I also cut your risk every way I can. You get to see your homepage design first, before you decide.',
       'And this isn’t for every brand. If I don’t think it will work for you, I’ll tell you on our call. Taking on a brand I can’t help is bad for both of us.',
-    ],
-  },
-  {
-    q: 'What do you need from me?',
-    a: [
-      'Access to your Shopify store.',
-      'Everything else is handled. During the 14 days of revisions, you can ask for any changes you want. If you’re happy without the revisions, then you’re done.',
     ],
   },
   {
