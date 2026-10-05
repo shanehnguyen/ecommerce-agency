@@ -1,13 +1,12 @@
 /* =====================================================================
-   faqs.ts — homepage FAQ. Seven questions, written the way a store owner
-   would actually ask them, answered in plain words: short sentences, no
-   jargon, one idea per line. Answers are arrays of short paragraphs
-   (FAQ.astro renders each as its own <p>; the FAQPage schema joins them).
-   Every fact matches the deal timeline in TheDeal.astro: design first
-   after the call (days 0-4, free), pay only on approval (day 4), then the
-   14-day build clock runs to launch. The 14 days are counted from
-   APPROVAL, never from the first call — if that ever changes, this file,
-   TheDeal.astro and the hero headline all move together.
+   faqs.ts — homepage FAQ. Five questions, the ones a store owner asks
+   before booking: what is it, is 14 days real, what if it doesn't work,
+   how much of my time, why you. Plain words, short sentences.
+   Every fact matches the deal: homepage design first (about 4 days,
+   free), pay only on approval, then the 14-day build clock runs to
+   launch. The 14 days are counted from APPROVAL, never from the first
+   call — if that ever changes, this file and the hero headline move
+   together.
    ===================================================================== */
 
 /* An answer is a string, or a list of blocks. A block is a paragraph string
@@ -19,53 +18,49 @@ export type Faq = { q: string; a: string | FaqBlock[] };
 
 export const homeFaqs: Faq[] = [
   {
-    q: 'Do I see it before I buy it?',
+    q: 'What do I actually get?',
     a: [
-      'Yes. The call and your new homepage design come first.',
-      'You see the design, then you decide. If you like it, we build the rest. If you don’t, you walk away and owe nothing.',
+      'A new Shopify store, designed and written to turn more of your visitors into buyers.',
+      'We design your homepage first, for free. If you like it, we build every page around it: product pages, collection pages, your cart and landing pages for your ads. We write every word.',
+      'It’s for brands that already get visitors and want more of them to buy.',
+      'When it’s done, the site is 100% yours. No lock-in, no contract.',
+      'The goal is one thing: a higher conversion rate.',
     ],
   },
   {
-    q: 'When do I actually pay?',
+    q: 'Does it actually take 14 days to go live?',
     a: [
-      'Only after you see your homepage design and say yes.',
-      'Then it’s 50% to start the build, and 50% when your site is live.',
+      'Yes. Your site is live 14 days after you approve your homepage design.',
+      'If it isn’t, you don’t pay.',
+      'The homepage design comes before that clock. It takes about 4 days, and it’s free.',
     ],
   },
   {
-    q: 'What if it’s not done in 14 days?',
+    q: 'What if the website doesn’t work?',
     a: [
-      'Then you don’t pay. Simple as that.',
-      'The 14 days start the day you approve your homepage design. Fourteen days later your site is live.',
-      'The design comes before that clock, and it costs you nothing. You are never paying for days you are waiting to see something.',
+      'We can’t promise you’ll make a million dollars. Your sales depend on things we don’t control: your product, your prices, your ads and how many people visit.',
+      'What we do have is proof. Before we change anything, we write down your numbers. After launch, you see them side by side. You can see what that looked like for other brands in our [case studies](/case-studies).',
+      'This isn’t for every brand. If we don’t think a new site will get you more sales, we’ll tell you straight up on our call.',
+      'That’s in our interest too. Taking on a brand we can’t help only makes an unhappy customer.',
     ],
   },
   {
-    q: 'How do I know if it actually worked?',
+    q: 'I’m busy. What do you need from me?',
     a: [
-      'We screenshot your current numbers together on day one. That is your baseline.',
-      'Six weeks after launch we sit down and compare the two. Most people who build you a website never come back to tell you whether it worked.',
+      'Nothing but access to your Shopify store. Adding us takes about a minute.',
+      'The design, the words and the build are on us.',
+      'If you want, you get unlimited revisions while we build and for 14 days after launch. You tell us what to change, like a headline, a photo or a whole section, and we change it. As many times as you want.',
+      'All of that is optional. If you’re happy, you don’t have to do a thing.',
     ],
   },
   {
-    q: 'What do you need from me?',
+    q: 'How are you different from every other agency?',
     a: [
-      'Three things: your logo, your product photos, and access to your store.',
-      'One call, and we take it from there. No long forms, no weeks of back-and-forth.',
-    ],
-  },
-  {
-    q: 'Do you only work with Shopify?',
-    a: [
-      'Shopify is what we do best and build fastest.',
-      'On something else? Just ask. We’ll tell you straight whether we can help — and whether switching is worth it for you.',
-    ],
-  },
-  {
-    q: 'Who owns the site when it’s done?',
-    a: [
-      'You do. The code, the design, everything. No lock-in, no contract.',
-      'Want us to keep improving it after launch? We can, for a small monthly fee. Totally optional.',
+      { list: [
+        '**We have proof.** Real stores, with their numbers before and after. They’re in our [case studies](/case-studies).',
+        '**We’re not a design agency.** We’re not chasing awards, and we don’t build your site and disappear. Our only goal is conversion. That means we have to understand your business as well as you do, or better. So we research your market, study your customers and test what makes them buy.',
+        '**You see how we work before you pay.** It’s hard to know who to trust online. So we design your homepage first, for free, and you see exactly how we work before we work together.',
+      ] },
     ],
   },
 ];
