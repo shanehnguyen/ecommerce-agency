@@ -17,6 +17,10 @@ export default defineConfig({
     '/calculator': '/',
     '/seo': '/',
     '/get-found': '/',
+    // case studies removed Oct 2026; send old links to the portfolio
+    '/case-studies': '/#portfolio',
+    '/case-studies/lynhs-drinks': '/#portfolio',
+    '/case-studies/pk-cabinets': '/#portfolio',
   },
   adapter: vercel({
     webAnalytics: { enabled: false }, // we wire Meta Pixel + GA4 ourselves

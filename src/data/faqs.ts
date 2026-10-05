@@ -37,7 +37,7 @@ export const homeFaqs: Faq[] = [
     q: 'What if the website doesn’t work?',
     a: [
       'I can’t promise you’ll make a million dollars. Your sales also depend on your product, your prices and your ads.',
-      'What I can show you is proof. I’ve helped other brands get more of their visitors to buy. See my [case studies](/case-studies).',
+      'What I can show you is proof. I’ve helped other brands get more of their visitors to buy. [See the results](/#portfolio).',
       'I also cut your risk every way I can. You see your homepage design first, for free, before you pay anything.',
       'And this isn’t for every brand. If I don’t think it will work for you, I’ll tell you on our call. Taking on a brand I can’t help is bad for both of us.',
     ],
@@ -80,7 +80,7 @@ export const callFaqs: Faq[] = [
     q: 'How much is it?',
     a: [
       { list: [
-        '**Conversion Build:** from $4,500. I rebuild every page of your store.',
+        '**Conversion Build:** from $4,500. I rebuild the pages your store needs to sell.',
         '**Growth Plan:** a monthly fee, set on our call. I keep your store running and growing after launch.',
       ] },
       'Not sure which you need? I’ll tell you on our call.',
@@ -129,7 +129,7 @@ export const callFaqs: Faq[] = [
     q: 'What results can I expect?',
     a: [
       'More of your visitors buying. That’s the whole goal.',
-      'For example, Lynh’s Drinks went from 1.2% to 3.4% of visitors buying. See more in my [case studies](/case-studies).',
+      'For example, Lynh’s Drinks went from 1.2% to 3.4% of visitors buying.',
       'Your results also depend on your product, your prices and how many people visit. I’ll be honest with you about all three on our call.',
     ],
   },

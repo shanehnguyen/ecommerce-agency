@@ -12,8 +12,8 @@
    pushed, because SEO/AEO/GEO can't show results inside a normal
    cancel-anytime window.
 
-   The Growth Plan price is a placeholder ($X,XXX/mo): it's quoted on
-   the call.
+   The Growth Plan price reads "Custom": it's a monthly fee quoted on
+   the call (a "$X,XXX" placeholder looked unfinished).
 
    Keep each stack to FIVE lines or fewer. Past that a checklist stops
    reading as a spec and starts reading as padding.
@@ -75,10 +75,10 @@ export const priceCards: PriceCard[] = [
   {
     eyebrow: 'Phase 1',
     name: 'The Conversion Build',
-    description: "For growing brands with traffic. Every page you need to convert higher.",
+    description: "For growing brands that need a complete Shopify store. Every page you need to convert higher.",
     price: '$4,500', pricePrefix: 'from', qualifier: '', featured: true,
     cta: 'See your homepage first', event: 'Pricing:Full',
-    pagesLabel: 'Pages included',
+    pagesLabel: 'Pick the pages you need',
     pages: [
       'Homepage',
       'Collection pages',
@@ -89,7 +89,7 @@ export const priceCards: PriceCard[] = [
       'About + brand story',
       'FAQ, contact, policies',
     ],
-    scopeNote: 'Need a page that isn’t on this list? It gets built too.',
+    scopeNote: 'Don’t see a page you need? I’ll build that too.',
     features: [
       "Live in 14 days or you don't pay",
       'Every word written for you',
@@ -105,8 +105,8 @@ export const priceCards: PriceCard[] = [
   {
     eyebrow: 'Phase 2',
     name: 'The Growth Plan',
-    description: "For brands that want everything handled. Choose any service you need.",
-    price: '$X,XXX', qualifier: '/mo',
+    description: "For growing brands that need everything Shopify-related handled. Choose whichever services you need.",
+    price: 'Custom', qualifier: '',
     cta: 'See your homepage first', event: 'Pricing:Retainer',
     pagesLabel: 'Pick your services',
     services: [
@@ -119,6 +119,6 @@ export const priceCards: PriceCard[] = [
     // no checklist: the service tiles carry this card on their own
     features: [],
     stack: [],
-    riskFree: 'Month-to-month. Cancel anytime.',
+    riskFree: 'Monthly, set on our call. Cancel anytime.',
   },
 ];

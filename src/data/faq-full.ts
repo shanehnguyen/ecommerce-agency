@@ -68,16 +68,17 @@ export const fullFaqGroups: FaqGroup[] = [
       {
         q: 'What comes with the Conversion Build?',
         a: [
-          'I rebuild every page of your store to get more visitors to buy:',
+          'I build the pages your store needs to get more visitors to buy. You pick them on our call. For example:',
           { list: [
             'Your homepage',
             'Product pages',
             'Collection pages (where shoppers browse your products)',
             'Pages for your ads',
+            'Wholesale (B2B) pages',
             'Your cart, with add-on offers',
-            'All your other pages, like About, FAQ and contact',
+            'About, FAQ, contact and policy pages',
           ] },
-          'I write every word on every page.',
+          'Need a page that isn’t on this list? I’ll build that too. I write every word on every page.',
         ],
       },
       {
@@ -107,7 +108,7 @@ export const fullFaqGroups: FaqGroup[] = [
         q: 'Why is the Conversion Build “from” $4,500? What makes it cost more?',
         a: [
           'Every store needs a different amount of work.',
-          'The price goes up with more pages, more products, or extras like more than one language.',
+          'The price depends on which pages you need, how many products you have, and extras like more than one language.',
           'You get the exact price in writing before you pay anything.',
         ],
       },
@@ -457,7 +458,7 @@ export const fullFaqGroups: FaqGroup[] = [
         q: 'What results can I expect, and how soon?',
         a: [
           'More of your visitors buying. That’s the whole goal.',
-          'For example, Lynh’s Drinks went from 1.2% to 3.4% of visitors buying, 30 days after launch. [Read the case study](/case-studies/lynhs-drinks).',
+          'For example, Lynh’s Drinks went from 1.2% to 3.4% of visitors buying, 30 days after launch.',
           'Your results also depend on your product, your prices and how many people visit. I’ll be honest with you about all three on our call.',
         ],
       },
