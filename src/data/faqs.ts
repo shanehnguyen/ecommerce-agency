@@ -19,8 +19,8 @@ export const homeFaqs: Faq[] = [
     q: 'What do I actually get?',
     a: [
       'A new Shopify store, built to get more of your visitors to buy.',
-      'I design your homepage first, for free. If you like it, I build the rest of your store around it. I write every word.',
-      'It’s for brands that already get visitors and want more sales from them.',
+      'I’ll build your homepage first, so you can see the difference before you decide to work with me.',
+      'It’s for brands looking to get more sales out of their visitors.',
       'When it’s done, the store is 100% yours.',
     ],
   },
@@ -28,15 +28,15 @@ export const homeFaqs: Faq[] = [
     q: 'Does it actually take 14 days to go live?',
     a: [
       'Yes. Your store goes live in 14 days.',
-      'If it’s late, you don’t pay.',
+      'You also get 14 days of unlimited revisions.',
     ],
   },
   {
     q: 'What if the website doesn’t work?',
     a: [
-      'I can’t promise you’ll make a million dollars. Your sales also depend on your product, your prices and your ads.',
-      'What I can show you is proof. I’ve helped other brands get more of their visitors to buy. [See the results](/#portfolio).',
-      'I also cut your risk every way I can. You see your homepage design first, for free, before you pay anything.',
+      'I’m not going to promise a million dollars. Your sales depend on your product, pricing and visitors.',
+      'What I can show you is proof: what has worked for other brands, applied to you.',
+      'I also cut your risk every way I can. You get to see your homepage design first, before you decide.',
       'And this isn’t for every brand. If I don’t think it will work for you, I’ll tell you on our call. Taking on a brand I can’t help is bad for both of us.',
     ],
   },
