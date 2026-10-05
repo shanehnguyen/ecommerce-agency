@@ -74,6 +74,7 @@ export const priceCards: PriceCard[] = [
     description: "For growing brands with traffic. Every page you need to convert higher.",
     price: '$4,500', pricePrefix: 'starting at', qualifier: '', featured: true,
     cta: 'Build my website', event: 'Pricing:Full',
+    pagesLabel: 'Pages included',
     pages: [
       'Homepage',
       'Collection pages',
@@ -105,7 +106,7 @@ export const priceCards: PriceCard[] = [
     description: "For brands that want everything handled. Choose any service you need.",
     price: '$X,XXX', qualifier: '/mo',
     cta: 'Keep it selling', event: 'Pricing:Retainer',
-    pagesLabel: 'What we handle',
+    pagesLabel: 'Pick your services',
     pages: [
       'Site upkeep',
       'Sales and launch pages',
