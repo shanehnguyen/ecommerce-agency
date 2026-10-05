@@ -20,47 +20,48 @@ export const homeFaqs: Faq[] = [
   {
     q: 'What do I actually get?',
     a: [
-      'A new Shopify store, designed and written to turn more of your visitors into buyers.',
-      'We design your homepage first, for free. If you like it, we build every page around it: product pages, collection pages, your cart and landing pages for your ads. We write every word.',
-      'It’s for brands that already get visitors and want more of them to buy.',
-      'When it’s done, the site is 100% yours. No lock-in, no contract.',
-      'The goal is one thing: a higher conversion rate.',
+      'A new Shopify store, built to get more of your visitors to buy.',
+      'We design your homepage first, for free. If you like it, we build the rest of your store around it. We write every word.',
+      'It’s for brands that already get visitors and want more sales from them.',
+      'When it’s done, the store is 100% yours.',
     ],
   },
   {
     q: 'Does it actually take 14 days to go live?',
     a: [
-      'Yes. Your site is live 14 days after you approve your homepage design.',
-      'If it isn’t, you don’t pay.',
-      'The homepage design comes before that clock. It takes about 4 days, and it’s free.',
+      'Yes. Your store goes live 14 days after you say yes to your homepage design.',
+      'If it’s late, you don’t pay.',
     ],
   },
   {
     q: 'What if the website doesn’t work?',
     a: [
-      'We can’t promise you’ll make a million dollars. Your sales depend on things we don’t control: your product, your prices, your ads and how many people visit.',
-      'What we do have is proof. Before we change anything, we write down your numbers. After launch, you see them side by side. You can see what that looked like for other brands in our [case studies](/case-studies).',
-      'This isn’t for every brand. If we don’t think a new site will get you more sales, we’ll tell you straight up on our call.',
-      'That’s in our interest too. Taking on a brand we can’t help only makes an unhappy customer.',
+      'We can’t promise you’ll make a million dollars. Your sales also depend on your product, your prices and your ads.',
+      'What we can show you is proof. We’ve helped other brands get more of their visitors to buy. See our [case studies](/case-studies).',
+      'We also cut your risk every way we can. You see your homepage design first, for free, before you pay anything.',
+      'And this isn’t for every brand. If we don’t think it will work for you, we’ll tell you on our call. Taking on a brand we can’t help is bad for both of us.',
     ],
   },
   {
-    q: 'I’m busy. What do you need from me?',
+    q: 'What do you need from me?',
     a: [
-      'Nothing but access to your Shopify store. Adding us takes about a minute.',
-      'The design, the words and the build are on us.',
-      'If you want, you get unlimited revisions while we build and for 14 days after launch. You tell us what to change, like a headline, a photo or a whole section, and we change it. As many times as you want.',
-      'All of that is optional. If you’re happy, you don’t have to do a thing.',
+      'Just access to your Shopify store. Adding us takes about a minute.',
+      'We handle the design, the words and the build.',
+      'You can ask for as many changes as you want while we build, and for 14 days after launch. Tell us what to change, like a headline or a photo, and we change it.',
+      'You don’t have to ask for anything. If you’re happy, you’re done.',
     ],
   },
   {
     q: 'How are you different from every other agency?',
     a: [
+      'Most agencies build stores that look nice. We build stores that sell. That’s the only thing we care about.',
+      'Here’s what we do to get there:',
       { list: [
-        '**We have proof.** Real stores, with their numbers before and after. They’re in our [case studies](/case-studies).',
-        '**We’re not a design agency.** We’re not chasing awards, and we don’t build your site and disappear. Our only goal is conversion. That means we have to understand your business as well as you do, or better. So we research your market, study your customers and test what makes them buy.',
-        '**You see how we work before you pay.** It’s hard to know who to trust online. So we design your homepage first, for free, and you see exactly how we work before we work together.',
+        '**We study your business first.** Who buys from you, what makes them unsure, what your competitors do and what your ads promise.',
+        '**We write every word to sell.** Your pages answer your buyers’ questions before they leave.',
+        '**We match your pages to your ads.** People who click an ad land on a page that says the same thing, so more of them buy.',
       ] },
+      'And you see how we work before you pay. We design your homepage first, for free.',
     ],
   },
 ];
