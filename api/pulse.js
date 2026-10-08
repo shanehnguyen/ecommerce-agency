@@ -326,7 +326,8 @@ async function maybeCapi(redis, j) {
   if (stageIndex(j.stage) >= stageIndex('calendar')) await queue('Lead', 'lead');
   // QualifiedLead = completed the form AND revenue band $10k+ (mirrors the
   // browser's custom event; the future optimization target for buyer-quality).
-  if (stageIndex(j.stage) >= stageIndex('calendar') && j.revenue && !/^(Pre-revenue|Under \$10k)$/.test(j.revenue)) {
+  // $10k+ stores only; old and current under-$10k band names both excluded
+  if (stageIndex(j.stage) >= stageIndex('calendar') && j.revenue && !/^(Pre-revenue|Under \$10k|Under \$2k|\$2k–\$10k)$/.test(j.revenue)) {
     await queue('QualifiedLead', 'qlead');
   }
   // Schedule = booked a Calendly time.

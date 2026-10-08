@@ -18,7 +18,7 @@
 import BareLayout from '../layouts/BareLayout.astro';
 import { site } from '../data/site.config';
 
-const revenueBands = ['Pre-revenue', 'Under $10k', '$10k–$30k', '$30k–$60k', '$60k–$100k', '$100k+'];
+const revenueBands = ['Under $2k', '$2k–$10k', '$10k–$50k', '$50k–$100k', '$100k–$300k', '$300k+'];
 ---
 <BareLayout
   title="Apply: Get your build in 14 days"
@@ -65,7 +65,7 @@ const revenueBands = ['Pre-revenue', 'Under $10k', '$10k–$30k', '$30k–$60k',
           <fieldset class="bk-step" data-step hidden>
             <button type="button" class="bk-back" data-back><span aria-hidden="true">←</span> Back</button>
             <p class="bk-count">3/3</p>
-            <h2 class="bk-q">Last thing: let’s lock this in and build your personalized strategy.</h2>
+            <h2 class="bk-q">Last thing: let’s lock this in.</h2>
             <div class="bk-fields">
               <div class="bk-field" data-field="fullName">
                 <label class="bk-label" for="bk-fullName">Full name</label>
@@ -417,7 +417,8 @@ const revenueBands = ['Pre-revenue', 'Under $10k', '$10k–$30k', '$30k–$60k',
         (window as any).fbq?.('track', 'Lead', {}, { eventID: 'lead_' + PULSE.id });
         // B2 — quality signal: only $10k+ stores. Once it has volume, optimize
         // the ad set for QualifiedLead so Meta hunts buyers, not form-fillers.
-        if (!/^(Pre-revenue|Under \$10k)$/.test(answers.revenue || '')) {
+        // old bands (Pre-revenue, Under $10k) kept in the test for in-progress sessions
+        if (!/^(Pre-revenue|Under \$10k|Under \$2k|\$2k–\$10k)$/.test(answers.revenue || '')) {
           (window as any).fbq?.('trackCustom', 'QualifiedLead', {}, { eventID: 'qlead_' + PULSE.id });
         }
       }
