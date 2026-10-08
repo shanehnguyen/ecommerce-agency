@@ -137,7 +137,7 @@
    italic serif so it reads as a plain-spoken caveat, not fine print. */
 /* Growth Plan services: one bordered box split into rows (name + one
    line each). Joined rather than four separate tiles so the card stays
-   about as tall as the Conversion Build next to it. */
+   about as tall as the Conversion Rebuild next to it. */
 .pcard__services { list-style: none; margin: var(--space-3) 0 0; padding: 0; border: var(--rule-width) solid var(--line); border-radius: var(--radius-md); background: var(--bg); overflow: hidden; }
 .pcard__services li { display: grid; gap: 0.1em; padding: var(--space-2) var(--space-4); }
 .pcard__services li + li { border-top: var(--rule-width) solid var(--line); }

@@ -1,9 +1,9 @@
 /* =====================================================================
    pricing.ts — SINGLE SOURCE OF TRUTH for the two offers.
-   One build (the Conversion Build) and one ongoing plan (the Growth
+   One build (the Conversion Rebuild) and one ongoing plan (the Growth
    Plan). Change it once, here.
 
-   The Conversion Build leads with the PAGES it covers, rendered as chips,
+   The Conversion Rebuild leads with the PAGES it covers, rendered as chips,
    so scope reads at a glance. The Growth Plan lists its services as
    pickable tiles (name + one line on what it does), then a short
    checklist of how the plan works.
@@ -29,7 +29,7 @@ export type PriceCard = {
   name: string;
   description: string;
   price: string;
-  /** Small label BEFORE the number ("starting at"). The Conversion Build
+  /** Small label BEFORE the number ("starting at"). The Conversion Rebuild
    * is no longer a flat fee — scope above the standard store is quoted. */
   pricePrefix?: string;
   qualifier: string;
@@ -74,8 +74,8 @@ export type PriceCard = {
 export const priceCards: PriceCard[] = [
   {
     eyebrow: 'Phase 1',
-    name: 'The Conversion Build',
-    description: "For growing brands that need a complete Shopify store. Every page you need to convert higher.",
+    name: 'The Conversion Rebuild',
+    description: "For growing brands that want to sell more on their traffic. Every page needed to convert higher.",
     price: '$4,500', pricePrefix: 'from', qualifier: '', featured: true,
     cta: 'See your homepage first', event: 'Pricing:Full',
     pagesLabel: 'Pick the pages you need',

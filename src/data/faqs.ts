@@ -69,7 +69,7 @@ export const callFaqs: Faq[] = [
     q: 'How much is it?',
     a: [
       { list: [
-        '**Conversion Build:** from $4,500. I rebuild the pages your store needs to sell.',
+        '**Conversion Rebuild:** from $4,500. I rebuild the pages your store needs to sell.',
         '**Growth Plan:** a monthly fee, set on our call. I keep your store running and growing after launch.',
       ] },
       'Not sure which you need? I’ll tell you on our call.',

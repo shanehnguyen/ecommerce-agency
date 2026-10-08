@@ -25,7 +25,7 @@ export const fullFaqGroups: FaqGroup[] = [
         q: 'Is it my homepage or a landing page?',
         a: [
           'Your homepage. That’s the main page of your store.',
-          'A landing page is a page made for one ad. Those come with the Conversion Build.',
+          'A landing page is a page made for one ad. Those come with the Conversion Rebuild.',
         ],
       },
       {
@@ -59,14 +59,14 @@ export const fullFaqGroups: FaqGroup[] = [
         q: 'How much does it cost?',
         a: [
           { list: [
-            '**Conversion Build:** from $4,500',
+            '**Conversion Rebuild:** from $4,500',
             '**Growth Plan:** a monthly fee, set on our call',
           ] },
           'You see your homepage design before you pay anything.',
         ],
       },
       {
-        q: 'What comes with the Conversion Build?',
+        q: 'What comes with the Conversion Rebuild?',
         a: [
           'I build the pages your store needs to get more visitors to buy. You pick them on our call. For example:',
           { list: [
@@ -98,14 +98,14 @@ export const fullFaqGroups: FaqGroup[] = [
         q: 'Which one is right for me?',
         a: [
           { list: [
-            '**Conversion Build:** your store needs to be rebuilt so more visitors buy.',
+            '**Conversion Rebuild:** your store needs to be rebuilt so more visitors buy.',
             '**Growth Plan:** your store is built, and you want me to keep it running and growing.',
           ] },
           'Not sure? I’ll tell you on our call.',
         ],
       },
       {
-        q: 'Why is the Conversion Build “from” $4,500? What makes it cost more?',
+        q: 'Why is the Conversion Rebuild “from” $4,500? What makes it cost more?',
         a: [
           'Every store needs a different amount of work.',
           'The price depends on which pages you need, how many products you have, and extras like more than one language.',
@@ -329,7 +329,7 @@ export const fullFaqGroups: FaqGroup[] = [
         q: 'What is a page for my ads, and do I get one?',
         a: [
           'It’s a page made for one ad. It says the same thing your ad says, so people who click know they’re in the right place. That makes them more likely to buy.',
-          'Ad pages come with the Conversion Build.',
+          'Ad pages come with the Conversion Rebuild.',
         ],
       },
       {
