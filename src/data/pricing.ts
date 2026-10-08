@@ -74,8 +74,8 @@ export type PriceCard = {
 export const priceCards: PriceCard[] = [
   {
     eyebrow: 'Phase 1',
-    name: 'The Conversion Rebuild',
-    description: "For growing brands that want to sell more on their traffic. Every page needed to convert higher.",
+    name: 'Conversion Rebuild',
+    description: "For established brands that want more sales from the traffic they already get. I find where your store loses buyers, then rebuild those pages.",
     price: '$4,500', pricePrefix: 'from', qualifier: '', featured: true,
     cta: 'Claim your new product page', event: 'Pricing:Full',
     pagesLabel: 'Pick the pages you need',
@@ -93,18 +93,18 @@ export const priceCards: PriceCard[] = [
     features: [
       "Live in 14 days or you don't pay",
       'Every word written for you',
-      'Unlimited changes for 14 days',
+      'Unlimited revisions for 14 days',
     ],
     stack: [
       "Live in 14 days or you don't pay",
       'Every word written for you',
-      'Unlimited changes for 14 days',
+      'Unlimited revisions for 14 days',
     ],
-    riskFree: 'See it before you buy it.',
+    riskFree: 'See your product page first.',
   },
   {
     eyebrow: 'Phase 2',
-    name: 'The Growth Plan',
+    name: 'Growth Plan',
     description: "For growing brands that need everything Shopify-related handled. Choose whichever services you need.",
     price: 'Custom', qualifier: '/mo',
     cta: 'Get the Growth Plan', event: 'Pricing:Retainer',
