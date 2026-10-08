@@ -133,7 +133,7 @@ import BareLayout from '../layouts/BareLayout.astro';
 
   const STAGE_ORDER = ['landed', 'offer', 'revenue', 'traffic', 'details', 'calendar', 'booked'];
   const STAGE_LABELS: Record<string, string> = {
-    landed: 'Landed', offer: 'Picked offer', revenue: 'Revenue answered', traffic: 'Traffic answered',
+    landed: 'Landed', offer: 'Picked offer', revenue: 'Revenue answered', traffic: 'Website step',
     details: 'On details', calendar: 'At calendar', booked: 'Booked',
   };
   const STAGE_TONE: Record<string, string> = {
@@ -276,6 +276,7 @@ import BareLayout from '../layouts/BareLayout.astro';
       stageRank: stageRankOf(j.stage || 'landed'),
       revenue: j.revenue || '',
       traffic: j.traffic || '',
+      website: j.website || '',
       email: j.email || '',
       phone: j.phone || '',
       // SMS opt-in from the /apply checkbox, only for people who submitted (earlier
@@ -316,13 +317,14 @@ import BareLayout from '../layouts/BareLayout.astro';
     { key: 'email',       label: 'Email · Q3',    type: 'text',                    get: (r: any) => r.email.toLowerCase(),     cell: (r: any) => txt(r.email) },
     { key: 'phone',       label: 'Phone · Q3',    type: 'text',                    get: (r: any) => r.phone.toLowerCase(),     cell: (r: any) => txt(r.phone) },
     { key: 'sms',         label: 'SMS opt-in',    type: 'text',                    get: (r: any) => r.sms,                     cell: (r: any) => r.sms === 'yes' ? '<span class="pl-sms--yes">Opted in</span>' : (r.sms === 'no' ? '<span class="pl-sms--no">No</span>' : '<span class="pl-dash">-</span>') },
-    { key: 'traffic',     label: 'Traffic · Q2',  type: 'text',                    get: (r: any) => r.traffic.toLowerCase(),   cell: (r: any) => txt(r.traffic) },
+    // Q2 was monthly traffic until Oct 2026, now the website URL; old leads show their traffic band
+    { key: 'website',     label: 'Website · Q2',  type: 'text',                    get: (r: any) => (r.website || r.traffic).toLowerCase(), cell: (r: any) => txt(r.website || r.traffic) },
     { key: 'revenue',     label: 'Revenue · Q1',  type: 'text',                    get: (r: any) => r.revenue.toLowerCase(),   cell: (r: any) => txt(r.revenue) },
     { key: 'status',      label: 'Status',        type: 'num',                     get: (r: any) => statusRank(r),             cell: badgeCell },
     { key: 'when',        label: 'Date',          type: 'num',                     get: (r: any) => r.when,                    cell: whenCell },
     { key: 'tOffer',      label: '→ Offer',       type: 'numNull',                 get: (r: any) => r.tOffer,                  cell: (r: any) => elapsedCell(r.tOffer) },
     { key: 'tRevenue',    label: '→ Revenue',     type: 'numNull',                 get: (r: any) => r.tRevenue,                cell: (r: any) => elapsedCell(r.tRevenue) },
-    { key: 'tTraffic',    label: '→ Traffic',     type: 'numNull',                 get: (r: any) => r.tTraffic,                cell: (r: any) => elapsedCell(r.tTraffic) },
+    { key: 'tTraffic',    label: '→ Website',     type: 'numNull',                 get: (r: any) => r.tTraffic,                cell: (r: any) => elapsedCell(r.tTraffic) },
     { key: 'tDetails',    label: '→ Details',     type: 'numNull',                 get: (r: any) => r.tDetails,                cell: (r: any) => elapsedCell(r.tDetails) },
     { key: 'tCal',        label: '→ Calendar',    type: 'numNull',                 get: (r: any) => r.tCal,                    cell: (r: any) => elapsedCell(r.tCal) },
     { key: 'tBooked',     label: '→ Booked',      type: 'numNull',                 get: (r: any) => r.tBooked,                 cell: (r: any) => elapsedCell(r.tBooked) },
@@ -388,7 +390,7 @@ import BareLayout from '../layouts/BareLayout.astro';
     return rows.filter((r) => {
       for (const k in fs) { if (!fs[k].includes(String(r[k] || ''))) return false; }
       if (q) {
-        const hay = [r.name, r.revenue, r.traffic, r.email, r.phone, r.utmSource, r.utmMedium,
+        const hay = [r.name, r.revenue, r.traffic, r.website, r.email, r.phone, r.utmSource, r.utmMedium,
           r.utmCampaign, r.utmContent, r.utmTerm, r.campaign, r.adset, r.ad,
           r.from, r.paid, r.referrer, r.device, r.ip,
           r.entryLabel, r.j.query, r.j.id].join(' ').toLowerCase();
@@ -619,7 +621,7 @@ import BareLayout from '../layouts/BareLayout.astro';
     const rows = filterRows(ALL_ROWS);
     const cols: [string, (r: any) => any][] = [
       ['Name', (r) => r.name], ['Email', (r) => r.email], ['Phone', (r) => r.phone], ['SMS opt-in', (r) => r.sms === 'yes' ? 'Yes' : (r.sms === 'no' ? 'No' : '')],
-      ['Traffic', (r) => r.traffic], ['Revenue', (r) => r.revenue],
+      ['Website', (r) => r.website], ['Traffic', (r) => r.traffic], ['Revenue', (r) => r.revenue],
       ['Status', (r) => statusLabel(r)], ['Date', (r) => r.when ? new Date(r.when).toISOString() : ''],
       ['Reached', (r) => stageLabel(r.stage)],
       ['t_to_offer_s', (r) => secs(r.tOffer)], ['t_to_revenue_s', (r) => secs(r.tRevenue)], ['t_to_traffic_s', (r) => secs(r.tTraffic)], ['t_to_details_s', (r) => secs(r.tDetails)],

@@ -51,7 +51,7 @@ const STAGE_LABEL = {
   landed: 'Just landed on the page',
   offer: 'Picked which option they want',
   revenue: 'Answered monthly revenue',
-  traffic: 'Answered monthly traffic',
+  traffic: 'Reached the website question',
   details: 'On the contact details step',
   calendar: 'Completed the form — reached the calendar',
   booked: 'Booked a time',
@@ -161,6 +161,7 @@ async function ingest(req, res) {
     stage,
     revenue: pick('revenue', 40),
     traffic: pick('traffic', 40),
+    website: pick('website', 200),
     interest: pick('interest', 80),
     fbp: pick('fbp', 120),
     fbc: pick('fbc', 300),
@@ -216,7 +217,7 @@ async function maybeEmail(redis, j) {
   if (!redis) return;
 
   const dwell = (j.updatedAt || 0) - (j.landedAt || 0);
-  const engaged = j.revenue || j.traffic || j.interest || stageIndex(j.stage) > 0;
+  const engaged = j.revenue || j.traffic || j.website || j.interest || stageIndex(j.stage) > 0;
   if (dwell < MIN_DWELL_FOR_EMAIL_MS && !engaged) return; // prefetch/bot bounce
 
   try {
@@ -238,7 +239,7 @@ async function maybeEmail(redis, j) {
     'Time on page': fmtDwell(dwell),
     Name: j.fullName || '—',
     'Monthly revenue': j.revenue || '—',
-    'Monthly traffic': j.traffic || '—',
+    Website: j.website || '—',
     'Interested in': j.interest || '—',
     'Came from': j.source || j.referrer || 'direct',
   };
@@ -377,6 +378,7 @@ export async function upsertLead(redis, j, now) {
     smsConsentAt: j.smsConsent === 'no' ? 0 : ((prev && prev.smsConsentAt) || (j.smsConsent === 'yes' ? now : 0)),
     revenue: keep(j.revenue, 'revenue'),
     traffic: keep(j.traffic, 'traffic'),
+    website: keep(j.website, 'website'),
     interest: keep(j.interest, 'interest'),
     source: keep(j.source, 'source'),
     referrer: keep(j.referrer, 'referrer'),

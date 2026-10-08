@@ -6,18 +6,19 @@
    <form>; values live in the DOM and persist to sessionStorage so nothing
    is lost. On submit the lead fires to Web3Forms and the Calendly
    calendar takes over the same spot; a booked time shows the confirmation.
-   Exactly 3 questions: monthly revenue, monthly traffic, then contact
-   details → calendar. Neither band question gates — every answer moves
-   the form forward; they exist so the call is informed, not to block.
-   Both are asked because either alone misfires: revenue misses the
-   offline-first brand (real money, few sessions), traffic misses the
-   funded pre-revenue founder. Contact details go last since that's the
-   step that actually submits. */
+   Exactly 3 questions: monthly revenue, website URL (typed in), then
+   contact details → calendar. Nothing gates — every answer moves the
+   form forward; the answers exist so the call is informed, not to block.
+   The URL replaced the old monthly-traffic band (Oct 2026): it lets Shane
+   look at the actual store before the call. Contact details go last since
+   that's the step that actually submits.
+   Pulse note: the Q2 stage is still stored as 'traffic' so older journeys
+   keep their place in the funnel; the dashboard labels it as the website
+   step. */
 import BareLayout from '../layouts/BareLayout.astro';
 import { site } from '../data/site.config';
 
 const revenueBands = ['Pre-revenue', 'Under $10k', '$10k–$30k', '$30k–$60k', '$60k–$100k', '$100k+'];
-const trafficBands = ['Not launched yet', 'Under 2,500', '2,500–10,000', '10,000–25,000', '25,000–50,000', '50,000+'];
 ---
 <BareLayout
   title="Apply: Get your build in 14 days"
@@ -47,19 +48,17 @@ const trafficBands = ['Not launched yet', 'Under 2,500', '2,500–10,000', '10,0
             </div>
           </fieldset>
 
-          <!-- Q2 — TRAFFIC (no gate). Revenue alone misses the offline-first
-               brand (real money, few sessions); traffic alone misses the
-               funded pre-revenue founder. The PAIR is what decides fit, so
-               both are asked and neither one blocks. -->
+          <!-- Q2 — WEBSITE URL (typed, required). Lets Shane look at the
+               real store before the call. Light check only: it needs to
+               look like a domain; https:// is optional. -->
           <fieldset class="bk-step" data-step hidden>
             <button type="button" class="bk-back" data-back><span aria-hidden="true">←</span> Back</button>
             <p class="bk-count">2/3</p>
-            <h2 class="bk-q">How many visitors does your site get a month? A rough number is fine.</h2>
-            <div class="bk-field" data-field="traffic">
-              <div class="bk-cards bk-cards--row" data-name="traffic" data-radio>
-                {trafficBands.map((b) => <button type="button" class="bk-card" data-value={b}>{b}</button>)}
-              </div>
+            <h2 class="bk-q">What’s your website URL?</h2>
+            <div class="bk-field" data-field="website">
+              <input class="bk-input" id="bk-website" name="website" type="text" inputmode="url" autocomplete="url" autocapitalize="off" spellcheck="false" placeholder="yourbrand.com" aria-label="Your website URL" required data-url />
             </div>
+            <div class="bk-nav"><button type="button" class="btn btn--primary btn--lg" data-next>Next <span aria-hidden="true">→</span></button></div>
           </fieldset>
 
           <!-- Q3 — NAME + EMAIL + PHONE → submit -->
@@ -156,6 +155,8 @@ const trafficBands = ['Not launched yet', 'Under 2,500', '2,500–10,000', '10,0
     let current = 0;
 
     const emailOk = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+    // a domain-ish string: something.tld, optional scheme/path, no spaces
+    const urlOk = (v: string) => /^(https?:\/\/)?[^\s.\/]+(\.[^\s.\/]+)*\.[a-z]{2,}(\/\S*)?$/i.test(v.trim());
 
     // ---- visible validation (shows messages + shakes) ----
     const fieldWrap = (name: string) => form.querySelector<HTMLElement>(`[data-field="${name}"]`);
@@ -182,6 +183,7 @@ const trafficBands = ['Not launched yet', 'Under 2,500', '2,500–10,000', '10,0
         const name = (f.closest('[data-field]') as HTMLElement)?.dataset.field || f.name;
         if (!f.value.trim()) { showErr(name, 'Please fill this in to continue.'); ok = false; }
         else if ((f as HTMLInputElement).type === 'email' && !emailOk(f.value)) { showErr(name, 'That email doesn’t look right.'); ok = false; }
+        else if (f.hasAttribute('data-url') && !urlOk(f.value)) { showErr(name, 'That doesn’t look like a website. Try something like yourbrand.com'); ok = false; }
         else clearErr(name);
       });
       step.querySelectorAll<HTMLElement>('[data-radio]').forEach((g) => {
@@ -199,6 +201,7 @@ const trafficBands = ['Not launched yet', 'Under 2,500', '2,500–10,000', '10,0
         if (f.name === 'hp_confirm' || !f.required) return;
         if (!f.value.trim()) ok = false;
         else if ((f as HTMLInputElement).type === 'email' && !emailOk(f.value)) ok = false;
+        else if (f.hasAttribute('data-url') && !urlOk(f.value)) ok = false;
       });
       step.querySelectorAll<HTMLElement>('[data-radio]').forEach((g) => { if (!g.querySelector('.is-on')) ok = false; });
       return ok;
@@ -282,7 +285,7 @@ const trafficBands = ['Not launched yet', 'Under 2,500', '2,500–10,000', '10,0
       return {
         id: PULSE.id, stage: PULSE.stage,
         revenue: answers.revenue || '',
-        traffic: answers.traffic || '',
+        website: answers.website || '',
         fullName: answers.fullName || '',
         email: answers.email || '',
         phone: answers.phone || '',
@@ -306,7 +309,7 @@ const trafficBands = ['Not launched yet', 'Under 2,500', '2,500–10,000', '10,0
       }
       if (up || final) pulseSend(pulsePayload(final), final);
     };
-    // Furthest step → stage. Q1 revenue · Q2 traffic · Q3 details → calendar → booked.
+    // Furthest step → stage. Q1 revenue · Q2 website (stored as 'traffic') · Q3 details → calendar → booked.
     const stageForCurrent = () =>
       current >= 2 ? 'details' : current >= 1 ? 'traffic' : (answers.revenue ? 'revenue' : 'landed');
 
@@ -379,7 +382,7 @@ const trafficBands = ['Not launched yet', 'Under 2,500', '2,500–10,000', '10,0
       fd.append('Email', answers.email || '');
       fd.append('Phone', answers.phone || '');
       fd.append('Monthly revenue', answers.revenue || '');
-      fd.append('Monthly traffic', answers.traffic || '');
+      fd.append('Website', answers.website || '');
       // SMS consent record: yes/no, when, and the exact disclosure they saw.
       fd.append('SMS consent', answers.smsConsent === 'yes' ? 'YES, opted in to texts' : 'No');
       if (answers.smsConsent === 'yes') {
