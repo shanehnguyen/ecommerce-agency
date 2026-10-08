@@ -30,9 +30,10 @@ const { event } = Astro.props;
   .cta-repeat__n { color: var(--accent-deep); font-weight: var(--fw-body-semi); }
   .cta-repeat__sep { color: var(--line); }
   /* phones: three steps don't fit one line, and wrapping left a dangling
-     "/" — stack them instead */
+     "/" — keep them side by side as three columns, number over label */
   @media (max-width: 40em) {
-    .cta-repeat__process { flex-direction: column; gap: var(--space-2); }
+    .cta-repeat__process { flex-wrap: nowrap; align-items: flex-start; gap: var(--space-8); }
+    .cta-repeat__process > span:not(.cta-repeat__sep) { display: flex; flex-direction: column; align-items: center; gap: var(--space-1); max-width: 5.5rem; text-wrap: balance; }
     .cta-repeat__sep { display: none; }
   }
 
