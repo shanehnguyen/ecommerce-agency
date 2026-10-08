@@ -39,7 +39,7 @@ export const site = {
   },
 
   // ---- The single CTA (identical on every button, per the structure spec)
-  cta: { label: 'SEE YOUR HOMEPAGE FIRST', href: '/apply' },
+  cta: { label: 'CLAIM YOUR NEW PRODUCT PAGE', href: '/apply' },
 
   // ---- Scarcity — evergreen copy ("I only take N builds a month"), so
   // nothing goes stale. slotsOpen is the TRUE capacity cap; only change it

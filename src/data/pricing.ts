@@ -77,7 +77,7 @@ export const priceCards: PriceCard[] = [
     name: 'The Conversion Rebuild',
     description: "For growing brands that want to sell more on their traffic. Every page needed to convert higher.",
     price: '$4,500', pricePrefix: 'from', qualifier: '', featured: true,
-    cta: 'See your homepage first', event: 'Pricing:Full',
+    cta: 'Claim your new product page', event: 'Pricing:Full',
     pagesLabel: 'Pick the pages you need',
     pages: [
       'Homepage',
