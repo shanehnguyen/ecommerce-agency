@@ -22,7 +22,7 @@ const revenueBands = ['Pre-revenue', 'Under $10k', '$10k–$30k', '$30k–$60k',
 ---
 <BareLayout
   title="Apply: Get your build in 14 days"
-  description="A two-minute application. If you're a fit, I design your new homepage first — you don't pay a dollar until you approve it."
+  description="A two-minute application. If you're a fit, I rebuild your best-selling product page first — you don't pay a dollar until you approve it."
   noindex={true}
 >
   <div data-book-flow>
@@ -30,7 +30,7 @@ const revenueBands = ['Pre-revenue', 'Under $10k', '$10k–$30k', '$30k–$60k',
       <div class="container container--narrow">
 
         <header class="bk-intro">
-          <h1 class="bk-intro__h1">Claim your homepage design.</h1>
+          <h1 class="bk-intro__h1">Claim your new product page.</h1>
         </header>
 
         <form class="bk-form" data-book-form novalidate>
@@ -135,7 +135,7 @@ const revenueBands = ['Pre-revenue', 'Under $10k', '$10k–$30k', '$30k–$60k',
   const bookingUrl = site.bookingUrl;
   const web3Key = site.web3formsKey;
 
-  // Visitors from the Growth Plan card didn't come for a homepage design,
+  // Visitors from the Growth Plan card didn't come for a product page design,
   // so the headline speaks to what they clicked.
   if (new URLSearchParams(location.search).get('from') === 'Pricing:Retainer') {
     const h1 = document.querySelector('.bk-intro__h1');

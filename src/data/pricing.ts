@@ -63,7 +63,7 @@ export type PriceCard = {
    * total. */
   anchor?: string;
   /** Risk-reversal line under the price: the see-it-before-you-buy promise.
-   * Mechanics live in the FAQ ("What's the free homepage design?"). */
+   * Mechanics live in the FAQ ("What do I get for free?"). */
   riskFree?: string;
   /** When true, renders as wrapped chips instead of a checklist, with
    * features[0] as a lead-in caption. Neither card uses this currently. */
@@ -78,18 +78,14 @@ export const priceCards: PriceCard[] = [
     description: "For established brands that want more sales from the traffic they already get. I find where your store loses buyers, then rebuild those pages.",
     price: '$4,500', pricePrefix: 'from', qualifier: '', featured: true,
     cta: 'Claim your new product page', event: 'Pricing:Full',
-    pagesLabel: 'Pick the pages you need',
+    pagesLabel: 'Most rebuilds include',
     pages: [
-      'Homepage',
-      'Collection pages',
       'Product pages',
-      'Ad landing pages',
-      'B2B pages',
+      'Collection pages',
       'Cart + upsells',
-      'About + brand story',
-      'FAQ, contact, policies',
+      'Homepage',
     ],
-    scopeNote: 'Don’t see a page you need? I’ll build that too.',
+    scopeNote: 'Plus any page your traffic depends on, like ad landing pages or B2B pages.',
     features: [
       "Live in 14 days or you don't pay",
       'Every word written for you',

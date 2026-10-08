@@ -12,38 +12,37 @@ import type { FaqGroup } from './faqs';
 
 export const fullFaqGroups: FaqGroup[] = [
   {
-    title: 'The Free Homepage',
+    title: 'The Free Product Page',
     items: [
       {
         q: 'What do I get for free?',
         a: [
-          'I design your new homepage and write every word on it, before you pay anything.',
+          'I design a new product page for your best-selling product and write every word on it, before you pay anything.',
           'I send you a private link so you can look at it on your phone or computer.',
         ],
       },
       {
-        q: 'Is it my homepage or a landing page?',
+        q: 'Which product page do you design?',
         a: [
-          'Your homepage. That’s the main page of your store.',
-          'A landing page is a page made for one ad. Those come with the Conversion Rebuild.',
+          'The page for your best-selling product. That’s where most of your sales happen, so it’s the best place to see the difference.',
         ],
       },
       {
         q: 'Do I pay anything before I see it?',
-        a: ['No. You pay nothing until you’ve seen your homepage and said yes.'],
+        a: ['No. You pay nothing until you’ve seen your new product page and said yes.'],
       },
       {
         q: 'Do you need access to my store to make it?',
         a: [
-          'No. I design your homepage without touching your store.',
+          'No. I design your product page without touching your store.',
           'You add me to your store later, when the build starts.',
         ],
       },
       {
         q: 'Why do you ask so much about my business?',
         a: [
-          'So your homepage fits your customers, not just any store.',
-          'I look at who buys from you, what makes them unsure, what your competitors do and what your ads promise. Then your homepage answers those questions before people leave.',
+          'So your product page fits your customers, not just any store.',
+          'I look at who buys from you, what makes them unsure, what your competitors do and what your ads promise. Then your product page answers those questions before people leave.',
         ],
       },
       {
@@ -62,7 +61,7 @@ export const fullFaqGroups: FaqGroup[] = [
             '**Conversion Rebuild:** from $4,500',
             '**Growth Plan:** a monthly fee, set on our call',
           ] },
-          'You see your homepage design before you pay anything.',
+          'You see your new product page before you pay anything.',
         ],
       },
       {
@@ -134,7 +133,7 @@ export const fullFaqGroups: FaqGroup[] = [
         a: [
           'Yes. You pay in two halves:',
           { list: [
-            '**First half:** when you say yes to your homepage design and sign. You have 3 days to pay.',
+            '**First half:** when you say yes to your new product page and sign. You have 3 days to pay.',
             '**Second half:** when I deliver your finished store.',
           ] },
         ],
@@ -165,7 +164,7 @@ export const fullFaqGroups: FaqGroup[] = [
         q: 'How long does the whole thing take?',
         a: [
           { list: [
-            '**Your homepage design:** about 4 days after our call.',
+            '**Your product page design:** about 4 days after our call.',
             '**Your full store:** live in 14 days.',
           ] },
         ],
@@ -501,7 +500,7 @@ export const fullFaqGroups: FaqGroup[] = [
         q: 'I’ve been burned by a developer before. Why is this different?',
         a: [
           { list: [
-            'You see your homepage before you pay anything.',
+            'You see your new product page before you pay anything.',
             'The price, the pages and the deadline are in writing before I start.',
             'Want something extra? I tell you the price first, and you decide.',
             'Half your money waits until your store is done.',

@@ -2,7 +2,8 @@
    faqs.ts — homepage FAQ. Four questions, the ones a store owner asks
    before booking: what is it, is 14 days real, what if it doesn't work,
    why you. Plain words, short sentences.
-   Every fact matches the deal: homepage design first (free), pay only
+   Every fact matches the deal: a free new product page for their
+   best-selling product first, pay only
    on approval, live in 14 days. Say "live in 14 days" plainly; don't
    qualify when the clock starts.
    ===================================================================== */
@@ -19,7 +20,7 @@ export const homeFaqs: Faq[] = [
     q: 'What do I actually get?',
     a: [
       'A new Shopify store, built to get more of your visitors to buy.',
-      'I’ll build your homepage first, so you can see the difference before you decide to work with me.',
+      'I’ll rebuild the product page for your best-selling product first, so you can see the difference before you decide to work with me.',
       'It’s for brands looking to get more sales out of their visitors.',
       'When it’s done, the store is 100% yours.',
     ],
@@ -36,7 +37,7 @@ export const homeFaqs: Faq[] = [
     a: [
       'I’m not going to promise a million dollars. Your sales depend on your product, pricing and visitors.',
       'What I can show you is proof: what has worked for other brands, applied to you.',
-      'I also cut your risk every way I can. You get to see your homepage design first, before you decide.',
+      'I also cut your risk every way I can. You get to see your new product page first, before you decide.',
       'And this isn’t for every brand. If I don’t think it will work for you, I’ll tell you. Taking on a brand I can’t help is bad for both of us.',
     ],
   },
@@ -61,7 +62,7 @@ export const callFaqs: Faq[] = [
   {
     q: 'What do I get for free, and what am I paying for?',
     a: [
-      '**Free:** I design your new homepage and write every word on it. I send you a private link so you can look at it.',
+      '**Free:** I design a new product page for your best-selling product and write every word on it. I send you a private link so you can look at it.',
       '**Paid:** if you like it, I build the rest of your store around it. If you don’t, you owe me nothing.',
     ],
   },
@@ -81,7 +82,7 @@ export const callFaqs: Faq[] = [
     a: [
       'Yes. You pay in two halves:',
       { list: [
-        '**First half:** when you say yes to your homepage design and sign. You have 3 days to pay.',
+        '**First half:** when you say yes to your new product page and sign. You have 3 days to pay.',
         '**Second half:** when I deliver your finished store.',
       ] },
       'Any credit card works. The price, the pages and the dates are all in a short agreement you sign online.',
@@ -91,7 +92,7 @@ export const callFaqs: Faq[] = [
     q: 'How long does it take, and can I make changes?',
     a: [
       { list: [
-        '**Homepage design:** about 4 days after our call.',
+        '**Product page design:** about 4 days after our call.',
         '**Full store:** live in 14 days.',
         '**Changes:** as many as you want while I build, and for 14 days after I deliver.',
       ] },
@@ -171,7 +172,7 @@ export const callFaqs: Faq[] = [
     q: 'I’ve been burned by a developer before. Why is this different?',
     a: [
       { list: [
-        'You see your homepage before you pay anything.',
+        'You see your new product page before you pay anything.',
         'The price, the pages and the deadline are in writing before I start.',
         'Want something extra? I tell you the price first, and you decide.',
         'Half your money waits until your store is done.',
