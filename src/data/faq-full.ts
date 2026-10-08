@@ -73,8 +73,9 @@ export const fullFaqGroups: FaqGroup[] = [
             'Collection pages (where shoppers browse your products)',
             'Your cart, with add-on offers',
             'Your homepage',
+            'Email capture (signup popups and forms)',
           ] },
-          'Plus any page your traffic depends on, like ad landing pages or B2B pages. I write every word on every page.',
+          'Plus any page your traffic depends on, like listicles, advertorials, ad landing pages or B2B pages. I write every word on every page.',
         ],
       },
       {

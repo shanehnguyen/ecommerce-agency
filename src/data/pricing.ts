@@ -84,8 +84,9 @@ export const priceCards: PriceCard[] = [
       'Collection pages',
       'Cart + upsells',
       'Homepage',
+      'Email capture',
     ],
-    scopeNote: 'Plus any page your traffic depends on, like ad landing pages or B2B pages.',
+    scopeNote: 'Plus any page your traffic depends on, like listicles, advertorials, ad landing pages or B2B pages.',
     features: [
       "Live in 14 days or you don't pay",
       'Every word written for you',

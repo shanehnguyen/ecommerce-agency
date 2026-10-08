@@ -47,51 +47,18 @@ const fourteenLabel = fourteenDayLabel();
       <p class="hero__sub">Done for you. I rebuild your best-selling product page first — you see it before you buy.</p>
     </div>
 
-    <!-- 3. VSL — autoplay muted loop under a dark tint (keeps the unmute
-         button and progress bar legible over any footage). The circular
-         button unmutes and restarts from 0; the bar below is a real
-         scrubber. WebM first (smaller, modern browsers), MP4 fallback;
-         phones get a 540p cut (half the download), desktops 720p.
-         The video is 16:9 landscape, so the player is too.
-         The poster frame paints instantly so there's never a blank/black
-         flash while the (compressed, faststart) video streams in. -->
+    <!-- 3. VSL — Wistia embed (adaptive streaming: only the part a viewer
+         watches is downloaded, quality adjusts to their connection).
+         Autoplay / mute / controls are set in Wistia's video settings.
+         The swatch style shows a blurred still until the player boots. -->
     <div class="container hero__video">
-      <div class="vsl" data-vsl>
-        <video
-          class="vsl__media"
-          autoplay muted playsinline preload="auto"
-          disablepictureinpicture controlslist="nodownload noplaybackrate"
-          poster="/video/vsl-v3-poster.jpg"
-          aria-label="Founder VSL"
-        >
-          <source src="/video/vsl-v3-540.webm" type="video/webm" media="(max-width: 40em)" />
-          <source src="/video/vsl-v3-540.mp4" type="video/mp4" media="(max-width: 40em)" />
-          <source src="/video/vsl-v3.webm" type="video/webm" />
-          <source src="/video/vsl-v3.mp4" type="video/mp4" />
-        </video>
-        <div class="vsl__tint" aria-hidden="true"></div>
-        <button type="button" class="vsl__replay" data-vsl-replay aria-label="Replay video">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <polygon points="6 3 20 12 6 21 6 3"></polygon>
-          </svg>
-          <span>Replay</span>
-        </button>
-        <button type="button" class="vsl__unmute" data-vsl-unmute aria-label="Unmute video">
-          <svg class="vsl__unmute-icon vsl__unmute-icon--muted" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M11 5 6 9H3v6h3l5 4V5Z"></path>
-            <line x1="22" y1="9" x2="16" y2="15"></line>
-            <line x1="16" y1="9" x2="22" y2="15"></line>
-          </svg>
-          <svg class="vsl__unmute-icon vsl__unmute-icon--unmuted" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M11 5 6 9H3v6h3l5 4V5Z"></path>
-            <path d="M15.5 8.5a5 5 0 0 1 0 7"></path>
-            <path d="M19 5a10 10 0 0 1 0 14"></path>
-          </svg>
-        </button>
-        <div class="vsl__progress">
-          <div class="vsl__bar" aria-hidden="true"><div class="vsl__bar-fill" data-vsl-fill></div></div>
-          <input type="range" class="vsl__range" min="0" max="100" step="0.1" value="0" data-vsl-range aria-label="Video progress" />
-        </div>
+      <link rel="preconnect" href="https://fast.wistia.com" />
+      <link rel="preconnect" href="https://embed-ssl.wistia.com" />
+      <script is:inline src="https://fast.wistia.com/player.js" async></script>
+      <script is:inline src="https://fast.wistia.com/embed/cbpagze6zt.js" async type="module"></script>
+      <style is:inline>wistia-player[media-id='cbpagze6zt']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/cbpagze6zt/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style>
+      <div class="vsl">
+        <wistia-player media-id="cbpagze6zt" aspect="1.7777777777777777"></wistia-player>
       </div>
     </div>
 
@@ -207,132 +174,6 @@ const fourteenLabel = fourteenDayLabel();
     window.addEventListener('load', function () { setTimeout(litAll, 700); });
   })();
 
-  // ---- VSL: unmute control + scrubbable progress bar ----
-  (function () {
-    var vsl = document.querySelector('[data-vsl]');
-    if (!vsl) return;
-    var media = vsl.querySelector('.vsl__media');
-    var btn = vsl.querySelector('[data-vsl-unmute]');
-    var range = vsl.querySelector('[data-vsl-range]');
-    var fill = vsl.querySelector('[data-vsl-fill]');
-    var replayBtn = vsl.querySelector('[data-vsl-replay]');
-    if (!media || !btn) return;
-    // Autoplay is handled natively via the `autoplay` attribute; Safari/iOS
-    // in particular can still need a nudge once metadata is ready.
-    media.addEventListener('loadedmetadata', function () { media.play().catch(function () {}); });
-
-    // Plays once, then shows a Replay overlay instead of looping silently.
-    media.addEventListener('ended', function () { vsl.classList.add('is-ended'); });
-    if (replayBtn) {
-      replayBtn.addEventListener('click', function () {
-        vsl.classList.remove('is-ended');
-        media.currentTime = 0;
-        media.play().catch(function () {});
-      });
-    }
-
-    // ---- Retention: beacon the furthest second watched WHILE UNMUTED to
-    // /api/vsl, which feeds the retention chart on /pulse. Tracking is
-    // opt-in by behavior: nothing beacons until the visitor unmutes (the
-    // muted autoplay is wallpaper, not a view), the watermark only advances
-    // while sound is on, and each browser is counted ONCE ever (localStorage
-    // flag set on first successful beacon) so refreshes and return visits
-    // never inflate the curve. Playback still pauses when the tab is hidden
-    // or the player scrolls away, so idle tabs can't rack up seconds.
-    // Each session only ever reports its watermark — the server tops up the
-    // histogram by the delta, so a later beacon never double-counts.
-    (function () {
-      var TRACKED_KEY = 'ff_vsl_tracked_v1';
-      try { if (localStorage.getItem(TRACKED_KEY) === '1') return; } catch (e) { /* private mode: track */ }
-
-      var sessionId = 'v_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
-      var maxSecond = 0;
-      var lastSent = 0;
-      var autoPaused = false;
-      var inView = true;
-      var engaged = false; // true after the first unmute — nothing counts before it
-
-      media.addEventListener('volumechange', function () { if (!media.muted) engaged = true; });
-
-      function beacon(done) {
-        if (!engaged) return;
-        if (maxSecond <= lastSent && !done) return;
-        lastSent = maxSecond;
-        try { localStorage.setItem(TRACKED_KEY, '1'); } catch (e) { /* ignore */ }
-        var payload = JSON.stringify({ id: sessionId, second: maxSecond, duration: Math.round(media.duration) || 0 });
-        try {
-          if (navigator.sendBeacon) {
-            navigator.sendBeacon('/api/vsl', new Blob([payload], { type: 'application/json' }));
-          } else {
-            fetch('/api/vsl', { method: 'POST', body: payload, headers: { 'Content-Type': 'application/json' }, keepalive: true });
-          }
-        } catch (e) {}
-      }
-
-      media.addEventListener('timeupdate', function () {
-        if (media.muted) return; // muted playback never advances the watermark
-        var sec = Math.floor(media.currentTime);
-        if (sec > maxSecond) maxSecond = sec;
-      });
-      media.addEventListener('ended', function () { beacon(true); });
-      window.addEventListener('pagehide', function () { beacon(false); });
-      document.addEventListener('visibilitychange', function () {
-        if (document.hidden) {
-          beacon(false);
-          if (!media.paused) { media.pause(); autoPaused = true; }
-        } else if (autoPaused && inView) {
-          media.play().catch(function () {});
-          autoPaused = false;
-        }
-      });
-
-      if ('IntersectionObserver' in window) {
-        new IntersectionObserver(function (entries) {
-          inView = entries[0].isIntersecting;
-          if (!inView) {
-            if (!media.paused) { media.pause(); autoPaused = true; beacon(false); }
-          } else if (autoPaused && !document.hidden) {
-            media.play().catch(function () {});
-            autoPaused = false;
-          }
-        }, { threshold: 0.4 }).observe(vsl);
-      }
-    })();
-
-    btn.addEventListener('click', function () {
-      var wasMuted = media.muted;
-      media.muted = !wasMuted;
-      btn.setAttribute('aria-label', media.muted ? 'Unmute video' : 'Mute video');
-      vsl.classList.toggle('is-unmuted', !media.muted);
-      // once the visitor has touched sound at all, the button shrinks into a
-      // corner toggle for good — no snapping back to the big centered
-      // overlay just because they muted again
-      vsl.classList.add('is-engaged');
-      // unmuting is a deliberate "watch it properly" action — start over
-      if (wasMuted) media.currentTime = 0;
-      if (media.paused) media.play().catch(function () {});
-    });
-
-    if (range && fill) {
-      var scrubbing = false;
-      var setFromMedia = function () {
-        if (scrubbing || !media.duration) return;
-        var pct = (media.currentTime / media.duration) * 100;
-        range.value = String(pct);
-        fill.style.width = pct + '%';
-      };
-      var setFromRange = function () {
-        fill.style.width = range.value + '%';
-        if (media.duration) media.currentTime = (parseFloat(range.value) / 100) * media.duration;
-      };
-      media.addEventListener('timeupdate', setFromMedia);
-      media.addEventListener('loadedmetadata', setFromMedia);
-      range.addEventListener('pointerdown', function () { scrubbing = true; });
-      range.addEventListener('input', setFromRange);
-      range.addEventListener('pointerup', function () { scrubbing = false; });
-    }
-  })();
-
 </script>
 
 <style>
@@ -384,81 +225,11 @@ const fourteenLabel = fourteenDayLabel();
   .hero__video { margin-top: var(--space-6); }
   .hero__cta { margin-top: var(--space-5); }
 
-  /* ---------- 3. VSL ---------- */
+  /* ---------- 3. VSL (Wistia) ---------- */
   .vsl {
-    position: relative; width: 100%; max-width: 50rem; aspect-ratio: 16 / 9;
-    margin-inline: auto; border-radius: 16px; overflow: hidden;
+    width: 100%; max-width: 50rem; margin-inline: auto; border-radius: 16px; overflow: hidden;
     background: #0f120e; box-shadow: 0 40px 80px -40px rgba(26, 24, 20, 0.5);
-    display: flex; align-items: center; justify-content: center;
   }
-  .vsl__media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  /* darkens the footage so the unmute button and progress bar stay legible
-     over any frame while muted — once the visitor unmutes, they've already
-     engaged, so fade it out and let the footage read normally */
-  .vsl__tint {
-    position: absolute; inset: 0; pointer-events: none;
-    background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.12) 28%, rgba(0,0,0,0.12) 60%, rgba(0,0,0,0.5) 100%);
-    opacity: 1; transition: opacity var(--duration-base) var(--ease-out);
-  }
-  .vsl.is-unmuted .vsl__tint { opacity: 0; }
-  .vsl__unmute {
-    position: absolute; z-index: 2; width: 72px; height: 72px; border-radius: 50%;
-    border: 2px solid var(--dark-ink); background: color-mix(in srgb, var(--dark-ink) 12%, transparent);
-    color: var(--dark-ink); cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: width var(--duration-base) var(--ease-out), height var(--duration-base) var(--ease-out),
-                top var(--duration-base) var(--ease-out), right var(--duration-base) var(--ease-out),
-                transform var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out);
-  }
-  .vsl__unmute:hover { transform: scale(1.06); background: color-mix(in srgb, var(--dark-ink) 22%, transparent); }
-  /* only one of the two icons is ever shown, matching the actual mute state
-     (never a plain "play" glyph — this button is sound-only, the video is
-     always already playing) */
-  .vsl__unmute-icon { display: none; }
-  .vsl__unmute-icon--muted { display: block; }
-  .vsl.is-unmuted .vsl__unmute-icon--muted { display: none; }
-  .vsl.is-unmuted .vsl__unmute-icon--unmuted { display: block; }
-  /* after the first interaction, get out of the way: shrink into a corner
-     toggle instead of staying a giant circle over the footage */
-  .vsl.is-engaged .vsl__unmute {
-    width: 40px; height: 40px; top: var(--space-4); right: var(--space-4); left: auto; bottom: auto; transform: none;
-  }
-  .vsl.is-engaged .vsl__unmute:hover { transform: scale(1.06); }
-  .vsl.is-engaged .vsl__unmute-icon { width: 16px; height: 16px; }
-
-  /* plays once, then this replaces the unmute button entirely — no silent
-     loop, no ambiguity about whether it's still going */
-  .vsl__replay {
-    position: absolute; z-index: 3; display: none; align-items: center; gap: var(--space-2);
-    padding: var(--space-3) var(--space-5); border-radius: 999px;
-    border: 2px solid var(--dark-ink); background: color-mix(in srgb, var(--dark-ink) 55%, transparent);
-    color: var(--dark-ink); cursor: pointer;
-    font-family: var(--font-mono); font-size: var(--fs-caption); font-weight: var(--fw-body-semi);
-    text-transform: uppercase; letter-spacing: var(--tracking-caps);
-    transition: transform var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out);
-  }
-  .vsl__replay:hover { transform: scale(1.05); background: color-mix(in srgb, var(--dark-ink) 70%, transparent); }
-  .vsl.is-ended .vsl__replay { display: flex; }
-  .vsl.is-ended .vsl__unmute { display: none; }
-  .vsl.is-ended .vsl__tint { opacity: 1; }
-
-  /* scrubbable progress bar: a native range input (full touch target) laid
-     over a slim visual track + fill, same "invisible functional control
-     over a custom visual" technique as the before/after slider */
-  .vsl__progress { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: var(--space-4); padding-top: var(--space-6); }
-  .vsl__bar { position: relative; width: 100%; height: 4px; border-radius: 999px; background: rgba(255,255,255,0.3); overflow: hidden; }
-  .vsl__bar-fill { position: absolute; inset: 0 auto 0 0; width: 0%; background: var(--accent-strong); border-radius: 999px; }
-  .vsl__range {
-    position: absolute; inset: 0; width: 100%; height: 100%; margin: 0;
-    appearance: none; -webkit-appearance: none; background: transparent; cursor: pointer;
-  }
-  .vsl__range::-webkit-slider-thumb {
-    appearance: none; -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
-    background: var(--accent-strong); box-shadow: 0 0 0 3px rgba(0,0,0,0.35); cursor: pointer;
-  }
-  .vsl__range::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--accent-strong); border: 0; box-shadow: 0 0 0 3px rgba(0,0,0,0.35); cursor: pointer; }
-  .vsl__range::-moz-range-track { background: transparent; }
-
   /* ---------- signature statement motion ---------- */
   .stmt { transition: opacity 800ms var(--ease-out), color 800ms var(--ease-out); }
   .js .stmt { opacity: 0.35; }
