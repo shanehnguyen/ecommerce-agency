@@ -491,10 +491,6 @@ export const fullFaqGroups: FaqGroup[] = [
         a: ['Me, Shane Nguyen. You talk to me directly, from our first call to launch day. I check every page myself.'],
       },
       {
-        q: 'Why do you only take 3 builds a month?',
-        a: ['So every store gets my full attention. I can’t study your customers and write every word for 20 stores at once.'],
-      },
-      {
         q: 'I’ve been burned by a developer before. Why is this different?',
         a: [
           { list: [

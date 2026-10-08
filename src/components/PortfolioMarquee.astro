@@ -10,12 +10,10 @@
    left with no visible seam or snap. */
 import PortfolioTile from './PortfolioTile.astro';
 import { portfolioCards } from '../data/portfolio';
-import { site } from '../data/site.config';
 
 const rest = portfolioCards.slice(3);
 ---
 <section class="pfm">
-  <p class="pfm__label mono">Apply now. I only take {site.scarcity.slotsOpen} builds a month.</p>
   <div class="pfm__viewport" data-reveal>
     <div class="pfm__track">
       {rest.map((c) => <div class="pfm__item"><PortfolioTile card={c} /></div>)}
@@ -82,11 +80,6 @@ const rest = portfolioCards.slice(3);
      because this strip only ever renders directly under #pricing. */
   .pfm { display: block; margin-top: clamp(-3.5rem, -5vh, -1.5rem); padding-block: 0 clamp(1.5rem, 4vh, 2.5rem); }
   @media (min-width: 60em) { .pfm { display: none; } }
-
-  .pfm__label {
-    text-align: center; margin-bottom: var(--space-3);
-    font-size: var(--fs-label); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--ink-50);
-  }
 
   /* a REAL scroll container (not a CSS transform loop): the finger drags it
      natively with momentum, and the script below drifts it while idle. The

@@ -185,7 +185,7 @@ export const callFaqs: Faq[] = [
     a: [
       'A cheap template and my work both run on Shopify. The difference is what’s on the page.',
       'I study your customers and your competitors. Then I write and design every page to answer the questions that stop people from buying.',
-      'I only take 3 builds a month, so yours gets my full attention. And you see my work before you pay.',
+      'And you see my work before you pay, so it’s easy to compare.',
     ],
   },
 ];
