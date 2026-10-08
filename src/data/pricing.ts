@@ -75,7 +75,7 @@ export const priceCards: PriceCard[] = [
   {
     eyebrow: 'Phase 1',
     name: 'Conversion Rebuild',
-    description: "For established brands that want more sales from the traffic they already get. I find where your store loses buyers, then rebuild those pages.",
+    description: "For established brands that want more sales from the traffic they already get. Rebuild the pages where your store loses buyers.",
     price: '$4,500', pricePrefix: 'from', qualifier: '', featured: true,
     cta: 'Claim your new product page', event: 'Pricing:Full',
     pagesLabel: 'Most rebuilds include',
