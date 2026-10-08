@@ -67,17 +67,14 @@ export const fullFaqGroups: FaqGroup[] = [
       {
         q: 'What comes with the Conversion Rebuild?',
         a: [
-          'I build the pages your store needs to get more visitors to buy. You pick them on our call. For example:',
+          'I find where your store loses buyers, then rebuild those pages. Most rebuilds include:',
           { list: [
-            'Your homepage',
             'Product pages',
             'Collection pages (where shoppers browse your products)',
-            'Pages for your ads',
-            'Wholesale (B2B) pages',
             'Your cart, with add-on offers',
-            'About, FAQ, contact and policy pages',
+            'Your homepage',
           ] },
-          'Need a page that isn’t on this list? I’ll build that too. I write every word on every page.',
+          'Plus any page your traffic depends on, like ad landing pages or B2B pages. I write every word on every page.',
         ],
       },
       {
