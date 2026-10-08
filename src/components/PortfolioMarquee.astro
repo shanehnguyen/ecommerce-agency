@@ -80,6 +80,7 @@ const rest = portfolioCards.slice(3);
      because this strip only ever renders directly under #pricing. */
   .pfm { display: block; margin-top: clamp(-3.5rem, -5vh, -1.5rem); padding-block: 0 clamp(1.5rem, 4vh, 2.5rem); }
   @media (min-width: 60em) { .pfm { display: none; } }
+  @media (max-width: 40em) { .pfm { margin-top: calc(-1 * var(--space-6)); padding-bottom: var(--space-10); } }
 
   /* a REAL scroll container (not a CSS transform loop): the finger drags it
      natively with momentum, and the script below drifts it while idle. The

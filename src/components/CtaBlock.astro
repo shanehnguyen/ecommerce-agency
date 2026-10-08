@@ -29,6 +29,12 @@ const { event } = Astro.props;
   }
   .cta-repeat__n { color: var(--accent-deep); font-weight: var(--fw-body-semi); }
   .cta-repeat__sep { color: var(--line); }
+  /* phones: three steps don't fit one line, and wrapping left a dangling
+     "/" — stack them instead */
+  @media (max-width: 40em) {
+    .cta-repeat__process { flex-direction: column; gap: var(--space-2); }
+    .cta-repeat__sep { display: none; }
+  }
 
   /* on a dark section (e.g. the final CTA), swap to the dark-safe palette */
   :global(.section--dark) .cta-repeat__process { color: var(--dark-soft); }

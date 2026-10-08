@@ -101,6 +101,9 @@ a:hover { text-decoration-color: var(--accent-strong); }
 /* Serif long-form voice — the letter + About prose */
 .serif { font-family: var(--font-serif); }
 strong, b, th { font-weight: var(--fw-body-semi); }
+/* even line breaks: no single word stranded on the last line */
+h1, h2, h3, h4, summary { text-wrap: balance; }
+p, li { text-wrap: pretty; }
 .prose p { font-family: var(--font-serif); font-size: var(--fs-lede); line-height: 1.7; color: var(--ink); }
 
 /* The document/mono voice for figures + conditions */

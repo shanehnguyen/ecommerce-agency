@@ -28,4 +28,11 @@ import PortfolioGrid from './PortfolioGrid.astro';
   .problem__sub { margin: var(--space-5) auto 0; max-width: 48ch; font-family: var(--font-serif); font-size: var(--fs-lede); line-height: 1.6; color: var(--ink-soft); }
 
   .pf { padding-top: clamp(1.5rem, 4vh, 3rem); padding-bottom: var(--space-10); }
+  .problem__sub { text-wrap: balance; }
+  /* phones: fixed spacing to match the homepage section rhythm */
+  @media (max-width: 40em) {
+    .problem { padding-top: var(--space-10); padding-bottom: var(--space-6); }
+    .problem__line { margin-top: 0; }
+    .pf { padding-top: var(--space-6); }
+  }
 </style>

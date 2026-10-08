@@ -219,7 +219,7 @@ const fourteenLabel = fourteenDayLabel();
   .hero__h1 > span { display: block; text-wrap: balance; }
   /* the multiplier is the claim — never let "1.5–2x" split across lines */
   .hero__h1-nb { white-space: nowrap; }
-  .hero__sub { margin: var(--space-5) auto 0; max-width: 44ch; font-family: var(--font-serif); font-style: italic; font-size: var(--fs-lede); color: var(--ink-soft); }
+  .hero__sub { margin: var(--space-5) auto 0; max-width: 44ch; font-family: var(--font-serif); font-style: italic; font-size: var(--fs-lede); color: var(--ink-soft);  text-wrap: balance; }
   .hero__video { margin-top: var(--space-6); }
   .hero__cta { margin-top: var(--space-5); }
 
@@ -242,7 +242,7 @@ const fourteenLabel = fourteenDayLabel();
   .pricing__eyebrow::before, .pricing__eyebrow::after { content: ""; width: 2.5rem; height: var(--rule-width); background: var(--line); }
   .pricing__heading { margin-top: var(--space-4); font-size: var(--fs-display); }
   .pricing__accent { color: var(--accent-deep); }
-  .pricing__sub { margin-top: var(--space-4); font-size: var(--fs-lede); color: var(--ink-soft); max-width: 42ch; margin-inline: auto; }
+  .pricing__sub { margin-top: var(--space-4); font-size: var(--fs-lede); color: var(--ink-soft); max-width: 42ch; margin-inline: auto;  text-wrap: balance; }
   .pricing__grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); max-width: 64rem; margin-inline: auto; }
   /* align-items:start so each card is only as tall as its own scope.
      Stretched to equal height, the shorter card pads itself out with dead
@@ -253,6 +253,12 @@ const fourteenLabel = fourteenDayLabel();
      homepage and /apply so the two never drift apart. Only the pricing
      SECTION layout + the homepage-only CTA link are styled here. */
   @media (max-width: 40em) {
+    /* phones: one fixed section rhythm (40px top + bottom = 80px between
+       sections) instead of the vh-based clamps, which drifted with phone
+       height and differed section to section */
+    .hero { padding-bottom: var(--space-10); }
+    .pricing, .faq-section { padding-block: var(--space-10); }
+    .closing { padding-block: var(--space-12); }
     .pricing__head { margin-bottom: var(--space-6); }
     .pricing__sub { font-size: var(--fs-body); }
     .pricing__grid { gap: var(--space-4); }
@@ -287,7 +293,7 @@ const fourteenLabel = fourteenDayLabel();
   }
 
   .countdown-track { margin: var(--space-6) auto 0; max-width: 26rem; display: flex; align-items: flex-start; gap: var(--space-3); }
-  .countdown-track__point { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); flex-shrink: 0; width: 5.5rem; }
+  .countdown-track__point { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); flex-shrink: 0; min-width: 5.5rem; }
   .countdown-track__dot { width: 10px; height: 10px; border-radius: 50%; background: var(--dark-line); box-shadow: 0 0 0 4px color-mix(in srgb, var(--dark-ink) 8%, transparent); }
   .countdown-track__dot--end { background: var(--accent-strong); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-strong) 22%, transparent); }
   .countdown-track__point .mono { font-size: var(--fs-label); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--dark-soft); white-space: nowrap; }
@@ -299,7 +305,7 @@ const fourteenLabel = fourteenDayLabel();
   }
   .js [data-reveal].is-in .countdown-track__fill { transform: scaleX(1); }
 
-  .closing__inner p { margin-top: var(--space-4); font-family: var(--font-serif); font-size: var(--fs-lede); line-height: 1.65; color: var(--dark-soft); max-width: 56ch; margin-inline: auto; }
+  .closing__inner p { text-wrap: balance; margin-top: var(--space-4); font-family: var(--font-serif); font-size: var(--fs-lede); line-height: 1.65; color: var(--dark-soft); max-width: 56ch; margin-inline: auto; }
   .closing__cta { margin-top: var(--space-8); }
   .closing__sig { margin-top: var(--space-8) !important; font-family: var(--font-display) !important; font-size: var(--fs-subhead) !important; color: var(--dark-ink) !important; }
 
