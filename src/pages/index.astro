@@ -53,6 +53,7 @@ const fourteenLabel = fourteenDayLabel();
     <div class="container hero__video">
       <link rel="preconnect" href="https://fast.wistia.com" />
       <link rel="preconnect" href="https://fast.wistia.net" />
+      <link rel="preconnect" href="https://embed-ssl.wistia.com" />
       <!-- Wistia's player is ~25 files and ~1s of phone CPU; loading it
            while the page paints delayed the headline badly. It now loads
            right after first paint (window load + idle, or the first
@@ -70,8 +71,16 @@ const fourteenLabel = fourteenDayLabel();
           ['scroll', 'touchstart', 'pointerdown', 'keydown'].forEach(function (e) { window.addEventListener(e, boot, { once: true, passive: true }); });
         })();
       </script>
-      <style is:inline>wistia-player[media-id='cbpagze6zt']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/cbpagze6zt/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style>
+      <!-- The box is fixed at 16:9 and shows Wistia's real thumbnail as a
+           normal image right away (the page's largest paint), then the
+           player boots on top of it at the same size: fast LCP, no jump.
+           If the video's thumbnail is changed in Wistia, update this URL
+           (fast.wistia.com/oembed?url=https://home.wistia.com/medias/cbpagze6zt). -->
       <div class="vsl">
+        <img class="vsl__poster" alt="" aria-hidden="true" width="960" height="540" fetchpriority="high"
+          src="https://embed-ssl.wistia.com/deliveries/2ff6105c508a008294ecf1e5ad782d93.webp?image_crop_resized=960x540"
+          srcset="https://embed-ssl.wistia.com/deliveries/2ff6105c508a008294ecf1e5ad782d93.webp?image_crop_resized=640x360 640w, https://embed-ssl.wistia.com/deliveries/2ff6105c508a008294ecf1e5ad782d93.webp?image_crop_resized=960x540 960w, https://embed-ssl.wistia.com/deliveries/2ff6105c508a008294ecf1e5ad782d93.webp?image_crop_resized=1280x720 1280w"
+          sizes="(max-width: 50rem) 100vw, 800px" />
         <wistia-player media-id="cbpagze6zt" aspect="1.7777777777777777"></wistia-player>
       </div>
     </div>
@@ -240,9 +249,13 @@ const fourteenLabel = fourteenDayLabel();
 
   /* ---------- 3. VSL (Wistia) ---------- */
   .vsl {
-    width: 100%; max-width: 50rem; margin-inline: auto; border-radius: 16px; overflow: hidden;
+    position: relative; width: 100%; max-width: 50rem; aspect-ratio: 16 / 9; margin-inline: auto;
+    border-radius: 16px; overflow: hidden;
     background: #0f120e; box-shadow: 0 40px 80px -40px rgba(26, 24, 20, 0.5);
   }
+  /* poster underneath, player on top, both filling the fixed 16:9 box */
+  .vsl__poster, .vsl wistia-player { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .vsl__poster { object-fit: cover; }
   /* ---------- signature statement motion ---------- */
   .stmt { transition: opacity 800ms var(--ease-out), color 800ms var(--ease-out); }
   .js .stmt { opacity: 0.35; }
