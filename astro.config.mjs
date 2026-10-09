@@ -26,7 +26,9 @@ export default defineConfig({
     webAnalytics: { enabled: false }, // we wire Meta Pixel + GA4 ourselves
   }),
   build: {
-    inlineStylesheets: 'auto',
+    // inline every stylesheet: the two small CSS files were render-blocking
+    // requests on the landing page (~160ms each on a phone)
+    inlineStylesheets: 'always',
   },
   trailingSlash: 'never',
 });

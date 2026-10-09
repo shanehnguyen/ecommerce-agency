@@ -107,7 +107,7 @@
   0%, 100% { box-shadow: 0 30px 60px -30px rgba(26, 24, 20, 0.4), 0 0 16px -6px color-mix(in srgb, var(--accent) 25%, transparent); }
   50%      { box-shadow: 0 30px 60px -30px rgba(26, 24, 20, 0.4), 0 0 26px 0px color-mix(in srgb, var(--accent) 45%, transparent); }
 }
-.pcard__tag { position: absolute; top: -0.8em; left: var(--space-8); background: var(--accent); color: var(--bg-raised); padding: 0.3em 0.9em; border-radius: 999px; font-size: var(--fs-caption); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps); }
+.pcard__tag { position: absolute; top: -0.8em; left: var(--space-8); background: var(--accent-deep); color: var(--bg-raised); padding: 0.3em 0.9em; border-radius: 999px; font-size: var(--fs-caption); font-weight: var(--fw-body-semi); text-transform: uppercase; letter-spacing: var(--tracking-caps); }
 .pcard__eyebrow { font-size: var(--fs-label); text-transform: uppercase; letter-spacing: var(--tracking-caps); color: var(--accent-deep); }
 .pcard__name { margin-top: var(--space-2); font-family: var(--font-display); font-size: var(--fs-title); font-weight: var(--fw-display); text-transform: uppercase; letter-spacing: var(--tracking-display); color: var(--ink); }
 .pcard__desc { margin-top: var(--space-2); font-family: var(--font-serif); font-size: var(--fs-body); line-height: 1.4; color: var(--ink-soft); }
@@ -360,7 +360,7 @@ button.pcard.is-on .pcard__select { background: var(--accent-strong); color: var
 .footer__brand-mark { height: 1.9rem; width: auto; flex-shrink: 0; filter: invert(1); }
 .footer__brand-text span { color: var(--accent-strong); }
 .footer__cols { display: flex; flex-wrap: wrap; gap: var(--space-12); }
-.footer__col h4 { color: var(--paper-50); font-size: var(--fs-label); letter-spacing: var(--tracking-caps); text-transform: uppercase; margin-bottom: var(--space-3); }
+.footer__h { font-weight: var(--fw-display); color: var(--paper-50); font-size: var(--fs-label); letter-spacing: var(--tracking-caps); text-transform: uppercase; margin-bottom: var(--space-3); }
 .footer__col a, .footer__col > span { display: block; color: var(--dark-soft); text-decoration: none; font-size: var(--fs-body); padding-block: var(--space-1); }
 .footer__col a:hover { color: var(--dark-ink); }
 .footer__legal { border-top: 1px solid var(--dark-line); padding-top: var(--space-5); display: flex; flex-wrap: wrap; gap: var(--space-4); justify-content: space-between; font-size: var(--fs-caption); color: var(--paper-50); }

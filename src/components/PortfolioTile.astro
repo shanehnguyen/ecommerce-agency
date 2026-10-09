@@ -20,7 +20,7 @@ const { card: c } = Astro.props;
   data-reveal-child
   style={`${c.zoom ? `--shot-zoom:${c.zoom};` : ''}${c.pos ? `--shot-pos:${c.pos}%;` : ''}`}
 >
-  <Image class="pf-tile__img" src={c.image} alt={`${c.name} storefront`} width={800} format="webp" quality={90} />
+  <Image class="pf-tile__img" src={c.image} alt={`${c.name} storefront`} width={800} widths={[480, 800]} sizes="(max-width: 40em) 92vw, 600px" format="webp" quality={85} />
   <span class="pf-tile__top">
     <span class="pf-tile__name">{c.name}</span>
   </span>

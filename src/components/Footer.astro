@@ -15,19 +15,19 @@ const year = 2026; // build-stamped; Date is intentionally not called at module 
       </div>
       <div class="footer__cols">
         <div class="footer__col">
-          <h4>Offers</h4>
+          <p class="footer__h">Offers</p>
           <a href="/#pricing">Conversion Rebuild</a>
           <a href="/#pricing">Growth Plan</a>
         </div>
         <div class="footer__col">
-          <h4>Company</h4>
+          <p class="footer__h">Company</p>
           <a href="/">Home</a>
           <a href="/about">About</a>
           <a href="/faq">FAQ</a>
           <a href={site.cta.href}>Claim your new product page</a>
         </div>
         <div class="footer__col">
-          <h4>Contact</h4>
+          <p class="footer__h">Contact</p>
           <span>{site.location.label}</span>
           <a href={`mailto:${site.email}`}>{site.email}</a>
           {site.phone && <a href={`tel:${site.phone.replace(/[^\d+]/g, '')}`}>{site.phone}</a>}

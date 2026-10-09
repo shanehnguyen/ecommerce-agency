@@ -52,9 +52,24 @@ const fourteenLabel = fourteenDayLabel();
          The swatch style shows a blurred still until the player boots. -->
     <div class="container hero__video">
       <link rel="preconnect" href="https://fast.wistia.com" />
-      <link rel="preconnect" href="https://embed-ssl.wistia.com" />
-      <script is:inline src="https://fast.wistia.com/player.js" async></script>
-      <script is:inline src="https://fast.wistia.com/embed/cbpagze6zt.js" async type="module"></script>
+      <link rel="preconnect" href="https://fast.wistia.net" />
+      <!-- Wistia's player is ~25 files and ~1s of phone CPU; loading it
+           while the page paints delayed the headline badly. It now loads
+           right after first paint (window load + idle, or the first
+           scroll/tap, whichever comes first). -->
+      <script is:inline>
+        (function () {
+          var done = false;
+          function boot() {
+            if (done) return; done = true;
+            var a = document.createElement('script'); a.src = 'https://fast.wistia.com/player.js'; a.async = true; document.head.appendChild(a);
+            var b = document.createElement('script'); b.src = 'https://fast.wistia.com/embed/cbpagze6zt.js'; b.type = 'module'; b.async = true; document.head.appendChild(b);
+          }
+          function soon() { if ('requestIdleCallback' in window) requestIdleCallback(boot, { timeout: 1500 }); else setTimeout(boot, 300); }
+          if (document.readyState === 'complete') soon(); else window.addEventListener('load', soon, { once: true });
+          ['scroll', 'touchstart', 'pointerdown', 'keydown'].forEach(function (e) { window.addEventListener(e, boot, { once: true, passive: true }); });
+        })();
+      </script>
       <style is:inline>wistia-player[media-id='cbpagze6zt']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/cbpagze6zt/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style>
       <div class="vsl">
         <wistia-player media-id="cbpagze6zt" aspect="1.7777777777777777"></wistia-player>
@@ -181,9 +196,9 @@ const fourteenLabel = fourteenDayLabel();
      last. Delays overlap rather than chain off full durations so the whole
      thing lands under ~1s instead of stacking to a slow crawl. */
   @keyframes hero-rise { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
-  .js .hero__h1 > span { opacity: 0; animation: hero-rise 500ms var(--ease-out) forwards; }
-  .js .hero__h1 > span:nth-child(1) { animation-delay: 100ms; }
-  .js .hero__h1 > span:nth-child(2) { animation-delay: 160ms; }
+  /* the headline itself does NOT fade in: it's the page's largest paint
+     (LCP), and an opacity-0 start made it wait for a free main thread —
+     ~8s on a throttled phone. Everything below it still rises in. */
   .js .hero__sub { opacity: 0; animation: hero-rise 450ms var(--ease-out) 260ms forwards; }
   .js .hero__cta :global(.cta-block) { opacity: 0; animation: hero-rise 450ms var(--ease-out) 360ms forwards; }
   .js .hero__cta :global(.cta-repeat__process > span:nth-child(1)),
