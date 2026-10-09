@@ -64,7 +64,6 @@ export const site = {
     // META_PIXEL_ID default, or the campaign goes blind to the site's events.
     metaPixelId: '1460315575868963',
     ga4Id: '',                        // optional — blank disables GA4
-    clarityId: 'xslhs1jscu',          // Microsoft Clarity id
   },
 } as const;
 
