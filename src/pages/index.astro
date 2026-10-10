@@ -46,42 +46,53 @@ const fourteenLabel = fourteenDayLabel();
       <p class="hero__sub">Done for you. I rebuild your best-selling product page first — you see it before you buy.</p>
     </div>
 
-    <!-- 3. VSL — Wistia embed (adaptive streaming: only the part a viewer
-         watches is downloaded, quality adjusts to their connection).
-         Autoplay / mute / controls are set in Wistia's video settings.
-         The swatch style shows a blurred still until the player boots. -->
+    <!-- 3. VSL — autoplay muted loop under a dark tint (keeps the unmute
+         button and progress bar legible over any footage). The circular
+         button unmutes and restarts from 0; the bar below is a real
+         scrubber. WebM first (smaller, modern browsers), MP4 fallback;
+         phones get a smaller cut (648x864, ~2.3 MB), desktops 864x1152.
+         The video is 3:4 portrait, so the player is too.
+         The poster frame paints instantly so there's never a blank/black
+         flash while the (compressed, faststart) video streams in. -->
     <div class="container hero__video">
-      <link rel="preconnect" href="https://fast.wistia.com" />
-      <link rel="preconnect" href="https://fast.wistia.net" />
-      <link rel="preconnect" href="https://embed-ssl.wistia.com" />
-      <!-- Wistia's player is ~25 files and ~1s of phone CPU; loading it
-           while the page paints delayed the headline badly. It now loads
-           right after first paint (window load + idle, or the first
-           scroll/tap, whichever comes first). -->
-      <script is:inline>
-        (function () {
-          var done = false;
-          function boot() {
-            if (done) return; done = true;
-            var a = document.createElement('script'); a.src = 'https://fast.wistia.com/player.js'; a.async = true; document.head.appendChild(a);
-            var b = document.createElement('script'); b.src = 'https://fast.wistia.com/embed/cbpagze6zt.js'; b.type = 'module'; b.async = true; document.head.appendChild(b);
-          }
-          function soon() { if ('requestIdleCallback' in window) requestIdleCallback(boot, { timeout: 1500 }); else setTimeout(boot, 300); }
-          if (document.readyState === 'complete') soon(); else window.addEventListener('load', soon, { once: true });
-          ['scroll', 'touchstart', 'pointerdown', 'keydown'].forEach(function (e) { window.addEventListener(e, boot, { once: true, passive: true }); });
-        })();
-      </script>
-      <!-- The box is fixed at 16:9 and shows Wistia's real thumbnail as a
-           normal image right away (the page's largest paint), then the
-           player boots on top of it at the same size: fast LCP, no jump.
-           If the video's thumbnail is changed in Wistia, update this URL
-           (fast.wistia.com/oembed?url=https://home.wistia.com/medias/cbpagze6zt). -->
-      <div class="vsl">
-        <img class="vsl__poster" alt="" aria-hidden="true" width="960" height="540" fetchpriority="high"
-          src="https://embed-ssl.wistia.com/deliveries/2ff6105c508a008294ecf1e5ad782d93.webp?image_crop_resized=960x540"
-          srcset="https://embed-ssl.wistia.com/deliveries/2ff6105c508a008294ecf1e5ad782d93.webp?image_crop_resized=640x360 640w, https://embed-ssl.wistia.com/deliveries/2ff6105c508a008294ecf1e5ad782d93.webp?image_crop_resized=960x540 960w, https://embed-ssl.wistia.com/deliveries/2ff6105c508a008294ecf1e5ad782d93.webp?image_crop_resized=1280x720 1280w"
-          sizes="(max-width: 50rem) 100vw, 800px" />
-        <wistia-player media-id="cbpagze6zt" aspect="1.7777777777777777"></wistia-player>
+      <!-- fetch the poster first: it is the first big paint above the fold -->
+      <link rel="preload" as="image" href="/video/vsl-v4-poster.jpg" fetchpriority="high" />
+      <div class="vsl" data-vsl>
+        <video
+          class="vsl__media"
+          autoplay muted playsinline preload="auto"
+          disablepictureinpicture controlslist="nodownload noplaybackrate"
+          poster="/video/vsl-v4-poster.jpg"
+          aria-label="Founder VSL"
+        >
+          <source src="/video/vsl-v4-sm.webm" type="video/webm" media="(max-width: 40em)" />
+          <source src="/video/vsl-v4-sm.mp4" type="video/mp4" media="(max-width: 40em)" />
+          <source src="/video/vsl-v4.webm" type="video/webm" />
+          <source src="/video/vsl-v4.mp4" type="video/mp4" />
+        </video>
+        <div class="vsl__tint" aria-hidden="true"></div>
+        <button type="button" class="vsl__replay" data-vsl-replay aria-label="Replay video">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="6 3 20 12 6 21 6 3"></polygon>
+          </svg>
+          <span>Replay</span>
+        </button>
+        <button type="button" class="vsl__unmute" data-vsl-unmute aria-label="Unmute video">
+          <svg class="vsl__unmute-icon vsl__unmute-icon--muted" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11 5 6 9H3v6h3l5 4V5Z"></path>
+            <line x1="22" y1="9" x2="16" y2="15"></line>
+            <line x1="16" y1="9" x2="22" y2="15"></line>
+          </svg>
+          <svg class="vsl__unmute-icon vsl__unmute-icon--unmuted" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11 5 6 9H3v6h3l5 4V5Z"></path>
+            <path d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+            <path d="M19 5a10 10 0 0 1 0 14"></path>
+          </svg>
+        </button>
+        <div class="vsl__progress">
+          <div class="vsl__bar" aria-hidden="true"><div class="vsl__bar-fill" data-vsl-fill></div></div>
+          <input type="range" class="vsl__range" min="0" max="100" step="0.1" value="0" data-vsl-range aria-label="Video progress" />
+        </div>
       </div>
     </div>
 
@@ -196,6 +207,90 @@ const fourteenLabel = fourteenDayLabel();
     window.addEventListener('load', function () { setTimeout(litAll, 700); });
   })();
 
+
+  // ---- VSL: unmute control + scrubbable progress bar ----
+  (function () {
+    var vsl = document.querySelector('[data-vsl]');
+    if (!vsl) return;
+    var media = vsl.querySelector('.vsl__media');
+    var btn = vsl.querySelector('[data-vsl-unmute]');
+    var range = vsl.querySelector('[data-vsl-range]');
+    var fill = vsl.querySelector('[data-vsl-fill]');
+    var replayBtn = vsl.querySelector('[data-vsl-replay]');
+    if (!media || !btn) return;
+    // Autoplay is handled natively via the `autoplay` attribute; Safari/iOS
+    // in particular can still need a nudge once metadata is ready.
+    media.addEventListener('loadedmetadata', function () { media.play().catch(function () {}); });
+
+    // Plays once, then shows a Replay overlay instead of looping silently.
+    media.addEventListener('ended', function () { vsl.classList.add('is-ended'); });
+    if (replayBtn) {
+      replayBtn.addEventListener('click', function () {
+        vsl.classList.remove('is-ended');
+        media.currentTime = 0;
+        media.play().catch(function () {});
+      });
+    }
+
+    // Pause when the tab is hidden or the player scrolls out of view, and
+    // resume when it's back: an idle tab never keeps streaming the video.
+    (function () {
+      var autoPaused = false;
+      var inView = true;
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+          if (!media.paused) { media.pause(); autoPaused = true; }
+        } else if (autoPaused && inView) {
+          media.play().catch(function () {});
+          autoPaused = false;
+        }
+      });
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) {
+          inView = entries[0].isIntersecting;
+          if (!inView) {
+            if (!media.paused) { media.pause(); autoPaused = true; }
+          } else if (autoPaused && !document.hidden) {
+            media.play().catch(function () {});
+            autoPaused = false;
+          }
+        }, { threshold: 0.4 }).observe(vsl);
+      }
+    })();
+
+    btn.addEventListener('click', function () {
+      var wasMuted = media.muted;
+      media.muted = !wasMuted;
+      btn.setAttribute('aria-label', media.muted ? 'Unmute video' : 'Mute video');
+      vsl.classList.toggle('is-unmuted', !media.muted);
+      // once the visitor has touched sound at all, the button shrinks into a
+      // corner toggle for good — no snapping back to the big centered
+      // overlay just because they muted again
+      vsl.classList.add('is-engaged');
+      // unmuting is a deliberate "watch it properly" action — start over
+      if (wasMuted) media.currentTime = 0;
+      if (media.paused) media.play().catch(function () {});
+    });
+
+    if (range && fill) {
+      var scrubbing = false;
+      var setFromMedia = function () {
+        if (scrubbing || !media.duration) return;
+        var pct = (media.currentTime / media.duration) * 100;
+        range.value = String(pct);
+        fill.style.width = pct + '%';
+      };
+      var setFromRange = function () {
+        fill.style.width = range.value + '%';
+        if (media.duration) media.currentTime = (parseFloat(range.value) / 100) * media.duration;
+      };
+      media.addEventListener('timeupdate', setFromMedia);
+      media.addEventListener('loadedmetadata', setFromMedia);
+      range.addEventListener('pointerdown', function () { scrubbing = true; });
+      range.addEventListener('input', setFromRange);
+      range.addEventListener('pointerup', function () { scrubbing = false; });
+    }
+  })();
 </script>
 
 <style>
@@ -247,15 +342,80 @@ const fourteenLabel = fourteenDayLabel();
   .hero__video { margin-top: var(--space-6); }
   .hero__cta { margin-top: var(--space-5); }
 
-  /* ---------- 3. VSL (Wistia) ---------- */
+  /* ---------- 3. VSL ---------- */
   .vsl {
-    position: relative; width: 100%; max-width: 50rem; aspect-ratio: 16 / 9; margin-inline: auto;
-    border-radius: 16px; overflow: hidden;
+    position: relative; width: 100%; max-width: 27rem; aspect-ratio: 3 / 4;
+    margin-inline: auto; border-radius: 16px; overflow: hidden;
     background: #0f120e; box-shadow: 0 40px 80px -40px rgba(26, 24, 20, 0.5);
+    display: flex; align-items: center; justify-content: center;
   }
-  /* poster underneath, player on top, both filling the fixed 16:9 box */
-  .vsl__poster, .vsl wistia-player { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-  .vsl__poster { object-fit: cover; }
+  .vsl__media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  /* darkens the footage so the unmute button and progress bar stay legible
+     over any frame while muted — once the visitor unmutes, they've already
+     engaged, so fade it out and let the footage read normally */
+  .vsl__tint {
+    position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.12) 28%, rgba(0,0,0,0.12) 60%, rgba(0,0,0,0.5) 100%);
+    opacity: 1; transition: opacity var(--duration-base) var(--ease-out);
+  }
+  .vsl.is-unmuted .vsl__tint { opacity: 0; }
+  .vsl__unmute {
+    position: absolute; z-index: 2; width: 72px; height: 72px; border-radius: 50%;
+    border: 2px solid var(--dark-ink); background: color-mix(in srgb, var(--dark-ink) 12%, transparent);
+    color: var(--dark-ink); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: width var(--duration-base) var(--ease-out), height var(--duration-base) var(--ease-out),
+                top var(--duration-base) var(--ease-out), right var(--duration-base) var(--ease-out),
+                transform var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out);
+  }
+  .vsl__unmute:hover { transform: scale(1.06); background: color-mix(in srgb, var(--dark-ink) 22%, transparent); }
+  /* only one of the two icons is ever shown, matching the actual mute state
+     (never a plain "play" glyph — this button is sound-only, the video is
+     always already playing) */
+  .vsl__unmute-icon { display: none; }
+  .vsl__unmute-icon--muted { display: block; }
+  .vsl.is-unmuted .vsl__unmute-icon--muted { display: none; }
+  .vsl.is-unmuted .vsl__unmute-icon--unmuted { display: block; }
+  /* after the first interaction, get out of the way: shrink into a corner
+     toggle instead of staying a giant circle over the footage */
+  .vsl.is-engaged .vsl__unmute {
+    width: 40px; height: 40px; top: var(--space-4); right: var(--space-4); left: auto; bottom: auto; transform: none;
+  }
+  .vsl.is-engaged .vsl__unmute:hover { transform: scale(1.06); }
+  .vsl.is-engaged .vsl__unmute-icon { width: 16px; height: 16px; }
+
+  /* plays once, then this replaces the unmute button entirely — no silent
+     loop, no ambiguity about whether it's still going */
+  .vsl__replay {
+    position: absolute; z-index: 3; display: none; align-items: center; gap: var(--space-2);
+    padding: var(--space-3) var(--space-5); border-radius: 999px;
+    border: 2px solid var(--dark-ink); background: color-mix(in srgb, var(--dark-ink) 55%, transparent);
+    color: var(--dark-ink); cursor: pointer;
+    font-family: var(--font-mono); font-size: var(--fs-caption); font-weight: var(--fw-body-semi);
+    text-transform: uppercase; letter-spacing: var(--tracking-caps);
+    transition: transform var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out);
+  }
+  .vsl__replay:hover { transform: scale(1.05); background: color-mix(in srgb, var(--dark-ink) 70%, transparent); }
+  .vsl.is-ended .vsl__replay { display: flex; }
+  .vsl.is-ended .vsl__unmute { display: none; }
+  .vsl.is-ended .vsl__tint { opacity: 1; }
+
+  /* scrubbable progress bar: a native range input (full touch target) laid
+     over a slim visual track + fill, same "invisible functional control
+     over a custom visual" technique as the before/after slider */
+  .vsl__progress { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: var(--space-4); padding-top: var(--space-6); }
+  .vsl__bar { position: relative; width: 100%; height: 4px; border-radius: 999px; background: rgba(255,255,255,0.3); overflow: hidden; }
+  .vsl__bar-fill { position: absolute; inset: 0 auto 0 0; width: 0%; background: var(--accent-strong); border-radius: 999px; }
+  .vsl__range {
+    position: absolute; inset: 0; width: 100%; height: 100%; margin: 0;
+    appearance: none; -webkit-appearance: none; background: transparent; cursor: pointer;
+  }
+  .vsl__range::-webkit-slider-thumb {
+    appearance: none; -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
+    background: var(--accent-strong); box-shadow: 0 0 0 3px rgba(0,0,0,0.35); cursor: pointer;
+  }
+  .vsl__range::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--accent-strong); border: 0; box-shadow: 0 0 0 3px rgba(0,0,0,0.35); cursor: pointer; }
+  .vsl__range::-moz-range-track { background: transparent; }
   /* ---------- signature statement motion ---------- */
   .stmt { transition: opacity 800ms var(--ease-out), color 800ms var(--ease-out); }
   .js .stmt { opacity: 0.35; }
