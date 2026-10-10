@@ -97,7 +97,7 @@ export const priceCards: PriceCard[] = [
       'Every word written for you',
       'Unlimited revisions for 14 days',
     ],
-    riskFree: 'See your product page first.',
+    riskFree: 'Get your product page first, free.',
   },
   {
     eyebrow: 'Phase 2',
