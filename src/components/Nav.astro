@@ -3,6 +3,9 @@
    styled as the one action. Collapses to a hamburger dropdown on mobile.
    No overlay/transparent mode — same bar on every page. */
 import { site } from '../data/site.config';
+interface Props { ctaLabel?: string; eventPrefix?: string; }
+const { ctaLabel = 'Get my free product page', eventPrefix = '' } = Astro.props;
+const navEvent = `${eventPrefix}Nav:GetBuild`;
 ---
 <header class="nav" data-nav>
   <div class="nav__inner">
@@ -31,7 +34,7 @@ import { site } from '../data/site.config';
       <ul class="nav__links" id="nav-links" data-nav-menu>
         <li><a href="/">Home</a></li>
         <li><a href="/faq">FAQ</a></li>
-        <li><a class="btn btn--primary nav__book" href={`${site.cta.href}?from=${encodeURIComponent('Nav:GetBuild')}`} data-event="Nav:GetBuild"><span class="btn__label">Get my free product page</span></a></li>
+        <li><a class="btn btn--primary nav__book" href={`${site.cta.href}?from=${encodeURIComponent(navEvent)}`} data-event={navEvent}><span class="btn__label">{ctaLabel}</span></a></li>
       </ul>
     </div>
   </div>

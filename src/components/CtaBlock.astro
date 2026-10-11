@@ -4,11 +4,11 @@
    placed; only the tracking `event` differs per instance. Used after VSL,
    Pricing, the composite visual, and Closing. */
 import Cta from './Cta.astro';
-interface Props { event: string; }
-const { event } = Astro.props;
+interface Props { event: string; label?: string; }
+const { event, label } = Astro.props;
 ---
 <div class="cta-repeat">
-  <Cta event={event} pill />
+  <Cta event={event} label={label} pill />
 
   <p class="cta-repeat__process mono">
     <span><span class="cta-repeat__n">01</span> Short form</span>

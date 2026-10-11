@@ -4,6 +4,9 @@
    "logo, email, one line" version — this restores the columns using CSS that
    was already sitting in components.css unused). */
 import { site } from '../data/site.config';
+interface Props { ctaLabel?: string; eventPrefix?: string; }
+const { ctaLabel = 'Get my free product page', eventPrefix } = Astro.props;
+const ctaHref = eventPrefix ? `${site.cta.href}?from=${encodeURIComponent(eventPrefix + 'Footer')}` : site.cta.href;
 const year = 2026; // build-stamped; Date is intentionally not called at module scope
 ---
 <footer class="footer">
@@ -24,7 +27,7 @@ const year = 2026; // build-stamped; Date is intentionally not called at module 
           <a href="/">Home</a>
           <a href="/about">About</a>
           <a href="/faq">FAQ</a>
-          <a href={site.cta.href}>Get my free product page</a>
+          <a href={ctaHref}>{ctaLabel}</a>
         </div>
         <div class="footer__col">
           <p class="footer__h">Contact</p>

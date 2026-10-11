@@ -135,11 +135,14 @@ const revenueBands = ['Under $2k', '$2k–$10k', '$10k–$50k', '$50k–$100k', 
   const bookingUrl = site.bookingUrl;
   const web3Key = site.web3formsKey;
 
-  // Visitors from the Growth Plan card didn't come for a product page design,
-  // so the headline speaks to what they clicked.
-  if (new URLSearchParams(location.search).get('from') === 'Pricing:Retainer') {
+  // The headline speaks to what they clicked: Growth Plan card visitors
+  // didn't come for a page design, and /free-homepage ("HP:" events) runs
+  // the free homepage design offer, not the free product page.
+  {
+    const from = new URLSearchParams(location.search).get('from') || '';
     const h1 = document.querySelector('.bk-intro__h1');
-    if (h1) h1.textContent = 'Let’s talk about your Growth Plan.';
+    if (h1 && from.endsWith('Pricing:Retainer')) h1.textContent = 'Let’s talk about your Growth Plan.';
+    else if (h1 && from.startsWith('HP:')) h1.textContent = 'Claim your homepage design.';
   }
 
   const form = document.querySelector<HTMLFormElement>('[data-book-form]');
