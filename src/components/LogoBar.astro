@@ -1,0 +1,96 @@
+---
+/* LogoBar — "brands we've built for" strip that sits directly under the
+   hero VSL. One slow, continuous drift: the set is rendered twice and the
+   track animates -50%, so the loop point lands on identical pixels (same
+   technique as WhatGoesIn's ticker). Logo files live in /public/logos,
+   normalized to one ink color and a 160px source height. Case, Yushan,
+   Lynh's and Absolute Kitchen are wordmarks recreated from their sites'
+   type; any item without a src falls back to a plain text wordmark. Every
+   item is the same visual height so the row reads as one list. */
+type Item = { name: string; src?: string; w?: number; h?: number };
+
+const items: Item[] = [
+  { name: 'Kerarganic', src: '/logos/kerarganic.png', w: 227, h: 160 },
+  { name: 'Wooven', src: '/logos/wooven.png', w: 740, h: 160 },
+  { name: 'PLARECETA', src: '/logos/plareceta.png', w: 1269, h: 160 },
+  { name: 'Loomi Holidays', src: '/logos/loomi-holidays.png', w: 302, h: 160 },
+  { name: 'PK Cabinets', src: '/logos/pk-cabinets.png', w: 555, h: 160 },
+  { name: 'Absolute Kitchen Distributors', src: '/logos/absolute-kitchen-distributors.png', w: 841, h: 160 },
+  { name: 'Better Self Better Life', src: '/logos/better-self-better-life.png', w: 561, h: 160 },
+  { name: 'Case Furniture', src: '/logos/case-furniture.png', w: 542, h: 160 },
+  { name: 'KetoMarin', src: '/logos/ketomarin.png', w: 433, h: 160 },
+  { name: 'Yushan Colour', src: '/logos/yushan-colour.png', w: 1581, h: 160 },
+  { name: "Lynh's Drinks", src: '/logos/lynhs-drinks.png', w: 1425, h: 160 },
+];
+
+// wide, flat wordmarks read heavier than tall marks at the same height,
+// so each logo gets its own height to balance visual weight
+const heights: Record<string, string> = {
+  'Kerarganic': '3.1rem',
+  'Wooven': '1.6rem',
+  'PLARECETA': '1.35rem',
+  'Loomi Holidays': '3.1rem',
+  'PK Cabinets': '2.2rem',
+  'Better Self Better Life': '3rem',
+  'KetoMarin': '2.3rem',
+  'Absolute Kitchen Distributors': '2.4rem',
+  'Case Furniture': '1.6rem',
+  'Yushan Colour': '1.4rem',
+  "Lynh's Drinks": '1.3rem',
+};
+---
+<section class="logobar" aria-label="Brands we've built for">
+  <p class="logobar__label">Brands we've built for</p>
+  <div class="logobar__viewport">
+    <ul class="logobar__track">
+      {[0, 1].map((copy) =>
+        items.map((it) => (
+          <li class="logobar__item" aria-hidden={copy === 1 ? 'true' : undefined}>
+            {it.src
+              ? <img src={it.src} alt={copy === 0 ? it.name : ''} width={it.w} height={it.h} loading="lazy" decoding="async" style={`height:${heights[it.name] ?? '1.75rem'}`} />
+              : <span class="logobar__word">{it.name}</span>}
+          </li>
+        ))
+      )}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .logobar { padding-block: var(--space-10) var(--space-2); max-width: 72rem; margin-inline: auto; }
+  .logobar__label {
+    text-align: center; margin: 0 0 var(--space-4);
+    font-family: var(--font-body); font-size: 0.875rem; font-weight: 500;
+    text-transform: none; letter-spacing: 0;
+    color: var(--ink-50);
+  }
+  /* soft fade at both edges so logos drift in and out instead of being cut */
+  .logobar__viewport {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  }
+  .logobar__track {
+    display: flex; align-items: center; gap: var(--space-12);
+    width: max-content; margin: 0; padding: 0; list-style: none;
+    animation: logobar-drift 45s linear infinite;
+  }
+  .logobar__item { flex: none; display: flex; align-items: center; height: 3.25rem; }
+  .logobar__item img { width: auto; display: block; opacity: 0.72; }
+  .logobar__word {
+    font-family: var(--font-display); font-weight: 600; font-size: 1rem;
+    letter-spacing: -0.01em; white-space: nowrap; color: var(--ink); opacity: 0.6;
+  }
+  @keyframes logobar-drift { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .logobar__viewport:hover .logobar__track { animation-play-state: paused; }
+
+  @media (max-width: 40em) {
+    .logobar__track { gap: var(--space-8); animation-duration: 35s; }
+    .logobar__item img { transform: scale(0.85); transform-origin: center; }
+    .logobar__word { font-size: 1rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .logobar__track { animation: none; flex-wrap: wrap; justify-content: center; width: auto; row-gap: var(--space-4); }
+    .logobar__item[aria-hidden="true"] { display: none; }
+  }
+</style>
