@@ -3,13 +3,13 @@
    styled as the one action. Collapses to a hamburger dropdown on mobile.
    No overlay/transparent mode — same bar on every page. */
 import { site } from '../data/site.config';
-interface Props { ctaLabel?: string; eventPrefix?: string; }
-const { ctaLabel = 'Get my free product page', eventPrefix = '' } = Astro.props;
+interface Props { ctaLabel?: string; eventPrefix?: string; homeHref?: string; }
+const { ctaLabel = 'Get my free product page', eventPrefix = '', homeHref = '/' } = Astro.props;
 const navEvent = `${eventPrefix}Nav:GetBuild`;
 ---
 <header class="nav" data-nav>
   <div class="nav__inner">
-    <a class="nav__logo" href="/" aria-label={`${site.brand}, home`}>
+    <a class="nav__logo" href={homeHref} aria-label={`${site.brand}, home`}>
       <img class="nav__logo-mark" src="/assets/images/fp-mark.png" alt="" width="102" height="120" />
       <span class="nav__logo-text">
         <span class="nav__logo-name">{site.wordmark.lead} <span>{site.wordmark.accent}</span></span>
@@ -32,7 +32,7 @@ const navEvent = `${eventPrefix}Nav:GetBuild`;
 
     <div class="nav__menu">
       <ul class="nav__links" id="nav-links" data-nav-menu>
-        <li><a href="/">Home</a></li>
+        <li><a href={homeHref}>Home</a></li>
         <li><a href="/faq">FAQ</a></li>
         <li><a class="btn btn--primary nav__book" href={`${site.cta.href}?from=${encodeURIComponent(navEvent)}`} data-event={navEvent}><span class="btn__label">{ctaLabel}</span></a></li>
       </ul>

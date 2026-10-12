@@ -23,8 +23,10 @@ interface Props {
    * runs a different offer than the homepage (e.g. /free-homepage). */
   ctaLabel?: string;
   eventPrefix?: string;
+  /** Where the logo and Home links go (an ad landing page keeps visitors on itself). */
+  homeHref?: string;
 }
-const { title, description, ogImage = '/assets/images/og-cover.png', noindex = false, ctaLabel, eventPrefix } = Astro.props;
+const { title, description, ogImage = '/assets/images/og-cover.png', noindex = false, ctaLabel, eventPrefix, homeHref = '/' } = Astro.props;
 const canonical = new URL(Astro.url.pathname, site.url).toString();
 const fullTitle = title.includes(site.brand) ? title : `${title} | ${site.brand}`;
 // Organization on every page; WebSite (Google's source for the site name
@@ -106,11 +108,11 @@ const schema = {
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <Nav ctaLabel={ctaLabel} eventPrefix={eventPrefix} />
+    <Nav ctaLabel={ctaLabel} eventPrefix={eventPrefix} homeHref={homeHref} />
     <main id="main">
       <slot />
     </main>
-    <Footer ctaLabel={ctaLabel} eventPrefix={eventPrefix} />
+    <Footer ctaLabel={ctaLabel} eventPrefix={eventPrefix} homeHref={homeHref} />
     <script is:inline>
       // Subtle fade-up on scroll + nav shrink/blur on scroll. Respects reduced-motion.
       (function () {
