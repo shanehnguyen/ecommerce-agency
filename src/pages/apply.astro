@@ -143,6 +143,8 @@ const revenueBands = ['Under $2k', '$2k–$10k', '$10k–$50k', '$50k–$100k', 
     const h1 = document.querySelector('.bk-intro__h1');
     if (h1 && from.endsWith('Pricing:Retainer')) h1.textContent = 'Let’s talk about your Growth Plan.';
     else if (h1 && from.startsWith('HP:')) h1.textContent = 'Claim your homepage design.';
+    // and the logo takes them back to the page they came from, not the homepage
+    if (from.startsWith('HP:')) document.querySelector('.nav__logo')?.setAttribute('href', '/free-homepage');
   }
 
   const form = document.querySelector<HTMLFormElement>('[data-book-form]');
