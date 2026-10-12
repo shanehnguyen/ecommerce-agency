@@ -11,6 +11,7 @@ import FAQ from '../components/FAQ.astro';
 import TheProblem from '../components/TheProblem.astro';
 import TheDeal from '../components/TheDeal.astro';
 import PortfolioMarquee from '../components/PortfolioMarquee.astro';
+import LogoBar from '../components/LogoBar.astro';
 import PriceCardContent from '../components/PriceCardContent.astro';
 import { site } from '../data/site.config';
 import { homepageOfferFaqs } from '../data/faqs-homepage-offer';
@@ -103,6 +104,8 @@ const fourteenLabel = fourteenDayLabel();
       </div>
     </div>
 
+    <!-- brands we've built for: slow logo drift under the CTA steps -->
+    <LogoBar />
   </section>
 
   <TheProblem />
